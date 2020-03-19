@@ -57,6 +57,31 @@
             </div>
           </div>
           <div class="date_main">
+            <!-- <table>
+              <thead>
+                <tr>
+                  <th>
+                    <em v-if="endPrev"
+                      class="prev_month hoverhands"
+                      @click="prev('end')"></em>
+                  </th>
+                  <th colspan="5">{{endYear}} 年 {{getMonthText(endMonth)}} </th>
+                  <th>
+                    <em class="next_month hoverhands"
+                      @click="next('end')"></em>
+                  </th>
+                </tr>
+                <tr>
+                  <th v-for="(week, idx) in weeks" :key="idx">{{ week }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                // <!-- 1阶段对应 0 -7 ， 2阶段对应 8 - 14， 以此类推 -- //
+                <tr v-for="idx in (endList.length / 7 + 1)" :key="idx">
+                  <td v-for="(el, index) in endList[idx]" :key="index">{{ idx }}</td>
+                </tr>
+              </tbody>
+            </table> -->
             <div class="date_top">
               <em v-if="endPrev"
                 class="prev_month hoverhands"
@@ -102,10 +127,13 @@ export default {
   props: ["child"],
   data: function () {
     return {
+      weeks: ['日', '一', '二', '三', '四', '五', '六'],
       openState: false,
       start: this.child.start,
       end: this.child.end,
+      initList: new Array(42).fill({ className: '', num: '', date: ''  }),
       dynamicDateText: '', // 动态时间文本
+
       startYear: '',
       startMonth: '',
       startFirstWeek: '',
@@ -118,7 +146,9 @@ export default {
       endFirstWeek: '',
       endDaySum: '',
       endList: [],
+
       endPrev: true,
+
       option: [
         { name: '昨日', type: 'yesterday' },
         { name: '今日', type: 'today' },
@@ -136,12 +166,15 @@ export default {
     }
   },
   computed: {
+    // 开始的时间戳
     activeStartData() {
       return new Date(this.start).getTime();
     },
+    // 结束的时间戳
     activeEndData() {
       return new Date(this.end).getTime();
     },
+    // 显示文字
     dataMsg() {
       return `${this.child.start} ~ ${this.child.end}`;
     },
@@ -224,6 +257,19 @@ export default {
         this.dynamicDateText = `过去${dayjs().diff(dayjs(this.end), 'day')}天 - 过去${dayjs().diff(dayjs(this.start), 'day') - 1}天`
       }
     },
+    calcDate() {
+      var startDate = new Date(this.start);
+      this.startYear = startDate.getFullYear();
+      this.startMonth = startDate.getMonth() + 1;
+
+      var endDate = new Date(this.end);
+      this.endYear = endDate.getFullYear();
+      this.endMonth = endDate.getMonth() + 1;
+      // 第一天是星期天
+      if (dayjs(this.start).startOf('month').toDate().getDay() === 0) {
+
+      }
+    },
     clickDate(val, tag) {
       if (val.className !== 'disabled') {
         this[tag] = val.date;
@@ -240,12 +286,15 @@ export default {
       this.openState = !this.openState;
     },
     init() {
+      // 开始的那一天时间
       this.startFirstWeek = new Date(`${this.startYear}-${this.dealVal(this.startMonth)}-01`).getDay();
-      this.startDaySum = this.getMonthDaySum(`${this.startYear}-${this.dealVal(this.startMonth)}-01`);
+      this.startDaySum = dayjs(`${this.startYear}-${this.dealVal(this.startMonth)}-01`).daysInMonth();
       this.startList = this.initDate(this.startFirstWeek, this.startDaySum, this.startYear, this.startMonth, this.activeStartData);
       this.endFirstWeek = new Date(`${this.endYear}-${this.dealVal(this.endMonth)}-01`).getDay();
-      this.endDaySum = this.getMonthDaySum(`${this.endYear}-${this.dealVal(this.endMonth)}-1`);
-      this.endList = this.initDate(this.endFirstWeek, this.endDaySum, this.endYear, this.endMonth, this.activeEndData)
+      this.endDaySum = dayjs(`${this.endYear}-${this.dealVal(this.endMonth)}-1`).daysInMonth();
+      this.endList = this.initDate(this.endFirstWeek, this.endDaySum, this.endYear, this.endMonth, this.activeEndData);
+
+      console.log(dayjs(this.start).daysInMonth(), dayjs(this.end).daysInMonth(), dayjs(this.start).toDate().getDay(), dayjs(this.end).startOf('month').toDate().getDay())
     },
     prev(tag) {
       if (tag === 'end') {
@@ -277,22 +326,16 @@ export default {
         this.init();
       })
     },
-    getMonthDaySum(val) { // 获取当前月有多少天
-      var curDate = new Date(val);
-      var curMonth = curDate.getMonth();
-      curDate.setMonth(curMonth + 1);
-      curDate.setDate(0);
-      return curDate.getDate();
-    },
     // 生成两个表格的数据源
     initDate(FirstWeek, DaySum, Year, Month, activeData) {
       var list = [];
-      for (var i = 1; i <= FirstWeek; i++) {
+      if (FirstWeek === 0) FirstWeek = 7;
+      for (var v = 0; v < FirstWeek; v++) {
         var Dates = new Date(`${Year}-${this.dealVal(Month)}-01`);
-        Dates.setDate(i - FirstWeek);
+        Dates.setDate(v - FirstWeek);
         list.push({
-          "className": "disabled",
-          "num": Dates.getDate(),
+          "className": "",
+          "num": '',
           "date": `${Year}-${this.dealVal(Month - 1)}-${Dates.getDate()}`
         })
       }
@@ -305,10 +348,11 @@ export default {
         })
       }
       var nextData = new Date(`${Year}-${this.dealVal(Month)}-${DaySum}`).getDay();
-      for (var k = 1; k <= 6 - nextData; k++) {
+      if (nextData === 6) nextData = 0;
+      for (var k = 0; k < 6 - nextData; k++) {
         list.push({
-          "className": "disabled",
-          "num": k,
+          "className": "",
+          "num": '',
           "date": `${Year}-${this.dealVal(Month + 1)}-${this.dealVal(k)}`
         })
       }
