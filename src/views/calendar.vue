@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       mdatapickdata: {
-        start: "2020-02-2",
+        start: "2020-02-02",
         end: "2020-03-18"
       }
     }

@@ -30,14 +30,40 @@
             </ul>
           </div>
           <div class="date_main">
-            <div class="date_top">
-              <em class="prev_month hoverhands"
+            <table class="table-condensed">
+              <thead>
+                <tr>
+                  <th>
+                    <i class="prev_arrow" @click="prev('start')"></i>
+                  </th>
+                  <th colspan="5">{{startYear}} 年 {{getMonthText(startMonth)}} </th>
+                  <th>
+                    <i class="next_arrow" @click="next('start')"></i>
+                  </th>
+                </tr>
+                <tr>
+                  <th v-for="(week, idx) in weeks"
+                    :key="idx">{{ week }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 1阶段对应 0 -7 ， 2阶段对应 8 - 14， 以此类推 -->
+                <tr v-for="idx in (startList.length / 7)"
+                  :key="idx">
+                  <td v-for="(el, index) in startComplexList[idx-1]"
+                    :key="index"
+                    :class="el.className"
+                    @click="clickDate(el, 'start')">{{ el.num }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- <div class="date_top">
+              <em class="prev_arrow hoverhands"
                 @click="prev('start')"></em>
               <p>
                 <span class="top_year">{{startYear}} 年 {{getMonthText(startMonth)}}</span>
               </p>
-              <em v-if="startNext"
-                class="next_month hoverhands"
+              <em class="next_arrow hoverhands"
                 @click="next('start')"></em>
             </div>
             <div class="date_week">
@@ -54,43 +80,45 @@
                 :class="el.className"
                 :key="idx"
                 @click="clickDate(el,'start')">{{ el.num }}</em>
-            </div>
+            </div> -->
           </div>
           <div class="date_main">
-            <!-- <table>
+            <table class="table-condensed">
               <thead>
                 <tr>
                   <th>
-                    <em v-if="endPrev"
-                      class="prev_month hoverhands"
-                      @click="prev('end')"></em>
+                    <i class="prev_arrow" @click="prev('end')"></i>
                   </th>
                   <th colspan="5">{{endYear}} 年 {{getMonthText(endMonth)}} </th>
                   <th>
-                    <em class="next_month hoverhands"
-                      @click="next('end')"></em>
+                    <i class="next_arrow" @click="next('end')"></i>
                   </th>
                 </tr>
                 <tr>
-                  <th v-for="(week, idx) in weeks" :key="idx">{{ week }}</th>
+                  <th v-for="(week, idx) in weeks"
+                    :key="idx">{{ week }}</th>
                 </tr>
               </thead>
               <tbody>
-                // <!-- 1阶段对应 0 -7 ， 2阶段对应 8 - 14， 以此类推 -- //
-                <tr v-for="idx in (endList.length / 7 + 1)" :key="idx">
-                  <td v-for="(el, index) in endList[idx]" :key="index">{{ idx }}</td>
+                <!-- 1阶段对应 0 -7 ， 2阶段对应 8 - 14， 以此类推 -->
+                <tr v-for="idx in (endList.length / 7)"
+                  :key="idx">
+                  <td v-for="(el, index) in endComplexList[idx-1]"
+                    :key="index"
+                    :class="el.className"
+                    @click="clickDate(el,'end')">{{ el.num }}</td>
                 </tr>
               </tbody>
-            </table> -->
-            <div class="date_top">
-              <em v-if="endPrev"
-                class="prev_month hoverhands"
+            </table>
+            <!-- <div class="date_top">
+              <em class="prev_month hoverhands"
                 @click="prev('end')"></em>
               <p>
                 <span class="top_year">{{endYear}} 年 {{getMonthText(endMonth)}} </span>
               </p>
               <em class="next_month hoverhands"
-                @click="next('end')"></em>
+                @click="next('end')"
+                ></em>
             </div>
             <div class="date_week">
               <span class="weekday">日</span>
@@ -106,14 +134,15 @@
                 :class="el.className"
                 :key="idx"
                 @click="clickDate(el,'end')">{{ el.num }}</em>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
       <div class="databtn">
-        <div class="btn hoverhands"
+        <div class="btn"
           @click="toggleShow">取消</div>
-        <div class="btn active hoverhands"
+        <div class="btn"
+          :class="{ 'disabled': activeStartData > activeEndData, 'active': activeStartData <= activeEndData }"
           @click="confirm">确定</div>
       </div>
     </div>
@@ -131,7 +160,7 @@ export default {
       openState: false,
       start: this.child.start,
       end: this.child.end,
-      initList: new Array(42).fill({ className: '', num: '', date: ''  }),
+      initList: new Array(42).fill({ className: '', num: '', date: '' }),
       dynamicDateText: '', // 动态时间文本
 
       startYear: '',
@@ -139,15 +168,14 @@ export default {
       startFirstWeek: '',
       startDaySum: '',
       startList: [],
-      startNext: true,
+      startComplexList: [],
 
       endYear: '',
       endMonth: '',
       endFirstWeek: '',
       endDaySum: '',
       endList: [],
-
-      endPrev: true,
+      endComplexList: [],
 
       option: [
         { name: '昨日', type: 'yesterday' },
@@ -178,6 +206,12 @@ export default {
     dataMsg() {
       return `${this.child.start} ~ ${this.child.end}`;
     },
+    isNext() {
+      // return this.startMonth > this.endMonth;
+    },
+    isNext2() {
+      return new Date().getMonth() + 1 > this.endMonth;
+    },
     check(tag) {
       var startTime = new Date(`${this.startYear}-${this.dealVal(this.startMonth)}-01`).getTime();
       var endTime = new Date(`${this.endYear}-${this.dealVal(this.endMonth)}-01`).getTime();
@@ -188,17 +222,20 @@ export default {
     }
   },
   mounted() {
-    var startDate = new Date(this.start);
-    this.startYear = startDate.getFullYear();
-    this.startMonth = startDate.getMonth() + 1;
-
-    var endDate = new Date(this.end);
-    this.endYear = endDate.getFullYear();
-    this.endMonth = endDate.getMonth() + 1;
-    this.init();
-    this.calcText();
+    this.initCalc();
   },
   methods: {
+    initCalc() {
+      var startDate = new Date(this.start);
+      this.startYear = startDate.getFullYear();
+      this.startMonth = startDate.getMonth() + 1;
+
+      var endDate = new Date(this.end);
+      this.endYear = endDate.getFullYear();
+      this.endMonth = endDate.getMonth() + 1;
+      this.init();
+      this.calcText();
+    },
     choose(el) {
       this.dynamicDateText = el.name;
       let start = dayjs();
@@ -238,6 +275,12 @@ export default {
       }
       this.start = start.format('YYYY-MM-DD');
       this.end = end.format('YYYY-MM-DD');
+      this.startYear = new Date(this.start).getFullYear();
+      this.startMonth = new Date(this.start).getMonth() + 1;
+
+      this.endYear = new Date(this.end).getFullYear();
+      this.endMonth = new Date(this.end).getMonth() + 1;
+
       this.$nextTick(() => {
         this.init();
         this.calcMonth();
@@ -284,6 +327,9 @@ export default {
     },
     toggleShow() {
       this.openState = !this.openState;
+      if (this.openState) {
+        this.initCalc();
+      }
     },
     init() {
       // 开始的那一天时间
@@ -294,7 +340,26 @@ export default {
       this.endDaySum = dayjs(`${this.endYear}-${this.dealVal(this.endMonth)}-1`).daysInMonth();
       this.endList = this.initDate(this.endFirstWeek, this.endDaySum, this.endYear, this.endMonth, this.activeEndData);
 
-      console.log(dayjs(this.start).daysInMonth(), dayjs(this.end).daysInMonth(), dayjs(this.start).toDate().getDay(), dayjs(this.end).startOf('month').toDate().getDay())
+      this.startComplexList = this.groupArray(this.startList, 7);
+      this.endComplexList = this.groupArray(this.endList, 7);
+
+      // console.log(dayjs(this.start).daysInMonth(), dayjs(this.end).daysInMonth(), dayjs(this.start).toDate().getDay(), dayjs(this.end).startOf('month').toDate().getDay())
+    },
+    // 数据分组
+    groupArray(data, cols) {
+      const r = data.reduce((r, t) => {
+        r.current.push(t);
+        if (r.current.length === cols) {
+          r.list.push(r.current);
+          r.current = [];
+        }
+        return r;
+      }, { list: [], current: [] });
+
+      if (r.current.length) {
+        r.list.push(r.current);
+      }
+      return r.list;
     },
     prev(tag) {
       if (tag === 'end') {
@@ -330,7 +395,8 @@ export default {
     initDate(FirstWeek, DaySum, Year, Month, activeData) {
       var list = [];
       if (FirstWeek === 0) FirstWeek = 7;
-      for (var v = 0; v < FirstWeek; v++) {
+      // 前空白部分
+      for (var v = 1; v <= FirstWeek; v++) {
         var Dates = new Date(`${Year}-${this.dealVal(Month)}-01`);
         Dates.setDate(v - FirstWeek);
         list.push({
@@ -339,22 +405,32 @@ export default {
           "date": `${Year}-${this.dealVal(Month - 1)}-${Dates.getDate()}`
         })
       }
+      console.log(list.length)
       for (var i = 1; i <= DaySum; i++) {
-        var isActive = new Date(`${Year}-${this.dealVal(Month)}-${this.dealVal(i)}`).getTime() === activeData;
+        let isActive = new Date(`${Year}-${this.dealVal(Month)}-${this.dealVal(i)}`).getTime() === activeData;
+        let isEnabled = new Date(`${Year}-${this.dealVal(Month)}-${this.dealVal(i)}`).getTime() > new Date().getTime();
+
+        let inRange = new Date(`${Year}-${this.dealVal(Month)}-${this.dealVal(i)}`).getTime() >= this.activeStartData && new Date(`${Year}-${this.dealVal(Month)}-${this.dealVal(i)}`).getTime() <= this.activeEndData;
         list.push({
-          "className": isActive ? 'on' : '',
+          "className": isActive ? 'active' : (isEnabled ? 'disabled' : (inRange ? 'in-range' : '')),
           "num": i,
           "date": `${Year}-${this.dealVal(Month)}-${this.dealVal(i)}`
         })
       }
+      console.log(list.length)
+      // 后空白部分
       var nextData = new Date(`${Year}-${this.dealVal(Month)}-${DaySum}`).getDay();
       if (nextData === 6) nextData = 0;
-      for (var k = 0; k < 6 - nextData; k++) {
+      for (var k = 1; k <= 6 - nextData; k++) {
         list.push({
           "className": "",
           "num": '',
           "date": `${Year}-${this.dealVal(Month + 1)}-${this.dealVal(k)}`
         })
+      }
+      // 补全
+      if (list.length < 42) {
+        list = list.concat(new Array(42 - list.length).fill({ className: '', num: '', date: '' }));
       }
       return list;
     },
@@ -364,6 +440,7 @@ export default {
     },
     // 保存
     confirm() {
+      if (this.activeStartData > this.activeEndData) return false;
       this.toggleShow();
       this.$emit("cb", this.start, this.end)
     },
@@ -532,10 +609,15 @@ export default {
       font-size: 12px;
       border: 1px solid #e6e6e6;
       border-radius: 2px;
+      margin-right: 8px;
       &.active {
-        color: wheat;
-        margin: 0px 8px;
-        background: #ee6e25;
+        color: #fff;
+        cursor: pointer;
+        background-color: #2dca93;
+      }
+
+      &.disabled {
+        background-color: #ccc;
       }
     }
   }
@@ -570,6 +652,18 @@ export default {
       display: flex;
       justify-content: space-around;
       align-items: center;
+      .prev_arrow {
+        width: 14px;
+        height: 14px;
+        background-image: url('../assets/right_arrow.png');
+        background-size: contain;
+      }
+      .next_arrow {
+        width: 14px;
+        height: 14px;
+        background-image: url('../assets/right_arrow.png');
+        background-size: contain;
+      }
       em {
         width: 14px;
         font-style: normal;
@@ -623,10 +717,9 @@ export default {
       overflow: hidden;
       display: flex;
       flex-wrap: wrap;
-      // border: 1px solid #e6e6e6;
       em {
         font-style: normal;
-        width: 23px;
+        width: 22px;
         height: 23px;
         line-height: 23px;
         display: block;
@@ -634,25 +727,126 @@ export default {
         font-size: 12px;
         padding: 5px;
         text-align: center;
-        // border-right: 1px solid #e6e6e6;
+        border-top: 1px solid #fff;
+        border-right: 1px solid #fff;
         cursor: pointer;
         &:nth-child(7n) {
           border-right: 0px solid #e6e6e6;
         }
         &.on {
-          color: #ffffff;
+          color: #fff;
           background-color: #559ff0;
         }
         &.in-range {
-          background-color: rgba(74,144,226,.6);
+          color: #fff;
+          background-color: rgba(74, 144, 226, 0.6);
         }
         &.disabled {
-          color: #cccccc;
-          background-color: #ffffff;
+          color: #ccc;
+          background-color: #fff;
           cursor: default;
+        }
+        &:hover {
+          color: #fff;
+          background-color: #559ff0;
         }
       }
     }
   }
+}
+
+.table-condensed {
+  border-collapse: separate;
+
+  .prev_arrow {
+    width: 32px;
+    height: 21px;
+    display: block;
+    background-image: url('../assets/left_arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  .next_arrow {
+    width: 32px;
+    height: 21px;
+    display: block;
+    background-image: url('../assets/right_arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+}
+
+.table-condensed td {
+  min-width: 30px;
+  height: 31px;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-collapse: separate;
+}
+
+.table-condensed td:empty {
+  height: 31px;
+}
+
+.table-condensed td.active {
+  color: #fff;
+  background-color: #559ff0;
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff;
+}
+
+.table-condensed td.available:hover,
+.table-condensed td.active:hover {
+  background-color: #559ff0 !important;
+  border-color: #fff;
+}
+
+.table-condensed td.available:not(.active):hover:not {
+  border-radius: 4px;
+}
+
+.table-condensed td.in-range:hover:not(.start-date):not(.end-date) {
+  border-radius: 0;
+}
+
+.table-condensed td.disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.table-condensed td.in-range {
+  background-color: rgba(74, 144, 226, 0.6);
+  border-bottom: 1px solid #fff;
+  color: #fff;
+}
+
+.table-condensed td.compare.active,
+.table-condensed td.compare.available:hover,
+.table-condensed td.compare.active:hover {
+  background-color: #2dca93 !important;
+  border-color: #fff;
+}
+
+.table-condensed td.compare.in-range {
+  background-color: rgba(0, 178, 121, 0.6);
+  border-bottom: 1px solid #fff;
+  border-color: #fff;
+  color: #fff;
+}
+
+.table-condensed td.both.active,
+.table-condensed td.both.available:hover,
+.table-condensed td.both.active:hover {
+  background-color: #28a8b1 !important;
+  border-color: #fff;
+}
+
+.table-condensed td.both.in-range {
+  background-color: rgba(40, 168, 177, 0.7);
+  border-bottom: 1px solid #fff;
+  border-color: #fff;
+  color: #fff;
 }
 </style>
