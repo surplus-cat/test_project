@@ -6,7 +6,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import App from './App.vue'
 
 Vue.config.productionTip = false
-Vue.use(ElementUI)
+Vue.use(ElementUI);
+
+Vue.prototype.bus = new Vue()
 
 Vue.directive('loadmore', {
   bind(el, binding) {

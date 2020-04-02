@@ -21,6 +21,12 @@ module.exports = {
       }
     }
   },
+  configureWebpack: {
+    externals: {
+      'TWEEN': 'TWEEN',
+      // 'gsap': 'gsap'
+    }
+  },
   parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
   pluginOptions: { // 第三方插件配置
   },

@@ -57,30 +57,6 @@
                 </tr>
               </tbody>
             </table>
-            <!-- <div class="date_top">
-              <em class="prev_arrow hoverhands"
-                @click="prev('start')"></em>
-              <p>
-                <span class="top_year">{{startYear}} 年 {{getMonthText(startMonth)}}</span>
-              </p>
-              <em class="next_arrow hoverhands"
-                @click="next('start')"></em>
-            </div>
-            <div class="date_week">
-              <span class="weekday">日</span>
-              <span class="weekday">一</span>
-              <span class="weekday">二</span>
-              <span class="weekday">三</span>
-              <span class="weekday">四</span>
-              <span class="weekday">五</span>
-              <span class="weekday">六</span>
-            </div>
-            <div class="date_day">
-              <em v-for="(el, idx) in startList"
-                :class="el.className"
-                :key="idx"
-                @click="clickDate(el,'start')">{{ el.num }}</em>
-            </div> -->
           </div>
           <div class="date_main">
             <table class="table-condensed">
@@ -110,31 +86,6 @@
                 </tr>
               </tbody>
             </table>
-            <!-- <div class="date_top">
-              <em class="prev_month hoverhands"
-                @click="prev('end')"></em>
-              <p>
-                <span class="top_year">{{endYear}} 年 {{getMonthText(endMonth)}} </span>
-              </p>
-              <em class="next_month hoverhands"
-                @click="next('end')"
-                ></em>
-            </div>
-            <div class="date_week">
-              <span class="weekday">日</span>
-              <span class="weekday">一</span>
-              <span class="weekday">二</span>
-              <span class="weekday">三</span>
-              <span class="weekday">四</span>
-              <span class="weekday">五</span>
-              <span class="weekday">六</span>
-            </div>
-            <div class="date_day">
-              <em v-for="(el, idx) in endList"
-                :class="el.className"
-                :key="idx"
-                @click="clickDate(el,'end')">{{ el.num }}</em>
-            </div> -->
           </div>
         </div>
       </div>
@@ -342,8 +293,6 @@ export default {
 
       this.startComplexList = this.groupArray(this.startList, 7);
       this.endComplexList = this.groupArray(this.endList, 7);
-
-      // console.log(dayjs(this.start).daysInMonth(), dayjs(this.end).daysInMonth(), dayjs(this.start).toDate().getDay(), dayjs(this.end).startOf('month').toDate().getDay())
     },
     // 数据分组
     groupArray(data, cols) {
@@ -460,14 +409,14 @@ export default {
 .date_input {
   margin: 0 auto;
   width: 200px;
-  border: 1px solid red;
+  border: 1px solid #ccc;
   text-align: center;
-  height: 20px;
   line-height: 20px;
-  cursor: pointer;
   display: block;
   color: #484848;
   font-size: 12px;
+  outline: none;
+  cursor: pointer;
 }
 .datamain {
   border: 1px solid #e6e6e6;
