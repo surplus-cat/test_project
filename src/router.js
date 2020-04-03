@@ -47,6 +47,11 @@ export default new Router({
       path: '/example',
       name: 'example',
       component: () => import(/* webpackChunkName: "about" */ './views/example.vue')
+    },
+    {
+      path: '/roll',
+      name: 'roll',
+      component: () => import(/* webpackChunkName: "about" */ './views/roll.vue')
     }
   ]
 })
