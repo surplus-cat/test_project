@@ -31,11 +31,9 @@
       <el-date-picker
         v-model="value1"
         type="week"
-        format="yyyy 年 MM 月 第 WW 周"
+        :format="format(value1)" 
         :picker-options="{'firstDayOfWeek': 1}"
         value-format="yyyy-MM-dd"
-        ref="week1"
-        @change="change"
         :clearable="false"
         placeholder="选择周">
       </el-date-picker>
@@ -45,8 +43,6 @@
         format="yyyy 年 MM 月 第 WW 周"
         :picker-options="{'firstDayOfWeek': 1}"
         value-format="yyyy-MM-dd"
-        ref="week2"
-        @change="change2"
         placeholder="选择周">
       </el-date-picker>
     </div>
@@ -189,6 +185,16 @@ export default {
     };
   },
   methods: {
+    format(date) {
+      
+      let now = new Date(date).getDay();
+      let firstDay = new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-01`).getDay();
+      // 判断当月的1号是不是周一
+      let isFirstWeek = firstDay === 1;
+
+      let a = 1;
+      return `yyyy 年 MM 月 ${a} 周`
+    },
     load(tree, treeNode, resolve) {
       setTimeout(() => {
         resolve([
@@ -207,19 +213,11 @@ export default {
         ]);
       }, 1000);
     },
-    change(event) {
-      console.log(this.value1, this.$refs.week1.displayValue);
-      console.log(this.getWeekNum(this.value1));
-    },
-    change2(event) {
-      console.log(this.value11, event, this.$refs.week2);
-    },
     getWeekNum(date) {
       let firstDay = new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-01`).getDay();
       // 判断当月的1号是不是周一
       let isFirstWeek = firstDay === 1;
       let FirstDay = firstDay === 0 ? 7 : firstDay
-      console.log(isFirstWeek)
       console.log((new Date(date).getDate() + FirstDay) / 7 + Number(isFirstWeek));
     }
   }
