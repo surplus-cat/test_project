@@ -3,6 +3,10 @@ const debug = process.env.NODE_ENV !== 'production'
 // const VueConf = require('./src/assets/js/libs/vue_config_class')
 // const vueConf = new VueConf(process.argv)
 
+function resolve(dir) {
+  return path.join(__dirname, dir);
+}
+
 module.exports = {
   publicPath: './', // vueConf.baseUrl, // 根域上下文目录
   outputDir: 'dist', // 构建输出目录
@@ -26,6 +30,23 @@ module.exports = {
       'TWEEN': 'TWEEN',
       // 'gsap': 'gsap'
     }
+  },
+  chainWebpack: (config) => {
+    config.module
+      .rule('js')
+      .use('babel-loader')
+      .exclude
+      // .add('./node_modules/element-ui/src/(utils/popper.js|utils/date.js)/')
+      .add('/src/utils/popper.js')
+      .end()
+
+    config.resolve.alias
+      .set("src", resolve("src"))
+      .set("assets", resolve("src/assets"))
+      .set("components", resolve("src/components"))
+      .set("base", resolve("baseConfig"))
+      .set("public", resolve("public"))
+      .set("packages", resolve("packages"));
   },
   parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
   pluginOptions: { // 第三方插件配置

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!--
     <el-date-picker v-model="value2"
       type="daterange"
       align="right"
@@ -10,13 +11,51 @@
       value-format="yyyy-MM-dd"
       :picker-options="pickerOptions">
     </el-date-picker>
+    -->
+
+    <div class="block">
+      <span class="demonstration">默认</span>
+      <el-date-picker
+        v-model="value1"
+        type="monthrange"
+        range-separator="至"
+        start-placeholder="开始月份"
+        end-placeholder="结束月份">
+      </el-date-picker>
+    </div>
+    <div class="block">
+      <span class="demonstration">周</span>
+      <el-date-picker
+        v-model="value3"
+        type="week"
+        format="yyyy 第 WW 周"
+        placeholder="选择周">
+      </el-date-picker>
+    </div>
+    <div class="block">
+      <span class="demonstration">周</span>
+      <week-picker
+        v-model="value"
+        type="weekrange"
+        format="yyyy 第 WW 周"
+        placeholder="选择周">
+      </week-picker>
+    </div>
   </div>
 </template>
 
 <script>
+//import WeekPicker from 'packages/date-picker/index.js';
+
 export default {
+  components: {
+    //WeekPicker
+  },
   data() {
     return {
+      value1: '',
+      value3: '',
+      value: '',
       pickerMinDate: '',
       pickerOptions: {
         onPick: (obj) => {
@@ -24,7 +63,7 @@ export default {
           console.log(obj)
         },
         disabledDate: (time) => {
-          return time.getTime() > Date.now() || time.getTime() < Date.now() - 3600 * 1000 * 24 * 120;
+          // return time.getTime() > Date.now() || time.getTime() < Date.now() - 3600 * 1000 * 24 * 120;
         },
         shortcuts: [
           {
@@ -125,7 +164,9 @@ export default {
   watch: {},
   methods: {}
 };
-
 </script>
 <style lang="less" scoped>
+.block {
+  margin-top: 20px;
+}
 </style>
