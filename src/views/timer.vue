@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--
     <el-date-picker v-model="value2"
       type="daterange"
       align="right"
@@ -11,7 +10,6 @@
       value-format="yyyy-MM-dd"
       :picker-options="pickerOptions">
     </el-date-picker>
-    -->
 
     <div class="block">
       <span class="demonstration">默认</span>
@@ -29,16 +27,18 @@
         v-model="value3"
         type="week"
         format="yyyy 第 WW 周"
-        placeholder="选择周">
+        placeholder="选择周"
+        :picker-options="{'firstDayOfWeek': 1}">
       </el-date-picker>
     </div>
     <div class="block">
       <span class="demonstration">周</span>
       <week-picker
-        v-model="value"
+        v-model="nowTime"
         type="weekrange"
         format="yyyy 第 WW 周"
-        placeholder="选择周">
+        placeholder="选择周"
+        :picker-options="{'firstDayOfWeek': 1}">
       </week-picker>
     </div>
   </div>
@@ -55,7 +55,7 @@ export default {
     return {
       value1: '',
       value3: '',
-      value: '',
+      nowTime: '',
       pickerMinDate: '',
       pickerOptions: {
         onPick: (obj) => {
@@ -88,70 +88,6 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '本周',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '上月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '本月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '去年',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '本年',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-
-          {
-            text: '过去七天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          },
-          {
-            text: '过去30天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
               picker.$emit('pick', [start, end]);
             }
           }]

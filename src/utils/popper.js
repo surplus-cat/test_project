@@ -38,8 +38,8 @@
     module.exports = factory();
   } else {
     // Browser globals (root is window)
-    root.Popper = factory();
-    // window.Popper = factory();
+    // root.Popper = factory();
+    window.Popper = factory();
   }
 }(this, function () {
 

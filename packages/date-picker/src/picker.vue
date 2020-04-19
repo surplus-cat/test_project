@@ -92,19 +92,19 @@ import Emitter from 'src/mixins/emitter';
 import ElInput from 'packages/input';
 import merge from 'src/utils/merge';
 
-const NewPopper = {
-  props: {
-    appendToBody: Popper.props.appendToBody,
-    offset: Popper.props.offset,
-    boundariesPadding: Popper.props.boundariesPadding,  // 日期弹框圆角
-    arrowOffset: Popper.props.arrowOffset // 日期弹框定位
-  },
-  methods: Popper.methods,
-  data() {
-    return merge({ visibleArrow: true }, Popper.data);
-  },
-  beforeDestroy: Popper.beforeDestroy
-};
+// const NewPopper = {
+//   props: {
+//     appendToBody: Popper.props.appendToBody,
+//     offset: Popper.props.offset,
+//     boundariesPadding: Popper.props.boundariesPadding,  // 日期弹框圆角
+//     arrowOffset: Popper.props.arrowOffset // 日期弹框定位
+//   },
+//   methods: Popper.methods,
+//   data() {
+//     return merge({ visibleArrow: true }, Popper.data);
+//   },
+//   beforeDestroy: Popper.beforeDestroy
+// };
 
 const DEFAULT_FORMATS = {
   date: 'yyyy-MM-dd',
@@ -332,8 +332,8 @@ const validator = function(val) {
 };
 
 export default {
-  mixins: [Emitter, NewPopper],
-  //mixins: [Emitter],
+  //mixins: [Emitter, NewPopper],
+  mixins: [Emitter],
   inject: {
     elForm: {
       default: ''

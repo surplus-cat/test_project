@@ -137,7 +137,7 @@
               <div>{{ leftLabel }}</div>
             </div>
             <date-table
-              selection-mode="range"
+              selection-mode="weekrange"
               :date="leftDate"
               :default-value="defaultValue"
               :min-date="minDate"
@@ -184,7 +184,7 @@
               <div>{{ rightLabel }}</div>
             </div>
             <date-table
-              selection-mode="range"
+              selection-mode="weekrange"
               :date="rightDate"
               :default-value="defaultValue"
               :min-date="minDate"

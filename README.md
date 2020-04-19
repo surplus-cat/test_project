@@ -1,29 +1,9 @@
-# my-test
 
-## Project setup
-```
-yarn install
-```
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+日期选择器 周区间自定义组件 封装未解决问题：
 
-### Run your tests
-```
-yarn run test
-```
+babel-loader exclude 编译文件 文件 popper.js 和 date.js;
 
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+开始周和结束周的样式未修复
+蓝色圆圈是 对应 start-date 和 end-date, 需要新增自定义 样式

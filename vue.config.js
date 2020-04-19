@@ -7,6 +7,8 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 
+const config = require('./config');
+
 module.exports = {
   publicPath: './', // vueConf.baseUrl, // 根域上下文目录
   outputDir: 'dist', // 构建输出目录
@@ -25,20 +27,21 @@ module.exports = {
       }
     }
   },
-  configureWebpack: {
-    externals: {
-      'TWEEN': 'TWEEN',
+  configureWebpack: config => {
+    config.externals = {
+      'TWEEN': 'TWEEN'
       // 'gsap': 'gsap'
-    }
+    };
   },
   chainWebpack: (config) => {
-    config.module
-      .rule('js')
-      .use('babel-loader')
-      .exclude
-      // .add('./node_modules/element-ui/src/(utils/popper.js|utils/date.js)/')
-      .add('/src/utils/popper.js')
-      .end()
+    // config.module
+    //   .rule('js')
+    //   .use('babel-loader')
+    //   // .loader('babel-loader')
+    //   .include
+    //   // .add('./node_modules/element-ui/src/(utils/popper.js|utils/date.js)/')
+    //   .add('/src/utils/popper.js')
+    //   .end()
 
     config.resolve.alias
       .set("src", resolve("src"))
@@ -46,7 +49,8 @@ module.exports = {
       .set("components", resolve("src/components"))
       .set("base", resolve("baseConfig"))
       .set("public", resolve("public"))
-      .set("packages", resolve("packages"));
+      .set("packages", resolve("packages"))
+      .set("node_modules", resolve("node_modules"));
   },
   parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
   pluginOptions: { // 第三方插件配置

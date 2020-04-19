@@ -259,6 +259,16 @@ export default {
           row[end].inRange = isWeekActive;
           row[end].end = isWeekActive;
         }
+        if (this.selectionMode === "weekrange") {
+          const start = this.showWeekNumber ? 1 : 0;
+          const end = this.showWeekNumber ? 7 : 6;
+          const isWeekActive = this.isWeekActive(row[start + 1]);
+
+          row[start].inRange = isWeekActive;
+          row[start].start = isWeekActive;
+          row[end].inRange = isWeekActive;
+          row[end].end = isWeekActive;
+        }
       }
 
       return rows;
@@ -338,7 +348,7 @@ export default {
         cell.inRange &&
         (cell.type === "normal" ||
           cell.type === "today" ||
-          this.selectionMode === "week")
+          this.selectionMode === "week" || this.selectionMode === "weekrange")
       ) {
         classes.push("in-range");
 
@@ -471,10 +481,10 @@ export default {
       if (target.tagName !== "TD") return;
 
       const row = target.parentNode.rowIndex - 1;
-      const column = this.selectionMode === "week" ? 1 : target.cellIndex;
+      const column = (this.selectionMode === "week" || this.selectionMode === "weekrange" ) ? 1 : target.cellIndex;
       const cell = this.rows[row][column];
 
-      if (cell.disabled || cell.type === "week") return;
+      if (cell.disabled || cell.type === "week" || cell.type === "weekrange") return;
 
       const newDate = this.getDateOfCell(row, column);
 
@@ -507,6 +517,18 @@ export default {
           ? removeFromArray(value, date => date.getTime() === newDate.getTime())
           : [...value, newDate];
         this.$emit("pick", newValue);
+      } else if (this.selectionMode === "weekrange") {
+        if (!this.rangeState.selecting) {
+          this.$emit("pick", { minDate: newDate, maxDate: null });
+          this.rangeState.selecting = true;
+        } else {
+          if (newDate >= this.minDate) {
+            this.$emit("pick", { minDate: this.minDate, maxDate: newDate });
+          } else {
+            this.$emit("pick", { minDate: newDate, maxDate: this.minDate });
+          }
+          this.rangeState.selecting = false;
+        }
       }
     }
   }
