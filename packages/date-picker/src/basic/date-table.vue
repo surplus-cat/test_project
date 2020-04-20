@@ -42,13 +42,13 @@ import {
   nextDate,
   isDate,
   clearTime as _clearTime
-} from "src/utils/date-util";
-import Locale from "src/mixins/locale";
+} from "element-ui/src/utils/date-util";
+import Locale from "element-ui/src/mixins/locale";
 import {
   arrayFindIndex,
   arrayFind,
   coerceTruthyValueToArray
-} from "src/utils/util";
+} from "element-ui/src/utils/util";
 
 const WEEKS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const getDateTimestamp = function(time) {
@@ -203,11 +203,11 @@ export default {
 
           const index = i * 7 + j;
           const time = nextDate(startDate, index - offset).getTime();
+          cell.start = this.minDate && time === getDateTimestamp(this.minDate);
+          cell.end = this.maxDate && time === getDateTimestamp(this.maxDate);
           cell.inRange =
             time >= getDateTimestamp(this.minDate) &&
             time <= getDateTimestamp(this.maxDate);
-          cell.start = this.minDate && time === getDateTimestamp(this.minDate);
-          cell.end = this.maxDate && time === getDateTimestamp(this.maxDate);
           const isToday = time === now;
 
           if (isToday) {
@@ -250,19 +250,9 @@ export default {
         }
 
         if (this.selectionMode === "week") {
-          const start = this.showWeekNumber ? 1 : 0;
-          const end = this.showWeekNumber ? 7 : 6;
-          const isWeekActive = this.isWeekActive(row[start + 1]);
-
-          row[start].inRange = isWeekActive;
-          row[start].start = isWeekActive;
-          row[end].inRange = isWeekActive;
-          row[end].end = isWeekActive;
-        }
-        if (this.selectionMode === "weekrange") {
-          const start = this.showWeekNumber ? 1 : 0;
-          const end = this.showWeekNumber ? 7 : 6;
-          const isWeekActive = this.isWeekActive(row[start + 1]);
+          const start = this.showWeekNumber ? 1 : 0; // 0
+          const end = this.showWeekNumber ? 7 : 6; // 6
+          const isWeekActive = this.isWeekActive(row[start + 1]); // row[start + 1] === row[1]
 
           row[start].inRange = isWeekActive;
           row[start].start = isWeekActive;
@@ -310,7 +300,7 @@ export default {
         Number(cell.text) === value.getDate()
       );
     },
-
+    // 单元格 class 判断
     getCellClasses(cell) {
       const selectionMode = this.selectionMode;
       const defaultValue = this.defaultValue
@@ -379,11 +369,12 @@ export default {
     getDateOfCell(row, column) {
       const offsetFromStart =
         row * 7 + (column - (this.showWeekNumber ? 1 : 0)) - this.offsetDay;
+      // console.log(this.startDate, offsetFromStart)
       return nextDate(this.startDate, offsetFromStart);
     },
 
     isWeekActive(cell) {
-      if (this.selectionMode !== "week") return false;
+      if (this.selectionMode !== "week" || this.selectionMode !== "weekrange") return false;
       const newDate = new Date(this.year, this.month, 1);
       const year = newDate.getFullYear();
       const month = newDate.getMonth();
@@ -481,7 +472,7 @@ export default {
       if (target.tagName !== "TD") return;
 
       const row = target.parentNode.rowIndex - 1;
-      const column = (this.selectionMode === "week" || this.selectionMode === "weekrange" ) ? 1 : target.cellIndex;
+      const column = (this.selectionMode === "week" || this.selectionMode === "weekrange") ? 1 : target.cellIndex;
       const cell = this.rows[row][column];
 
       if (cell.disabled || cell.type === "week" || cell.type === "weekrange") return;

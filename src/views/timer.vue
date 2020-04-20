@@ -32,11 +32,12 @@
       </el-date-picker>
     </div>
     <div class="block">
-      <span class="demonstration">周</span>
       <week-picker
+        class="timer"
         v-model="nowTime"
+        start-placeholder="开始周"
+        end-placeholder="结束周"
         type="weekrange"
-        format="yyyy 第 WW 周"
         placeholder="选择周"
         :picker-options="{'firstDayOfWeek': 1}">
       </week-picker>
@@ -45,11 +46,11 @@
 </template>
 
 <script>
-//import WeekPicker from 'packages/date-picker/index.js';
+import WeekPicker from 'packages/date-picker/index.js';
 
 export default {
   components: {
-    //WeekPicker
+    WeekPicker
   },
   data() {
     return {
@@ -95,14 +96,17 @@ export default {
       value2: ''
     };
   },
-  components: {},
   computed: {},
   watch: {},
-  methods: {}
+  methods: {
+  }
 };
 </script>
 <style lang="less" scoped>
 .block {
   margin-top: 20px;
+}
+.timer {
+  width: 400px
 }
 </style>

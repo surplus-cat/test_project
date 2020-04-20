@@ -1,7 +1,7 @@
 import { fecha } from './date_cp';
 import { t } from '../locale';
 
-console.log(fecha);
+// console.log(fecha);
 
 const weeks = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];

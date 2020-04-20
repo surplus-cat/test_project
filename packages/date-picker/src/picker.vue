@@ -85,26 +85,26 @@
 
 <script>
 import Vue from 'vue';
-import Clickoutside from 'src/utils/clickoutside';
-import { formatDate, parseDate, isDateObject, getWeekNumber } from 'src/utils/date-util';
-import Popper from 'src/utils/vue-popper';
-import Emitter from 'src/mixins/emitter';
+import Clickoutside from 'element-ui/src/utils/clickoutside';
+import { formatDate, parseDate, isDateObject, getWeekNumber, prevDate, nextDate } from 'element-ui/src/utils/date-util';
+import Emitter from 'element-ui/src/mixins/emitter';
 import ElInput from 'packages/input';
-import merge from 'src/utils/merge';
+import merge from 'element-ui/src/utils/merge';
+import Popper from 'element-ui/src/utils/vue-popper';
 
-// const NewPopper = {
-//   props: {
-//     appendToBody: Popper.props.appendToBody,
-//     offset: Popper.props.offset,
-//     boundariesPadding: Popper.props.boundariesPadding,  // 日期弹框圆角
-//     arrowOffset: Popper.props.arrowOffset // 日期弹框定位
-//   },
-//   methods: Popper.methods,
-//   data() {
-//     return merge({ visibleArrow: true }, Popper.data);
-//   },
-//   beforeDestroy: Popper.beforeDestroy
-// };
+const NewPopper = {
+  props: {
+    appendToBody: Popper.props.appendToBody,
+    offset: Popper.props.offset,
+    boundariesPadding: Popper.props.boundariesPadding, // 日期弹框圆角
+    arrowOffset: Popper.props.arrowOffset // 日期弹框定位
+  },
+  methods: Popper.methods,
+  data() {
+    return merge({ visibleArrow: true }, Popper.data);
+  },
+  beforeDestroy: Popper.beforeDestroy
+};
 
 const DEFAULT_FORMATS = {
   date: 'yyyy-MM-dd',
@@ -141,13 +141,59 @@ const DATE_PARSER = function(text, format) {
   if (format === 'timestamp') return new Date(Number(text));
   return parseDate(text, format);
 };
+const FORMATTER = function (date) {
+  let now = new Date(date).getDate();
+  // 获取1号是星期几
+  let firstDay = new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-01`).getDay();
+  // 获取第一个周日是几号
+  let firstWeek = firstDay === 0 ? 1 : new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-${7 - firstDay + 1}`).getDate();
+  // 判断当月的1号是不是周一
+  let isFirstWeek = firstDay === 1;
+  let year = new Date(date).getFullYear();
+  let month = new Date(date).getMonth() + 1;
+  let week = Math.ceil((now - firstWeek) / 7) + Number(isFirstWeek);
+  return `${year} 年 ${month} 月 第 ${week} 周`
+};
+const WEEK_PARSER = function (value, format) {
+  let week = getWeekNumber(value);
+  let month = value.getMonth();
+  const trueDate = new Date(value); // 日期对象
+  if (week === 1 && month === 11) {
+    trueDate.setHours(0, 0, 0, 0);
+    trueDate.setDate(trueDate.getDate() + 3 - (trueDate.getDay() + 6) % 7);
+  }
+  // console.log(trueDate, format)
+  let date = FORMATTER(trueDate);
+
+  date = /WW/.test(date)
+    ? date.replace(/WW/, week < 10 ? '0' + week : week)
+    : date.replace(/W/, week);
+  // console.log(date)
+
+  return date;
+};
+const WEEKRANGE_FORMATTER = function(array, format, separator) {
+  if (!Array.isArray(array)) {
+    array = array.split(separator);
+  }
+  if (array.length === 2) {
+    const range1 = array[0];
+    const range2 = array[1];
+    // 确保开始和结束时间正确，都是周二
+    let _range1 = nextDate(range1, 1);
+    let _range2 = prevDate(range2, 5);
+
+    return [WEEK_PARSER(_range1, format), WEEK_PARSER(_range2, format)];
+  }
+  return [];
+};
 const RANGE_FORMATTER = function(value, format) {
   if (Array.isArray(value) && value.length === 2) {
     const start = value[0];
     const end = value[1];
 
     if (start && end) {
-      return [DATE_FORMATTER(start, format), DATE_FORMATTER(end, format)];
+      return [DATE_PARSER(start, format), DATE_PARSER(end, format)];
     }
   }
   return '';
@@ -164,6 +210,7 @@ const RANGE_PARSER = function(array, format, separator) {
   }
   return [];
 };
+
 const TYPE_VALUE_RESOLVER_MAP = {
   default: {
     formatter(value) {
@@ -203,6 +250,10 @@ const TYPE_VALUE_RESOLVER_MAP = {
   datetime: {
     formatter: DATE_FORMATTER,
     parser: DATE_PARSER
+  },
+  weekrange: {
+    formatter: WEEKRANGE_FORMATTER,
+    parser: WEEK_PARSER
   },
   daterange: {
     formatter: RANGE_FORMATTER,
@@ -279,6 +330,7 @@ const formatAsFormatAndType = (value, customFormat, type) => {
     TYPE_VALUE_RESOLVER_MAP[type] ||
     TYPE_VALUE_RESOLVER_MAP['default']
   ).formatter;
+  // console.log(formatter)
   const format = customFormat || DEFAULT_FORMATS[type];
   return formatter(value, format);
 };
@@ -332,8 +384,7 @@ const validator = function(val) {
 };
 
 export default {
-  //mixins: [Emitter, NewPopper],
-  mixins: [Emitter],
+  mixins: [Emitter, NewPopper],
   inject: {
     elForm: {
       default: ''
@@ -506,6 +557,8 @@ export default {
 
     displayValue() {
       const formattedValue = formatAsFormatAndType(this.parsedValue, this.format, this.type, this.rangeSeparator);
+      // console.log(this.parsedValue, this.format, this.type, this.rangeSeparator)
+      // console.log(formattedValue, this.userInput);
       if (Array.isArray(this.userInput)) {
         return [
           this.userInput[0] || (formattedValue && formattedValue[0]) || '',
@@ -729,7 +782,7 @@ export default {
 
     handleFocus() {
       const type = this.type;
-      console.log(HAVE_TRIGGER_TYPES.indexOf(type) !== -1)
+      // console.log(HAVE_TRIGGER_TYPES.indexOf(type) !== -1)
       if (HAVE_TRIGGER_TYPES.indexOf(type) !== -1 && !this.pickerVisible) {
         this.pickerVisible = true;
       }

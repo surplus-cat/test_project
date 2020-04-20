@@ -203,7 +203,6 @@ parseFlags.MM = parseFlags.M;
 parseFlags.ss = parseFlags.s;
 parseFlags.A = parseFlags.a;
 
-
 // Some common format strings
 fecha.masks = {
   default: 'ddd MMM dd yyyy HH:mm:ss',

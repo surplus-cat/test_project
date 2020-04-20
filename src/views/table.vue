@@ -176,12 +176,13 @@ export default {
   },
   methods: {
     format(date) {
+      console.log(date);
       let now = new Date(date).getDate();
       // 获取1号是星期几
       let firstDay = new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-01`).getDay();
       // 获取第一个周日是几号
       let firstWeek = firstDay === 0 ? 1 : new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-${7 - firstDay + 1}`).getDate();
-      console.log(firstWeek);
+      // console.log(firstWeek);
       // 判断当月的1号是不是周一
       let isFirstWeek = firstDay === 1;
       let week = Math.ceil((now - firstWeek) / 7) + Number(isFirstWeek);

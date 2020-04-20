@@ -237,14 +237,12 @@ import {
   nextMonth,
   nextDate,
   extractDateFormat,
-  extractTimeFormat
-} from "src/utils/date-util";
-import Clickoutside from "src/utils/clickoutside";
-import Locale from "src/mixins/locale";
-import TimePicker from "./time";
+  extractTimeFormat,
+  prevDate
+} from "element-ui/src/utils/date-util";
+import Clickoutside from "element-ui/src/utils/clickoutside";
+import Locale from "element-ui/src/mixins/locale";
 import DateTable from "../basic/date-table";
-import ElInput from "packages/input";
-import ElButton from "packages/button";
 
 const calcDefaultValue = defaultValue => {
   if (Array.isArray(defaultValue)) {
@@ -518,6 +516,7 @@ export default {
     },
 
     handleChangeRange(val) {
+      // console.log(minDate, maxDate)
       this.minDate = val.minDate;
       this.maxDate = val.maxDate;
       this.rangeState = val.rangeState;
@@ -646,21 +645,32 @@ export default {
     },
 
     handleRangePick(val, close = true) {
+      let _maxDate;
+      let _minDate;
       const defaultTime = this.defaultTime || [];
       const minDate = modifyWithTimeString(val.minDate, defaultTime[0]);
       const maxDate = modifyWithTimeString(val.maxDate, defaultTime[1]);
+
+      // 默认是周二，为了样式正确，开始时间改为周一，结束时间改为周日
+      _minDate = new Date(minDate).getDay() === 1 ? minDate : prevDate(minDate, new Date(minDate).getDay() - 1);
+      if (maxDate) {
+        _maxDate = new Date(maxDate).getDay() === 0 ? maxDate : nextDate(maxDate, 7 - new Date(maxDate).getDay());
+        if (+new Date(_maxDate) > nextDate(_minDate, 7 * 12 - 1)) {
+          _maxDate = nextDate(_minDate, 7 * 12 - 1);
+        }
+      }
 
       if (this.maxDate === maxDate && this.minDate === minDate) {
         return;
       }
       this.onPick && this.onPick(val);
-      this.maxDate = maxDate;
-      this.minDate = minDate;
+      this.maxDate = _maxDate;
+      this.minDate = _minDate;
 
       // workaround for https://github.com/ElemeFE/element/issues/7539, should remove this block when we don't have to care about Chromium 55 - 57
       setTimeout(() => {
-        this.maxDate = maxDate;
-        this.minDate = minDate;
+        this.maxDate = _maxDate;
+        this.minDate = _minDate;
       }, 10);
       if (!close || this.showTime) return;
       this.handleConfirm();
@@ -810,6 +820,6 @@ export default {
     }
   },
 
-  components: { TimePicker, DateTable, ElInput, ElButton }
+  components: { DateTable }
 };
 </script>
