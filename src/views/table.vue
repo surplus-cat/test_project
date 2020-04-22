@@ -47,14 +47,6 @@
         placeholder="选择周">
       </el-date-picker>
     </div>
-    <!-- <div class="block">
-      <span class="demonstration">月</span>
-      <el-date-picker
-        v-model="value2"
-        type="month"
-        placeholder="选择月">
-      </el-date-picker>
-    </div> -->
 
     <div class="block">
       <span class="demonstration">默认</span>
@@ -66,6 +58,8 @@
         end-placeholder="结束月份">
       </el-date-picker>
     </div>
+    <i class="iconfont el-icon-myfold" />
+    <i class="iconfont el-icon-myunfold" />
   </div>
 </template>
 <script>
@@ -176,7 +170,6 @@ export default {
   },
   methods: {
     format(date) {
-      console.log(date);
       let now = new Date(date).getDate();
       // 获取1号是星期几
       let firstDay = new Date(`${new Date(date).getFullYear()}-${new Date(date).getMonth() + 1}-01`).getDay();
@@ -216,8 +209,27 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
 /deep/.el-table__indent {
   padding-left: 3px!important;
+}
+/deep/ .el-icon-arrow-right {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:before {
+    content: "\e65b";
+  }
+}
+
+/deep/ .el-table__expand-icon--expanded {
+  transform: rotate(0deg);
+
+  .el-icon-arrow-right:before {
+    content: "\e65a";
+  }
 }
 </style>
