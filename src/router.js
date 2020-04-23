@@ -64,6 +64,16 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './components/table.vue')
     },
     {
+      path: '/board',
+      name: 'board',
+      component: () => import(/* webpackChunkName: "about" */ './views/visualization/board.vue')
+    },
+    {
+      path: '/target',
+      name: 'target',
+      component: () => import(/* webpackChunkName: "about" */ './views/visualization/target.vue')
+    },
+    {
       path: '/menology',
       name: 'menology',
       component: () => import(/* webpackChunkName: "about" */ './components/index.vue')

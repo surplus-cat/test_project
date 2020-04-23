@@ -4,6 +4,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App.vue'
+import echarts from 'echarts';
 import './assets/icon/iconfont.css';
 
 Vue.config.productionTip = false
@@ -11,7 +12,8 @@ Vue.use(ElementUI);
 
 // 全局注册
 
-Vue.prototype.bus = new Vue()
+Vue.prototype.bus = new Vue();
+Vue.prototype.$echarts = echarts;
 
 Vue.directive('loadmore', {
   bind(el, binding) {

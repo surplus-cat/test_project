@@ -1,4 +1,3 @@
-// my-table.vue
 <template>
   <div class="ctable">
     <el-table :data="tableData"
