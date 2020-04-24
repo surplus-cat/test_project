@@ -59,9 +59,9 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/table.vue')
     },
     {
-      path: '/table1',
-      name: 'table1',
-      component: () => import(/* webpackChunkName: "about" */ './components/table.vue')
+      path: '/sheet',
+      name: 'sheet',
+      component: () => import(/* webpackChunkName: "about" */ './views/visualization/sheet.vue')
     },
     {
       path: '/board',

@@ -2531,6 +2531,247 @@ let option = [
         y: 'NotSet'
       }
     }]
-  },
+  }, {
+    type: 'trends',
+    axisPointer: {
+      link: {
+        xAxisIndex: 'all'
+      },
+      label: {
+        backgroundColor: '#777'
+      }
+    },
+    title: [{
+      text: '接单量（万平方米）',
+      left: 60,
+      top: '0%',
+      textStyle: {
+        color: '#000',
+        fontSize: 14,
+        fontWeight: 'normal'
+      }
+    }, {
+      subtext: '总GMV（万元）',
+      subtextStyle: {
+        color: '#000',
+        fontSize: 14,
+        fontWeight: 'normal'
+      },
+      left: 60,
+      top: '45%'
+    }],
+    dataset: {
+      dimensions: [
+        'date', 'saleAmount', 'saleAmountChain', 'GMVChain', 'GMV'
+      ],
+      source: []
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'line',
+        lineStyle: {
+          type: 'dashed'
+        }
+      },
+      backgroundColor: 'rgba(245, 245, 245, 0.8)',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      padding: 10,
+      textStyle: {
+        color: '#000'
+      },
+      formatter: function (params) {
+        console.log(params);
+        let text = `<div style="width: 240px">
+                          <div style="margin-bottom: 10px; font-size: 14px; display: flex; justify-content: space-between"><p>${params[0].name} 周五</p> <p>日环比</p></div>
+                          <div style="margin-bottom: 5px; font-size: 14px;display: flex; justify-content: space-between"><p>${params[0]['marker']} 接单量</p>  <p>${params[0]['value']['saleAmount']} <i></i> ${Math.abs(params[0]['value']['saleAmountChain'])}%</p></div>
+                          <div style="margin-bottom: 5px; font-size: 14px;display: flex; justify-content: space-between"><p>${params[1]['marker']} 总GMV</p>  <p>${params[1]['value']['GMV']} <i></i> ${Math.abs(params[0]['value']['GMVChain'])}%</p></div>
+                      </div>`;
+        return text;
+      }
+    },
+    grid: [{
+      x: '5%',
+      y: '5%',
+      height: '35%',
+      left: '10%',
+      show: false
+    },
+    {
+      x: '5%',
+      y1: '5%',
+      top: '40%',
+      height: '12.5%',
+      left: '10%',
+      show: false
+    },
+    {
+      x: '5%',
+      y2: '5%',
+      top: '52.5%',
+      height: '40%',
+      left: '10%',
+      show: false
+    }],
+    xAxis: [{
+      gridIndex: 0,
+      show: false,
+      type: 'category',
+
+      axisTick: {
+        show: false
+      }
+    },
+    {
+      show: false,
+      gridIndex: 1,
+      type: 'category',
+      axisTick: {
+        show: false
+      },
+    },
+    {
+      type: 'category',
+      gridIndex: 2,
+      axisTick: {
+        show: false
+      }
+    }
+    ],
+    yAxis: [{
+      type: 'value',
+      gridIndex: 0,
+      nameTextStyle: {
+        padding: 40
+      },
+      offset: 10,
+      position: 'left',
+      nameLocation: 'middle',
+      splitLine: {
+        show: true
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}',
+        textStyle: {
+          fontSize: 12
+        }
+      }
+    },
+    {
+      show: false,
+      type: 'value',
+      gridIndex: 1,
+      splitLine: {
+        show: true
+      },
+      offset: 10,
+      nameTextStyle: {
+        padding: 25,
+        align: 'center'
+      },
+      position: 'left',
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}'
+      }
+    },
+    {
+      type: 'value',
+      gridIndex: 2,
+      nameTextStyle: {
+        padding: 40
+      },
+      offset: 10,
+      position: 'left',
+      nameLocation: 'middle',
+      splitLine: {
+        show: true
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}',
+        textStyle: {
+          fontSize: 12
+        }
+      }
+    }],
+    series: [{
+      name: '接单量',
+      type: "line",
+      xAxisIndex: 0,
+      yAxisIndex: 0,
+      encode: {
+        x: 'date',
+        y: 'saleAmount'
+      },
+      icon: '',
+      itemStyle: {
+        normal: {
+          color: '#80F5FF'
+        }
+      }
+    },
+    {
+      type: 'bar',
+      stack: '总量',
+      barWidth: 30,
+      xAxisIndex: 2,
+      yAxisIndex: 2,
+      encode: {
+        x: 'date',
+        y: 'GMV'
+      },
+      icon: '',
+      itemStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+            offset: 0,
+            color: '#2A84CF'
+          }, {
+            offset: 1,
+            color: '#03FECD'
+          }])
+        }
+      }
+    },
+    {
+      type: 'bar',
+      barWidth: 30,
+      xAxisIndex: 1,
+      yAxisIndex: 1,
+      encode: {
+        x: 'date',
+        y: 'saleAmount'
+      },
+      itemStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: 'transparent'
+          }, {
+            offset: 1,
+            color: 'transparent'
+          }])
+        }
+      }
+    }]
+  }
 ];
 export default option;

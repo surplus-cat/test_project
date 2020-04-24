@@ -34,7 +34,22 @@ export default {
         {
           salemanName: '贾谊',
           saleAmount: 254,
-          targetValue: 100
+          targetValue: 200
+        },
+        {
+          salemanName: '张若君',
+          saleAmount: 254,
+          targetValue: 300
+        },
+        {
+          salemanName: '李宗盛',
+          saleAmount: 454,
+          targetValue: 300
+        },
+        {
+          salemanName: '贾小宝',
+          saleAmount: 284,
+          targetValue: 500
         },
         {
           salemanName: '彭万里',
@@ -48,7 +63,11 @@ export default {
         },
         {
           salemanName: '于学忠',
-          saleAmount: 347,
+          saleAmount: 347
+        },
+        {
+          salemanName: '李学忠',
+          saleAmount: 747
         },
       ]
     };

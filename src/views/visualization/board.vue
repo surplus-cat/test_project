@@ -2,7 +2,7 @@
   <div>
     <div class="board-cards">
       <ul>
-        <li v-for="(item, index) in users" :key="item.name">
+        <li v-for="item in users" :key="item.name">
           <p>{{ item.name }}</p>
           <base-table
             class="btable"
