@@ -1,5 +1,5 @@
 <template>
-  <el-dialog ref="djDialog"
+  <el-dialog
     custom-class="resultDialog"
     :visible.sync="dialogVisible"
     :has-footer="false"
@@ -50,7 +50,7 @@ export default {
 <style lang="less" scoped>
 .vessel {
   position: relative;
-  width: 1160px;
+  width: 100%;
   height: 600px;
   .nodata {
     height: 100%;

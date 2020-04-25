@@ -2532,7 +2532,7 @@ let option = [
       }
     }]
   }, {
-    type: 'trends',
+    name: 'trends',
     axisPointer: {
       link: {
         xAxisIndex: 'all'

@@ -22,13 +22,13 @@
         filter-placement="bottom-end"
       >
         <template slot-scope="scope">
-          <i class="icon iconfont el-icon-my-trend"></i>
+          <i class="icon iconfont el-icon-my-trend" @click="open"></i>
         </template>
       </el-table-column>
     </el-table>
 
-
     <chart-pop
+      ref="ChartPop"
       v-if="dialogVisible"
       :dialog-visible="dialogVisible"
       :chart-obj="ChartObj"
@@ -107,55 +107,61 @@ export default {
         {
           date: '3-21',
           saleAmount: 287,
-          saleAmountChain: "2%",
+          saleAmountChain: "2.4",
           GMV: 131,
-          GMVChain: '-12%',
+          GMVChain: '-1.5',
         },
         {
           date: '3-22',
           saleAmount: 187,
-          saleAmountChain: "2%",
+          saleAmountChain: "2",
           GMV: 136,
-          GMVChain: '-12%',
+          GMVChain: '-12.8',
         },
         {
           date: '3-23',
           saleAmount: 147,
-          saleAmountChain: "2%",
+          saleAmountChain: "12",
           GMV: 126,
-          GMVChain: '-12%',
+          GMVChain: '-11',
         },
         {
           date: '3-24',
           saleAmount: 87,
-          saleAmountChain: "2%",
+          saleAmountChain: "12",
           GMV: 226,
-          GMVChain: '-12%',
+          GMVChain: '-10',
         },
         {
           date: '3-25',
           saleAmount: 107,
-          saleAmountChain: "2%",
+          saleAmountChain: "12",
           GMV: 246,
-          GMVChain: '-12%',
+          GMVChain: '-18',
         },
         {
           date: '3-26',
           saleAmount: 227,
-          saleAmountChain: "2%",
+          saleAmountChain: "2.2",
           GMV: 46,
-          GMVChain: '-12%',
+          GMVChain: '12',
         },
         {
           date: '3-27',
           saleAmount: 127,
-          saleAmountChain: "2%",
+          saleAmountChain: "3",
           GMV: 16,
-          GMVChain: '-12%',
+          GMVChain: '-12',
         }
       ];
       this.ChartObj.ChartType = "trends";
-      this.dialogVisible = true
+      this.dialogVisible = true;
+
+      this.$nextTick(() => {
+        console.log(this.$refs.ChartPop.$refs)
+        this.$refs.ChartPop.$refs.echart.option.dataset.source = this.ChartObj.data;
+        this.$refs.ChartPop.$refs.echart.draw();
+      })
     }
   }
 };
