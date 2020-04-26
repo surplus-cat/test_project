@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     custom-class="resultDialog"
-    :visible.sync="dialogVisible"
+    :visible.sync="dislogState"
     :has-footer="false"
     :title="ChartObj.title"
     @close="close">
@@ -40,6 +40,11 @@ export default {
   components: {
     echart
   },
+  computed: {
+    dislogState () {
+      return this.dialogVisible || false;
+    }
+  },
   methods: {
     close() {
       this.$emit('close');
@@ -48,6 +53,36 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+/deep/ .el-dialog {
+  // background-color: rgba(0,0,0,0.65);
+
+  .el-dialog__body {
+    padding: 0
+  }
+}
+/deep/ .el-dialog__header {
+  position: relative;
+  padding: 36px 28px 24px;
+  text-align: left;
+
+  .el-dialog__headerbtn {
+    top: 40px;
+    right: 30px;
+  }
+
+
+  /deep/ .el-icon-close {
+    font-family: "dj-bi-" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:before {
+      content: "\e61c";
+    }
+  }
+}
 .vessel {
   position: relative;
   width: 100%;

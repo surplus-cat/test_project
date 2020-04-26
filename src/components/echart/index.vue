@@ -25,11 +25,17 @@ export default {
   },
   mounted () {
     // 基于准备好的dom，初始化echarts实例
-    this.width = this.$el.offsetWidth + 'px';
-    this.height = this.$el.offsetHeight + 'px';
-    this.originHeight = this.$el.offsetHeight + 'px';
-    this.myChart = this.$echarts.init(this.$refs.chart);
-    this.draw();
+    console.log(this.$el.offsetWidth);
+    console.log(this.width);
+    if (this.$el.offsetWidth) {
+      this.width = this.$el.offsetWidth + 'px';
+      this.height = this.$el.offsetHeight + 'px';
+      this.originHeight = this.$el.offsetHeight + 'px';
+      setTimeout(() => {
+        this.myChart = this.$echarts.init(this.$refs.chart);
+        this.draw();
+      }, 0)
+    }
     // console.log(Worker);
   },
   methods: {

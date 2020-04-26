@@ -4,7 +4,6 @@
       <el-table-column
         prop="date"
         label="日期"
-        sortable
         width="180"
         column-key="date"
       >
@@ -22,14 +21,13 @@
         filter-placement="bottom-end"
       >
         <template slot-scope="scope">
-          <i class="icon iconfont el-icon-my-trend" @click="open"></i>
+          <i class="icon dj-bi- dj-bi-chart" @click="open"></i>
         </template>
       </el-table-column>
     </el-table>
 
     <chart-pop
       ref="ChartPop"
-      v-if="dialogVisible"
       :dialog-visible="dialogVisible"
       :chart-obj="ChartObj"
       @close="close">
@@ -77,9 +75,6 @@ export default {
     chartPop
   },
   methods: {
-    close() {
-      this.dialogVisible = false;
-    },
     resetDateFilter() {
       this.$refs.filterTable.clearFilter("date");
     },
@@ -100,6 +95,10 @@ export default {
     filterHandler(value, row, column) {
       const property = column["property"];
       return row[property] === value;
+    },
+    close() {
+      console.log(3333)
+      this.dialogVisible = false;
     },
     open() {
       this.ChartObj.title = "值班团购接单趋势";
@@ -158,7 +157,6 @@ export default {
       this.dialogVisible = true;
 
       this.$nextTick(() => {
-        console.log(this.$refs.ChartPop.$refs)
         this.$refs.ChartPop.$refs.echart.option.dataset.source = this.ChartObj.data;
         this.$refs.ChartPop.$refs.echart.draw();
       })

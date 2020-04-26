@@ -1,6 +1,8 @@
 import { func } from '@/util';
 import echarts from 'echarts';
 
+import './echarts.less'
+
 let option = [
   {
     name: 'supplyDiagram',
@@ -2277,7 +2279,9 @@ let option = [
       },
       "z": 1
     }]
-  }, {
+  },
+
+  {
     name: 'salemanTarget',
     animation: true,
     title: [{
@@ -2336,8 +2340,8 @@ let option = [
       // 色值 不需要带''
       formatter: function (params) {
         let content = `
-        <div style="color: #fff; font-size: 14px;">
-                          <div style="margin-bottom: 5px;">￥<span style="font-family: ding">${params[0]['value']['originVal']}</span></div>
+                        <div class="salemanTargetBoxer">
+                          <div>￥<span style="font-family: ding">${params[0]['value']['originVal']}</span></div>
                           <p>达成率 ${params[0]['value']["relativeRatio"]}</p>
                         </div>`;
         return content;
@@ -2543,22 +2547,22 @@ let option = [
     },
     title: [{
       text: '接单量（万平方米）',
-      left: 60,
-      top: '0%',
+      left: 22,
+      top: 0,
       textStyle: {
-        color: '#000',
+        color: 'rgba(255,255,255,0.65)',
         fontSize: 14,
         fontWeight: 'normal'
       }
     }, {
       subtext: '总GMV（万元）',
       subtextStyle: {
-        color: '#000',
+        color: 'rgba(255,255,255,0.65)',
         fontSize: 14,
         fontWeight: 'normal'
       },
-      left: 60,
-      top: '45%'
+      left: 22,
+      top: '43%'
     }],
     dataset: {
       dimensions: [
@@ -2574,51 +2578,47 @@ let option = [
           type: 'dashed'
         }
       },
-      backgroundColor: 'rgba(245, 245, 245, 0.8)',
-      borderWidth: 1,
-      borderColor: '#ccc',
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
       padding: 10,
-      textStyle: {
-        color: '#000'
-      },
       formatter: function (params) {
-        console.log(params);
-        let text = `<div style="width: 240px">
-                          <div style="margin-bottom: 10px; font-size: 14px; display: flex; justify-content: space-between"><p>${params[0].name} 周五</p> <p>日环比</p></div>
-                          <div style="margin-bottom: 5px; font-size: 14px;display: flex; justify-content: space-between"><p>${params[0]['marker']} 接单量</p>  <p>${params[0]['value']['saleAmount']} <i></i> ${Math.abs(params[0]['value']['saleAmountChain'])}%</p></div>
-                          <div style="margin-bottom: 5px; font-size: 14px;display: flex; justify-content: space-between"><p>${params[1]['marker']} 总GMV</p>  <p>${params[1]['value']['GMV']} <i></i> ${Math.abs(params[0]['value']['GMVChain'])}%</p></div>
-                      </div>`;
+        let text = `<div class="trendsBoxer">
+                      <div class="line"><p>${params[0].name} 周五</p> <p>日环比</p></div>
+                      <div class="line"><p><span class="dj-bi- dj-bi-linechart_tag1"></span> 接单量</p>  <p>${params[0]['value']['saleAmount']} ${params[0]['value']['saleAmountChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['saleAmountChain'])}%</span></p></div>
+                      <div class="line"><p><span class="mark"></span> GMV</p>  <p>${params[1]['value']['GMV']} ${params[0]['value']['GMVChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['GMVChain'])}%</span></p></div>
+                    </div>`;
         return text;
       }
     },
     grid: [{
-      x: '5%',
+      x: '1%',
       y: '5%',
       height: '35%',
-      left: '10%',
+      left: 80,
+      right: 28,
       show: false
     },
     {
-      x: '5%',
+      x: '1%',
       y1: '5%',
       top: '40%',
       height: '12.5%',
-      left: '10%',
+      left: 80,
+      right: 28,
       show: false
     },
     {
-      x: '5%',
+      x: '1%',
       y2: '5%',
       top: '52.5%',
       height: '40%',
-      left: '10%',
+      left: 80,
+      right: 28,
       show: false
     }],
     xAxis: [{
       gridIndex: 0,
       show: false,
       type: 'category',
-
       axisTick: {
         show: false
       }
@@ -2629,13 +2629,21 @@ let option = [
       type: 'category',
       axisTick: {
         show: false
-      },
+      }
     },
     {
       type: 'category',
       gridIndex: 2,
       axisTick: {
         show: false
+      },
+      axisLabel: {
+        color: 'rgba(255,255,255,0.85)'
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12);'
+        }
       }
     }
     ],
@@ -2645,11 +2653,14 @@ let option = [
       nameTextStyle: {
         padding: 40
       },
-      offset: 10,
+      offset: 24,
       position: 'left',
       nameLocation: 'middle',
       splitLine: {
-        show: true
+        show: true,
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12)'
+        }
       },
       axisLine: {
         show: false
@@ -2660,6 +2671,7 @@ let option = [
       axisLabel: {
         formatter: '{value}',
         textStyle: {
+          color: 'rgba(255,255,255,0.65)',
           fontSize: 12
         }
       }
@@ -2671,7 +2683,7 @@ let option = [
       splitLine: {
         show: true
       },
-      offset: 10,
+      offset: 24,
       nameTextStyle: {
         padding: 25,
         align: 'center'
@@ -2693,11 +2705,14 @@ let option = [
       nameTextStyle: {
         padding: 40
       },
-      offset: 10,
+      offset: 24,
       position: 'left',
       nameLocation: 'middle',
       splitLine: {
-        show: true
+        show: true,
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12)'
+        }
       },
       axisLine: {
         show: false
@@ -2708,6 +2723,7 @@ let option = [
       axisLabel: {
         formatter: '{value}',
         textStyle: {
+          color: 'rgba(255,255,255,0.65)',
           fontSize: 12
         }
       }
@@ -2721,9 +2737,11 @@ let option = [
         x: 'date',
         y: 'saleAmount'
       },
-      icon: '',
+      symbol: 'circle',
+      symbolSize: 8,
       itemStyle: {
         normal: {
+          width: 2,
           color: '#80F5FF'
         }
       }
