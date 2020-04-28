@@ -2790,6 +2790,287 @@ let option = [
         }
       }
     }]
+  },
+  {
+    name: 'Saletrends',
+    axisPointer: {
+      link: {
+        xAxisIndex: 'all'
+      },
+      label: {
+        backgroundColor: '#777'
+      }
+    },
+    title: [{
+      text: '接单量（万平方米）',
+      left: 22,
+      top: 0,
+      textStyle: {
+        color: 'rgba(255,255,255,0.65)',
+        fontSize: 14,
+        fontWeight: 'normal'
+      }
+    }, {
+      subtext: '总GMV（万元）',
+      subtextStyle: {
+        color: 'rgba(255,255,255,0.65)',
+        fontSize: 14,
+        fontWeight: 'normal'
+      },
+      left: 22,
+      top: '43%'
+    }],
+    dataset: {
+      dimensions: [
+        'date', 'saleAmount', 'saleAmountChain', 'GMVChain', 'GMV', 'total', 'totalChain', 'integal', 'integalChain'
+      ],
+      source: []
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'line',
+        lineStyle: {
+          type: 'dashed'
+        }
+      },
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      padding: 10,
+      formatter: function (params) {
+        let text = `<div class="trendsBoxer">
+                      <div class="line"><p>${params[0].name} 周五</p> <p>日环比</p></div>
+                      <div class="line"><p><span class="dj-bi- dj-bi-linechart_tag1"></span> 接单量</p>  <p>${params[0]['value']['saleAmount']} ${params[0]['value']['saleAmountChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['saleAmountChain'])}%</span></p></div>
+                      <div class="line"><p><span class="mark transparent"></span> 总GMV</p>  <p>${params[0]['value']['total']} ${params[0]['value']['totalChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['totalChain'])}%</span></p></div>
+                      <div class="line"><p><span class="mark"></span> GMV</p>  <p>${params[1]['value']['GMV']} ${params[0]['value']['GMVChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['GMVChain'])}%</span></p></div>
+                      <div class="line"><p><span class="mark integral"></span> 积分商城</p>  <p>${params[0]['value']['integral']} ${params[0]['value']['integralChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['integralChain'])}%</span></p></div>
+                    </div>`;
+        return text;
+      }
+    },
+    grid: [{
+      x: '1%',
+      y: '5%',
+      height: '35%',
+      left: 80,
+      right: 28,
+      show: false
+    },
+    {
+      x: '1%',
+      y1: '5%',
+      top: '40%',
+      height: '12.5%',
+      left: 80,
+      right: 28,
+      show: false
+    },
+    {
+      x: '1%',
+      y2: '5%',
+      top: '52.5%',
+      height: '40%',
+      left: 80,
+      right: 28,
+      show: false
+    }],
+    xAxis: [{
+      gridIndex: 0,
+      show: false,
+      type: 'category',
+      axisTick: {
+        show: false
+      }
+    },
+    {
+      show: false,
+      gridIndex: 1,
+      type: 'category',
+      axisTick: {
+        show: false
+      }
+    },
+    {
+      type: 'category',
+      gridIndex: 2,
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        color: 'rgba(255,255,255,0.85)'
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12);'
+        }
+      }
+    }
+    ],
+    yAxis: [{
+      type: 'value',
+      gridIndex: 0,
+      nameTextStyle: {
+        padding: 40
+      },
+      offset: 24,
+      position: 'left',
+      nameLocation: 'middle',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12)'
+        }
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}',
+        textStyle: {
+          color: 'rgba(255,255,255,0.65)',
+          fontSize: 12
+        }
+      }
+    },
+    {
+      show: false,
+      type: 'value',
+      gridIndex: 1,
+      splitLine: {
+        show: true
+      },
+      offset: 24,
+      nameTextStyle: {
+        padding: 25,
+        align: 'center'
+      },
+      position: 'left',
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}'
+      }
+    },
+    {
+      type: 'value',
+      gridIndex: 2,
+      nameTextStyle: {
+        padding: 40
+      },
+      offset: 24,
+      position: 'left',
+      nameLocation: 'middle',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12)'
+        }
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}',
+        textStyle: {
+          color: 'rgba(255,255,255,0.65)',
+          fontSize: 12
+        }
+      }
+    }],
+    series: [{
+      name: '接单量',
+      type: "line",
+      xAxisIndex: 0,
+      yAxisIndex: 0,
+      encode: {
+        x: 'date',
+        y: 'saleAmount'
+      },
+      symbol: 'circle',
+      symbolSize: 8,
+      itemStyle: {
+        normal: {
+          width: 2,
+          color: '#80F5FF'
+        }
+      }
+    },
+    {
+      type: 'bar',
+      stack: '总量',
+      barWidth: 30,
+      xAxisIndex: 2,
+      yAxisIndex: 2,
+      encode: {
+        x: 'date',
+        y: 'integral'
+      },
+      icon: '',
+      itemStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+            offset: 0,
+            color: 'rgba(255,211,41,1)'
+          }, {
+            offset: 1,
+            color: 'rgba(254,167,18,1)'
+          }])
+        }
+      }
+    },
+    {
+      type: 'bar',
+      stack: '总量',
+      barWidth: 30,
+      xAxisIndex: 2,
+      yAxisIndex: 2,
+      encode: {
+        x: 'date',
+        y: 'GMV'
+      },
+      icon: '',
+      itemStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+            offset: 0,
+            color: '#2A84CF'
+          }, {
+            offset: 1,
+            color: '#03FECD'
+          }])
+        }
+      }
+    },
+    {
+      type: 'bar',
+      barWidth: 30,
+      xAxisIndex: 1,
+      yAxisIndex: 1,
+      encode: {
+        x: 'date',
+        y: 'saleAmount'
+      },
+      itemStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: 'transparent'
+          }, {
+            offset: 1,
+            color: 'transparent'
+          }])
+        }
+      }
+    }]
   }
 ];
 export default option;

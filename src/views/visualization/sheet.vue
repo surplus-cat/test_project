@@ -8,7 +8,7 @@
         column-key="date"
       >
       </el-table-column>
-      <el-table-column prop="gmv" label="总gmv" width="180" sortable></el-table-column>
+      <el-table-column prop="gmv" label="GMV" width="180" sortable></el-table-column>
       <el-table-column prop="address" label="接单量"
         :sortable="true"
         :sort-method="(a,b) => sortMethod(a, b)"
@@ -21,7 +21,7 @@
         filter-placement="bottom-end"
       >
         <template slot-scope="scope">
-          <i class="icon dj-bi- dj-bi-chart" @click="open"></i>
+          <i class="icon dj-bi- dj-bi-chart" @click="open(scope.$index)"></i>
         </template>
       </el-table-column>
     </el-table>
@@ -67,42 +67,7 @@ export default {
           tag: "公司"
         }
       ],
-      ChartObj: {},
-      dialogVisible: false
-    };
-  },
-  components: {
-    chartPop
-  },
-  methods: {
-    resetDateFilter() {
-      this.$refs.filterTable.clearFilter("date");
-    },
-    clearFilter() {
-      this.$refs.filterTable.clearFilter();
-    },
-    formatter(row, column) {
-      return row.address + 'm²';
-    },
-    sortMethod(a, b) {
-      const val1 = a.address.replace(/,/g, '');
-      const val2 = b.address.replace(/,/g, '');
-      return val1 - val2
-    },
-    filterTag(value, row) {
-      return row.tag === value;
-    },
-    filterHandler(value, row, column) {
-      const property = column["property"];
-      return row[property] === value;
-    },
-    close() {
-      console.log(3333)
-      this.dialogVisible = false;
-    },
-    open() {
-      this.ChartObj.title = "值班团购接单趋势";
-      this.ChartObj.data = [
+      data: [
         {
           date: '3-21',
           saleAmount: 287,
@@ -152,12 +117,60 @@ export default {
           GMV: 16,
           GMVChain: '-12',
         }
-      ];
-      this.ChartObj.ChartType = "trends";
+      ],
+      ChartObj: {},
+      dialogVisible: false
+    };
+  },
+  components: {
+    chartPop
+  },
+  methods: {
+    resetDateFilter() {
+      this.$refs.filterTable.clearFilter("date");
+    },
+    clearFilter() {
+      this.$refs.filterTable.clearFilter();
+    },
+    formatter(row, column) {
+      return row.address + 'm²';
+    },
+    sortMethod(a, b) {
+      const val1 = a.address.replace(/,/g, '');
+      const val2 = b.address.replace(/,/g, '');
+      return val1 - val2
+    },
+    filterTag(value, row) {
+      return row.tag === value;
+    },
+    filterHandler(value, row, column) {
+      const property = column["property"];
+      return row[property] === value;
+    },
+    close() {
+      this.dialogVisible = false;
+      // this.ChartObj.source = [];
+    },
+    open(index) {
+      this.ChartObj.title = "值班团购接单趋势";
+      let data = JSON.parse(JSON.stringify(this.data));
+      let newObj = JSON.parse(JSON.stringify(this.data[index]));
+
+      newObj.date = `3-${index}`;
+
+      data.push(newObj);
+
+      // this.ChartObj.source = data;
+      this.ChartObj.type = "trends";
       this.dialogVisible = true;
 
+      // if (this.$refs.ChartPop.$refs.echart) {
+      //   this.$refs.ChartPop.$refs.echart.option.dataset.source = data;
+      //   this.$refs.ChartPop.$refs.echart.draw();
+      // }
+
       this.$nextTick(() => {
-        this.$refs.ChartPop.$refs.echart.option.dataset.source = this.ChartObj.data;
+        this.$refs.ChartPop.$refs.echart.option.dataset.source = data;
         this.$refs.ChartPop.$refs.echart.draw();
       })
     }

@@ -12,7 +12,16 @@ import { func } from '@/util';
 
 export default {
   props: {
-    type: String
+    type: {
+      type: String,
+      default: ""
+    },
+    source: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
   },
   data () {
     return {
@@ -24,18 +33,13 @@ export default {
     };
   },
   mounted () {
+    console.log(this.$el.offsetWidth)
     // 基于准备好的dom，初始化echarts实例
-    console.log(this.$el.offsetWidth);
-    console.log(this.width);
-    if (this.$el.offsetWidth) {
-      this.width = this.$el.offsetWidth + 'px';
-      this.height = this.$el.offsetHeight + 'px';
-      this.originHeight = this.$el.offsetHeight + 'px';
-      setTimeout(() => {
-        this.myChart = this.$echarts.init(this.$refs.chart);
-        this.draw();
-      }, 0)
-    }
+    this.width = this.$el.offsetWidth + 'px';
+    this.height = this.$el.offsetHeight + 'px';
+    this.originHeight = this.$el.offsetHeight + 'px';
+    this.myChart = this.$echarts.init(this.$refs.chart);
+    this.draw();
     // console.log(Worker);
   },
   methods: {
@@ -48,8 +52,12 @@ export default {
       this.drawLine();
     },
     drawLine () {
+      // 数据赋值
+      if (this.source.length > 0) {
+        this.option.dataset.source = this.source;
+      }
       // 绘制图表
-      this.myChart.setOption(this.option);
+      this.myChart.setOption(this.option, true);
       this.myChart.resize();
     },
     async reDraw (calcHeight) {

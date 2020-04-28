@@ -6,7 +6,7 @@
     :title="ChartObj.title"
     @close="close">
     <div class="vessel">
-      <echart ref="echart" :type="ChartObj.ChartType" height="600px" v-show="isWhether"/>
+      <echart ref="echart" v-bind="ChartObj" v-show="isWhether"/>
       <div class="nodata" v-show="!isWhether"></div>
     </div>
   </el-dialog>
@@ -21,9 +21,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          ChartType: '',
+          type: '',
           title: '',
-          data: []
+          source: []
         }
       }
     },
@@ -48,13 +48,13 @@ export default {
   methods: {
     close() {
       this.$emit('close');
-    },
+    }
   }
 };
 </script>
 <style lang="less" scoped>
 /deep/ .el-dialog {
-  // background-color: rgba(0,0,0,0.65);
+  background-color: rgba(8,21,42,1);
 
   .el-dialog__body {
     padding: 0
@@ -70,10 +70,13 @@ export default {
     right: 30px;
   }
 
+  .el-dialog__title {
+    color: #fff;
+  }
 
   /deep/ .el-icon-close {
     font-family: "dj-bi-" !important;
-    font-size: 16px;
+    font-size: 26px;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -86,6 +89,7 @@ export default {
 .vessel {
   position: relative;
   width: 100%;
+  //width: 913px;
   height: 600px;
   .nodata {
     height: 100%;

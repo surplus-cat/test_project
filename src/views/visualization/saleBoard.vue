@@ -4,14 +4,14 @@
       <h3 class="title">总接单趋势</h3>
       <div class="vesselBoxer">
         <div class="vessel">
-          <echart ref="chart" type="trends" v-show="isWhether"/>
+          <echart ref="chart" type="Saletrends" v-show="isWhether"/>
           <div class="nodata" v-show="!isWhether"></div>
         </div>
       </div>
     </div>
     <div class="tableBox">
       <div class="titleBox">
-        <h3 class="title">xxx月xx日供应商接单明细</h3>
+        <h3 class="title">xxx月xx日行政区域接单明细</h3>
         <el-input class="el_input" />
       </div>
       <el-table ref="filterTable" :data="tableData">
@@ -149,6 +149,10 @@ export default {
           saleAmountChain: "2.4",
           GMV: 131,
           GMVChain: '-1.5',
+          total: 1313,
+          totalChain: '1.4',
+          integral: 137,
+          integralChain: '34'
         },
         {
           date: '3-22',
@@ -156,6 +160,10 @@ export default {
           saleAmountChain: "2",
           GMV: 136,
           GMVChain: '-12.8',
+          total: 2313,
+          totalChain: '4.4',
+          integral: 337,
+          integralChain: '-34'
         },
         {
           date: '3-23',
@@ -163,6 +171,10 @@ export default {
           saleAmountChain: "12",
           GMV: 126,
           GMVChain: '-11',
+          total: 2313,
+          totalChain: '4.4',
+          integral: 337,
+          integralChain: '-34'
         },
         {
           date: '3-24',
@@ -170,6 +182,10 @@ export default {
           saleAmountChain: "12",
           GMV: 226,
           GMVChain: '-10',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         },
         {
           date: '3-25',
@@ -177,6 +193,10 @@ export default {
           saleAmountChain: "12",
           GMV: 246,
           GMVChain: '-18',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         },
         {
           date: '3-26',
@@ -184,6 +204,10 @@ export default {
           saleAmountChain: "2.2",
           GMV: 46,
           GMVChain: '12',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         },
         {
           date: '3-27',
@@ -191,9 +215,13 @@ export default {
           saleAmountChain: "3",
           GMV: 16,
           GMVChain: '-12',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         }
       ];
-      this.ChartObj.type = "trends";
+      this.ChartObj.type = "Saletrends";
       this.dialogVisible = true;
 
       // setTimeout(() => {
@@ -217,6 +245,10 @@ export default {
           saleAmountChain: "2.4",
           GMV: 131,
           GMVChain: '-1.5',
+          total: 1313,
+          totalChain: '1.4',
+          integral: 137,
+          integralChain: '34'
         },
         {
           date: '3-22',
@@ -224,6 +256,10 @@ export default {
           saleAmountChain: "2",
           GMV: 136,
           GMVChain: '-12.8',
+          total: 2313,
+          totalChain: '4.4',
+          integral: 337,
+          integralChain: '-34'
         },
         {
           date: '3-23',
@@ -231,6 +267,10 @@ export default {
           saleAmountChain: "12",
           GMV: 126,
           GMVChain: '-11',
+          total: 2313,
+          totalChain: '4.4',
+          integral: 337,
+          integralChain: '-34'
         },
         {
           date: '3-24',
@@ -238,6 +278,10 @@ export default {
           saleAmountChain: "12",
           GMV: 226,
           GMVChain: '-10',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         },
         {
           date: '3-25',
@@ -245,6 +289,10 @@ export default {
           saleAmountChain: "12",
           GMV: 246,
           GMVChain: '-18',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         },
         {
           date: '3-26',
@@ -252,6 +300,10 @@ export default {
           saleAmountChain: "2.2",
           GMV: 46,
           GMVChain: '12',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         },
         {
           date: '3-27',
@@ -259,6 +311,10 @@ export default {
           saleAmountChain: "3",
           GMV: 16,
           GMVChain: '-12',
+          total: 1313,
+          totalChain: '5.4',
+          integral: 237,
+          integralChain: '-34'
         }
       ];
       // setTimeout(() => {
