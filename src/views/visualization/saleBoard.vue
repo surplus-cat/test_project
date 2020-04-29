@@ -14,45 +14,12 @@
         <h3 class="title">xxx月xx日行政区域接单明细</h3>
         <el-input class="el_input" />
       </div>
-      <el-table ref="filterTable" :data="tableData">
-        <el-table-column
-          prop="productName"
-          label="产品名称"
-          width="220"
-          column-key="productName"
-        >
-          <template slot-scope="scope">
-            <div class="innerBox">
-              <span class="rank">{{ scope.$index + 1 }}</span>
-              <p class="productName">{{ scope.row.productName }}</p>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="gmv"
-          label="GMV"
-          column-key="date"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column prop="gmvChain" label="GMV占比"></el-table-column>
-        <el-table-column prop="saleAmount" label="接单量"
-          :sortable="true"
-          :sort-method="(a,b) => sortMethod(a, b, 'saleAmount')"
-          :formatter="formatter">
-        </el-table-column>
-        <el-table-column prop="saleAmountChain" label="接单量占比"></el-table-column>
-        <el-table-column
-          prop="tag"
-          label="接单趋势"
-          width="100"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="scope">
-            <i class="dj-bi- dj-bi-histogram" @click="open"></i>
-          </template>
-      </el-table-column>
-    </el-table>
+      <lb-table
+        class="btable"
+        ref="baseTable"
+        :data="tableData"
+        :column="colConfigs">
+      </lb-table>
     </div>
 
     <chart-pop
@@ -67,49 +34,92 @@
 <script>
 import echart from '@/components/echart';
 import chartPop from './popout/chartPop';
+import LbTable from '@/components/lb-table/lb-table';
 
 export default {
   data () {
     return {
       isWhether: true,
+      colConfigs: [
+        {
+          prop: 'areaName',
+          label: '产品名称',
+          width: '160px',
+          render: (h, scope) => {
+            return (
+              <div class="innerBox">
+                <span class="rank">{ scope.$index + 1 }</span>
+                <p class="areaName">{ scope.row.areaName }</p>
+              </div>
+            )
+          }
+        },
+        {
+          prop: 'gmv',
+          label: 'GMV',
+          sortable: true,
+          sortMethod: (a, b) => {
+            return this.sortMethod(a, b, 'gmv');
+          }
+        },
+        {
+          prop: 'gmvChain',
+          label: 'GMV占比',
+        },
+        { prop: 'saleAmount',
+          label: '接单量',
+          width: '140px',
+          sortable: true,
+          sortMethod: (a, b) => {
+            return this.sortMethod(a, b, 'saleAmount');
+          },
+          formatter: this.formatter
+        },
+        { prop: 'saleAmountChain', label: '接单量占比' },
+        { label: '接单趋势',
+          render: (event, row) => {
+            return <i class="dj-bi- dj-bi-histogram" on-click={() => this.open() } />
+          }
+        },
+      ],
       tableData: [
         {
-          productName: '东宋二号',
+          areaName: '鹿城区',
           gmv: "￥111,183.11",
           gmvChain: '71%',
           saleAmount: "1,221,831.00",
           saleAmountChain: '71%'
         },
         {
-          productName: '东宋三号',
+          areaName: '瓯海区',
           gmv: "￥110,183.00",
           gmvChain: '71%',
           saleAmount: "132,331.10",
           saleAmountChain: '71%'
         },
         {
-          productName: '东丽2号',
+          areaName: '瑞安市',
           gmv: "￥954,103.11",
           gmvChain: '61%',
           saleAmount: "218,331.00",
           saleAmountChain: '71%'
         },
         {
-          productName: '特2号',
+          areaName: '洞头市',
           gmv: "￥11,183.11",
           gmvChain: '41%',
           saleAmount: "1,223,831.00",
           saleAmountChain: '81%'
         },
         {
-          productName: '东丽2号',
+          areaName: '苍南县',
           gmv: "￥954,103.11",
           gmvChain: '31%',
           saleAmount: "218,331.00",
           saleAmountChain: '90%'
         },
         {
-          productName: '特2号',
+          areaName: '泰顺县',
           gmv: "￥11,183.11",
           gmvChain: '21%',
           saleAmount: "1,223,831.00",
@@ -122,7 +132,8 @@ export default {
   },
   components: {
     echart,
-    chartPop
+    chartPop,
+    LbTable
   },
   computed: {},
   mounted() {
@@ -133,8 +144,8 @@ export default {
       return row.saleAmount + 'm²';
     },
     sortMethod(a, b, field) {
-      const val1 = a[field].replace(/,/g, '');
-      const val2 = b[field].replace(/,/g, '');
+      const val1 = a[field].replace(/\D/g, '');
+      const val2 = b[field].replace(/\D/g, '');
       return val1 - val2
     },
     close() {
@@ -406,7 +417,12 @@ export default {
       width: 100%;
 
       tr {
+        color: #fff;
         background-color: rgba(8,21,42,1);
+
+        &:hover > td {
+          background-color: rgba(8,21,42,1) !important;
+        }
 
         &:nth-child(1) .rank {
           background-color: rgba(250,173,20,1);
@@ -424,31 +440,30 @@ export default {
       th {
         background-color: rgba(255,255,255,0.08);
       }
-
     }
 
-    .innerBox {
+    /deep/.innerBox {
       display: flex;
-    }
 
-    .rank {
-      width: 18px;
-      height: 18px;
-      line-height: 20px;
-      text-align: center;
-      font-size: 12px;
-      border-radius: 100%;
-      display: block;
-      margin-right: 20px;
-      color: #fff;
-      background-color: rgba(255,255,255,0.12);
-    }
+      .rank {
+        width: 18px;
+        height: 18px;
+        line-height: 20px;
+        text-align: center;
+        font-size: 12px;
+        border-radius: 100%;
+        display: block;
+        margin-right: 20px;
+        color: #fff;
+        background-color: rgba(255,255,255,0.12);
+      }
 
-    .productName {
-      width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      .areaName {
+        width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 }

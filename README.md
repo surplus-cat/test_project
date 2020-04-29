@@ -25,3 +25,7 @@ element-ui 新增 自定义字体图标例如iconfont
 详见 iconfont.css  和  table.vue 文件
 
 问题关键还是在于 font-family
+
+echarts 图表宽度的获取方式
+echarts源码中有这么一个方法：Painter.prototype._getWidth
+https://blog.csdn.net/tl101120/article/details/103271942

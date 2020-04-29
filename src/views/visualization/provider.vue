@@ -4,7 +4,7 @@
       <h3 class="title">总接单趋势</h3>
       <div class="vesselBoxer">
         <div class="vessel">
-          <echart ref="chart" type="trends" v-show="isWhether"/>
+          <echart ref="chart" type="trends" v-show="isWhether" />
           <div class="nodata" v-show="!isWhether"></div>
         </div>
       </div>
@@ -12,47 +12,15 @@
     <div class="tableBox">
       <div class="titleBox">
         <h3 class="title">xxx月xx日供应商接单明细</h3>
-        <el-input class="el_input" />
+        <el-input class="el_input" v-model="areaName" placeholder="行政区名称" />
       </div>
-      <el-table ref="filterTable" :data="tableData">
-        <el-table-column
-          prop="productName"
-          label="产品名称"
-          width="220"
-          column-key="productName"
-        >
-          <template slot-scope="scope">
-            <div class="innerBox">
-              <span class="rank">{{ scope.$index + 1 }}</span>
-              <p class="productName">{{ scope.row.productName }}</p>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="gmv"
-          label="GMV"
-          column-key="date"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column prop="gmvChain" label="GMV占比"></el-table-column>
-        <el-table-column prop="saleAmount" label="接单量"
-          :sortable="true"
-          :sort-method="(a,b) => sortMethod(a, b, 'saleAmount')"
-          :formatter="formatter">
-        </el-table-column>
-        <el-table-column prop="saleAmountChain" label="接单量占比"></el-table-column>
-        <el-table-column
-          prop="tag"
-          label="接单趋势"
-          width="100"
-          filter-placement="bottom-end"
-        >
-          <template slot-scope="scope">
-            <i class="dj-bi- dj-bi-histogram" @click="open"></i>
-          </template>
-      </el-table-column>
-    </el-table>
+
+      <lb-table
+        class="btable"
+        ref="baseTable"
+        :data="tableData"
+        :column="colConfigs">
+      </lb-table>
     </div>
 
     <chart-pop
@@ -67,11 +35,63 @@
 <script>
 import echart from '@/components/echart';
 import chartPop from './popout/chartPop';
+import LbTable from '@/components/lb-table/lb-table';
 
 export default {
   data () {
     return {
+      areaName: '',
       isWhether: true,
+      colConfigs: [
+        {
+          prop: 'productName',
+          label: '产品名称',
+          width: '160px',
+          render: (h, scope) => {
+            return (
+              scope.row.productName.length > 8
+                ? <div class="innerBox">
+                  <span class="rank">{ scope.$index + 1 }</span>
+                  <el-tooltip content={scope.row.productName} placement="top-start" effect="light">
+                    <p class="productName">{ scope.row.productName }</p>
+                  </el-tooltip>
+                </div> : (
+                  <div class="innerBox">
+                    <span class="rank">{ scope.$index + 1 }</span>
+                    <p class="productName">{ scope.row.productName }</p>
+                  </div>
+                )
+            )
+          }
+        },
+        {
+          prop: 'gmv',
+          label: 'GMV',
+          sortable: true,
+          sortMethod: (a, b) => {
+            return this.sortMethod(a, b, 'gmv');
+          }
+        },
+        {
+          prop: 'gmvChain',
+          label: 'GMV占比',
+        },
+        { prop: 'saleAmount',
+          label: '接单量',
+          width: '140px',
+          sortable: true,
+          sortMethod: (a, b) => {
+            return this.sortMethod(a, b, 'saleAmount');
+          },
+          formatter: this.formatter
+        },
+        { prop: 'saleAmountChain', label: '接单量占比' },
+        { label: '接单趋势',
+          render: (event, row) => {
+            return <i class="dj-bi- dj-bi-histogram" on-click={() => this.open() } />
+          }
+        },
+      ],
       tableData: [
         {
           productName: '东宋二号',
@@ -81,7 +101,7 @@ export default {
           saleAmountChain: '71%'
         },
         {
-          productName: '东宋三号',
+          productName: '东宋三号(双面玖龙)特供版',
           gmv: "￥110,183.00",
           gmvChain: '71%',
           saleAmount: "132,331.10",
@@ -122,7 +142,8 @@ export default {
   },
   components: {
     echart,
-    chartPop
+    chartPop,
+    LbTable
   },
   computed: {},
   mounted() {
@@ -203,7 +224,7 @@ export default {
 
       this.$nextTick(() => {
         this.$refs.ChartPop.$refs.echart.option.dataset.source = data;
-        this.$refs.ChartPop.$refs.echart.draw();
+        this.$refs.ChartPop.$refs.echart.reDraw();
       });
 
       // this.$refs.ChartPop.$refs.echart.option.dataset.source = data;
@@ -267,7 +288,7 @@ export default {
       // }, 0);
       this.$nextTick(() => {
         this.$refs.chart.option.dataset.source = data;
-        this.$refs.chart.draw();
+        this.$refs.chart.reDraw();
       });
 
       // this.$refs.chart.option.dataset.source = data;
@@ -337,6 +358,7 @@ export default {
     }
 
     .title {
+      line-height: 38px;
       font-size: 18px;
       font-weight: 100;
       color: #fff;
@@ -344,6 +366,17 @@ export default {
 
     .el_input {
       width: 180px;
+
+      /deep/ .el-input__inner {
+        height: 38px;
+        line-height: 38px;
+        background-color: rgba(8,21,42,1);
+        border-color: rgba(255,255,255,0.2);
+
+        &:hover {
+          border-color: rgba(255,255,255,0.2);
+        }
+      }
     }
 
     /deep/.el-table {
@@ -371,28 +404,28 @@ export default {
 
     }
 
-    .innerBox {
+    /deep/.innerBox {
       display: flex;
-    }
 
-    .rank {
-      width: 18px;
-      height: 18px;
-      line-height: 20px;
-      text-align: center;
-      font-size: 12px;
-      border-radius: 100%;
-      display: block;
-      margin-right: 20px;
-      color: #fff;
-      background-color: rgba(255,255,255,0.12);
-    }
+      .rank {
+        width: 18px;
+        height: 18px;
+        line-height: 20px;
+        text-align: center;
+        font-size: 12px;
+        border-radius: 100%;
+        display: block;
+        margin-right: 20px;
+        color: #fff;
+        background-color: rgba(255,255,255,0.12);
+      }
 
-    .productName {
-      width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      .productName {
+        width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 }

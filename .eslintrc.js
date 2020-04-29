@@ -14,7 +14,8 @@ module.exports = {
     'quotes': 'off',
     'space-before-function-paren': 'off',
     'no-unused-vars': 'off',
-    'curly': 'off'
+    'curly': 'off',
+    'comma-dangle': 'off'
   },
   parserOptions: {
     parser: 'babel-eslint'

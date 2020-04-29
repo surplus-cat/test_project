@@ -3,15 +3,16 @@
     <div class="board-cards">
       <ul>
         <li v-for="item in users" :key="item.name">
+          <!--<el-tooltip class="item" :content="item.name" placement="top-start" effect="light">
+            <p>{{ item.name }}</p>
+          </el-tooltip>-->
           <p>{{ item.name }}</p>
-          <base-table
+          <Lb-table
             class="btable"
             ref="baseTable"
-            :table-data="item.data"
-            :col-configs="item.colConfigs"
-            :is-symbol="false"
-            :is-row-click="false">
-          </base-table>
+            :data="item.data"
+            :column="item.colConfigs">
+          </Lb-table>
         </li>
       </ul>
     </div>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import baseTable from '@/components/my-table';
+import LbTable from '@/components/lb-table/lb-table';
 
 export default {
   data () {
@@ -48,7 +49,19 @@ export default {
             InitialOrderTime: '2020-03-29'
           }],
           colConfigs: [
-            { prop: 'customer', label: '客户', width: '180px' },
+            {
+              prop: 'customer',
+              label: '客户',
+              width: '140px',
+              render: (event, source) => {
+                return (
+                  source.row.customer.length > 8
+                    ? (<el-tooltip content={source.row.customer} placement="top-start" effect="light">
+                      <div class="customer">{source.row.customer}</div>
+                    </el-tooltip>) : <div class="customer">{source.row.customer}</div>
+                )
+              }
+            },
             { prop: 'saleman', label: '业务员' },
             { prop: 'InitialOrderTime', label: '首次下单时间' },
           ],
@@ -80,10 +93,22 @@ export default {
             withoutOrderDays: 21
           }],
           colConfigs: [
-            { prop: 'customer', label: '客户', width: '180px' },
-            { prop: 'saleman', label: '业务员' },
+            {
+              prop: 'customer',
+              label: '客户',
+              width: '100px',
+              render: (event, source) => {
+                return (
+                  source.row.customer.length > 8
+                    ? (<el-tooltip content={source.row.customer} placement="top-start" effect="light">
+                      <div class="customer">{source.row.customer}</div>
+                    </el-tooltip>) : <div class="customer">{source.row.customer}</div>
+                )
+              }
+            },
+            { prop: 'saleman', label: '业务员', width: '80px' },
             { prop: 'ReorderTime', label: '再次下单时间' },
-            { prop: 'withoutOrderDays', label: '连续未下单天数' },
+            { prop: 'withoutOrderDays', label: '连续未下单天数', align: 'center', },
           ],
         },
         {
@@ -109,9 +134,29 @@ export default {
             withoutOrderDays: 21
           }],
           colConfigs: [
-            { prop: 'customer', label: '客户', width: '180px' },
-            { prop: 'saleman', label: '业务员' },
-            { prop: 'withoutOrderDays', label: '连续未下单天数' },
+            {
+              label: '客户',
+              width: '140px',
+              render: (event, source) => {
+                return (
+                  source.row.customer.length > 8
+                    ? (<el-tooltip content={source.row.customer} placement="top-start" effect="light">
+                      <div class="customer">{source.row.customer}</div>
+                    </el-tooltip>) : <div class="customer">{source.row.customer}</div>
+                )
+              }
+            },
+            {
+              prop: 'saleman',
+              label: '业务员',
+            },
+            {
+              label: '连续未下单天数',
+              align: 'center',
+              render: (event, source) => {
+                return <span class="yellow">{source.row.withoutOrderDays}</span>;
+              }
+            },
           ],
         },
         {
@@ -137,23 +182,34 @@ export default {
             withoutOrderDays: 61
           }],
           colConfigs: [
-            { prop: 'customer', label: '客户', width: '180px' },
+            {
+              prop: 'customer',
+              label: '客户',
+              width: '100px',
+              render: (event, source) => {
+                return (
+                  source.row.customer.length > 8
+                    ? (<el-tooltip content={source.row.customer} placement="top-start" effect="light">
+                      <div class="customer">{source.row.customer}</div>
+                    </el-tooltip>) : <div class="customer">{source.row.customer}</div>
+                )
+              }
+            },
             { prop: 'saleman', label: '业务员' },
-            { prop: 'withoutOrderDays', label: '连续未下单天数' },
+            {
+              label: '连续未下单天数',
+              align: 'center',
+              render: (event, source) => {
+                return <span class="pink">{source.row.withoutOrderDays}</span>;
+              }
+            },
           ],
         }
-      ],
-      colConfigs: [
-        { prop: 'customer', label: '客户', width: '180px' },
-        { prop: 'saleman', label: '业务员' },
-        { prop: 'InitialOrderTime', label: '首次下单时间' },
-        { prop: 'ReorderTime', label: '再次下单时间' },
-        { prop: 'withoutOrderDays', label: '连续未下单天数' },
       ],
     };
   },
   components: {
-    baseTable
+    LbTable
   },
   computed: {},
   watch: {},
@@ -162,7 +218,26 @@ export default {
 </script>
 <style lang="less" scoped>
 .board-cards {
+  margin-top: 20px;
   padding: 0 25px;
+
+  /deep/.el-table {
+    width: 100%;
+
+    tr {
+      color: #fff;
+      background-color: rgba(8,21,42,1);
+
+      &:hover > td {
+        background-color: rgba(8,21,42,1);
+      }
+    }
+
+    th {
+      background-color: rgba(255,255,255,0.08);
+    }
+
+  }
 
   ul {
     width: 100%;
@@ -171,15 +246,11 @@ export default {
 
   li {
     width: 25%;
-    height: 1011px;
+    height: 800px;
     border-radius: 8px;
     margin-right: 5px;
     list-style: none;
     background-color: #08152A;
-
-    /deep/.el-table__header-wrapper {
-      background-color: rgba(255, 255, 255, 0.08);
-    }
 
     &:nth-child(1) p {
       background: linear-gradient(to left, #2A84CF , #03FECD);
@@ -203,6 +274,21 @@ export default {
       color: #fff;
       font-size: 20px;
       border-radius: 8px 8px 0 0;
+    }
+
+    /deep/.customer {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /deep/.pink {
+      color: #ff70a1;
+    }
+
+    /deep/.yellow {
+      color: #ffb71b;
     }
   }
 }

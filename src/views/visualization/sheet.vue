@@ -1,30 +1,11 @@
 <template>
   <div class="boxer">
-    <el-table ref="filterTable" :data="tableData" style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180"
-        column-key="date"
-      >
-      </el-table-column>
-      <el-table-column prop="gmv" label="GMV" width="180" sortable></el-table-column>
-      <el-table-column prop="address" label="接单量"
-        :sortable="true"
-        :sort-method="(a,b) => sortMethod(a, b)"
-        :formatter="formatter">
-      </el-table-column>
-      <el-table-column
-        prop="tag"
-        label="接单趋势"
-        width="100"
-        filter-placement="bottom-end"
-      >
-        <template slot-scope="scope">
-          <i class="icon dj-bi- dj-bi-chart" @click="open(scope.$index)"></i>
-        </template>
-      </el-table-column>
-    </el-table>
+    <lb-table
+      class="btable"
+      ref="baseTable"
+      :data="tableData"
+      :column="colConfigs">
+    </lb-table>
 
     <chart-pop
       ref="ChartPop"
@@ -36,36 +17,80 @@
 </template>
 
 <script>
-import chartPop from './popout/chartPop'
+import chartPop from './popout/chartPop';
+import LbTable from '@/components/lb-table/lb-table';
 
 export default {
   data() {
     return {
+      colConfigs: [
+        { prop: 'customer', label: '客户', width: '140px' },
+        { prop: 'gmv',
+          label: 'GMV',
+          sortable: true,
+          sortMethod: (a, b) => {
+            return this.sortMethod(a, b, 'gmv');
+          }
+        },
+        { prop: 'saleAmount',
+          label: '接单量',
+          sortable: true,
+          sortMethod: (a, b) => {
+            return this.sortMethod(a, b, 'saleAmount');
+          },
+          formatter: this.formatter
+        },
+        { prop: 'gmvAverage', label: '日均GMV' },
+        { prop: 'saleAmountAverage', label: '日均接单量' },
+        { label: '接单趋势',
+          render: (event, row) => {
+            return <i class="dj-bi- dj-bi-chart" on-click={() => this.open(row) } />
+          }
+        },
+      ],
       tableData: [
         {
-          date: "2016-05-02",
-          gmv: "￥111,183.11",
-          address: "1,221,831.00",
-          tag: "家"
+          customer: "高大山",
+          gmv: "￥112,183.11",
+          saleAmount: "71,831.00",
+          gmvAverage: "￥121,183.11",
+          saleAmountAverage: "123,831.00",
         },
         {
-          date: "2016-05-04",
-          gmv: "￥110,183.00",
-          address: "132,331.10",
-          tag: "公司"
+          customer: "高大山",
+          gmv: "￥151,183.11",
+          saleAmount: "2,221,831.00",
+          gmvAverage: "￥111,183.11",
+          saleAmountAverage: "121,831.00",
         },
         {
-          date: "2016-05-01",
-          gmv: "￥954,103.11",
-          address: "218,331.00",
-          tag: "家"
+          customer: "高大山",
+          gmv: "￥2,111,183.11",
+          saleAmount: "2,921,831.00",
+          gmvAverage: "￥111,183.11",
+          saleAmountAverage: "20,831.00",
         },
         {
-          date: "2016-05-03",
-          gmv: "￥11,183.11",
-          address: "1,223,831.00",
-          tag: "公司"
-        }
+          customer: "高大山",
+          gmv: "￥211,183.11",
+          saleAmount: "10,221,831.10",
+          gmvAverage: "￥1,183.11",
+          saleAmountAverage: "121,831.00",
+        },
+        {
+          customer: "高山",
+          gmv: "￥910,183.11",
+          saleAmount: "3,221,831.00",
+          gmvAverage: "￥111,183.11",
+          saleAmountAverage: "11,831.00",
+        },
+        {
+          customer: "大山",
+          gmv: "￥211,283.21",
+          saleAmount: "10,221,831.00",
+          gmvAverage: "￥2,183.11",
+          saleAmountAverage: "221,831.00",
+        },
       ],
       data: [
         {
@@ -123,21 +148,16 @@ export default {
     };
   },
   components: {
-    chartPop
+    chartPop,
+    LbTable
   },
   methods: {
-    resetDateFilter() {
-      this.$refs.filterTable.clearFilter("date");
-    },
-    clearFilter() {
-      this.$refs.filterTable.clearFilter();
-    },
     formatter(row, column) {
-      return row.address + 'm²';
+      return row['saleAmount'] + 'm²';
     },
-    sortMethod(a, b) {
-      const val1 = a.address.replace(/,/g, '');
-      const val2 = b.address.replace(/,/g, '');
+    sortMethod(a, b, field) {
+      const val1 = a[field].replace(/\D/g, '');
+      const val2 = b[field].replace(/\D/g, '');
       return val1 - val2
     },
     filterTag(value, row) {
@@ -151,8 +171,9 @@ export default {
       this.dialogVisible = false;
       // this.ChartObj.source = [];
     },
-    open(index) {
-      this.ChartObj.title = "值班团购接单趋势";
+    open(row) {
+      let index = row.$index;
+      this.ChartObj.title = "纸板团购接单趋势";
       let data = JSON.parse(JSON.stringify(this.data));
       let newObj = JSON.parse(JSON.stringify(this.data[index]));
 
@@ -180,6 +201,7 @@ export default {
 <style lang="less" scoped>
 .boxer {
   width: 1000px;
+  background-color: #000D22;
   margin: 0 auto;
 }
 .icon {

@@ -84,6 +84,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/visualization/saleBoard.vue')
     },
     {
+      path: '/saleOrder',
+      name: 'saleOrder',
+      component: () => import(/* webpackChunkName: "about" */ './views/visualization/saleOrder.vue')
+    },
+    {
       path: '/menology',
       name: 'menology',
       component: () => import(/* webpackChunkName: "about" */ './components/index.vue')

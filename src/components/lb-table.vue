@@ -1,19 +1,40 @@
 <template>
   <div class="ctable">
-    <el-table :data="tableData"
+    <el-table
+      :data="tableData"
       :row-class-name="RowClassName"
-      :height="height"
-      @row-click="clickRow">
-      <template v-for="(colConfig, index) in colConfigs">
-        <slot v-if="colConfig.slot"
+      :height="height">
+      <!--<el-table-column
+        v-for="(item,key) in columnsConfig"
+        :key="key"
+        v-bind="item">
+
+          <template slot-scope="{row}">
+            <span>{{ row[column.field] }}</span>
+          </template>
+
+        </el-table-column> -->
+
+        <template v-for="(colConfig, index) in columnsConfig">
+          <slot v-if="colConfig.slot"
             :name="colConfig.slot" />
           <component
             v-if="colConfig.component"
             :is="colConfig.component"
             :col-config="colConfig"
             :key="index"/>
+
           <el-table-column
-            v-if="colConfig.label && !colConfig.component"
+            v-if="colConfig.render"
+            v-bind="colConfig"
+            :key="index">
+            <template slot-scope="scope">
+              <div v-html="colConfig.render(scope.row)"></div>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            v-if="colConfig.prop"
             v-bind="colConfig" :key="index">
           </el-table-column>
       </template>
@@ -31,7 +52,7 @@ export default {
       type: Array,
       default: function () { return []; }
     },
-    colConfigs: {
+    columnsConfig: {
       type: Array,
       default: function () { return []; }
     },
@@ -88,7 +109,7 @@ export default {
     display: block;
     width: 0;
     height: 0;
-    border-color: transparent transparent transparent #a3eaff;
+    // border-color: transparent transparent transparent #a3eaff;
     border-style: solid;
     border-width: 8px 7px 7px;
   }
@@ -99,13 +120,14 @@ export default {
       width: 0;
       height: 0 !important;
     }
-    .highlight-row {
-      background-color: #80f5ff;
-    }
+    // .highlight-row {
+    //   background-color: #80f5ff;
+    // }
   }
   /deep/ tr {
-    cursor: pointer;
+    // cursor: pointer;
     background-color: transparent;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
   }
   /deep/.el-table__header-wrapper {
     td,
@@ -122,7 +144,7 @@ export default {
     th.is-leaf,
     th {
       padding: 6px 0;
-      color: #b6fbff;
+      color: rgba(255,255,255,0.85);
       background-color: transparent;
       border: none;
     }
@@ -130,11 +152,11 @@ export default {
   /deep/ .el-table--border {
     td,
     th {
-      border: none;
+      // border: none;
     }
   }
-  /deep/ .el-table--enable-row-hover .el-table__body tr:hover > td {
-    background-color: rgba(128, 245, 255, 0.6);
-  }
+  // /deep/ .el-table--enable-row-hover .el-table__body tr:hover > td {
+  //   background-color: rgba(128, 245, 255, 0.6);
+  // }
 }
 </style>
