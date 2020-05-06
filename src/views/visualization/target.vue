@@ -86,7 +86,7 @@ export default {
     query () {
       this.data.forEach((v) => {
         v.originVal = v.saleAmount;
-        v.relativeRatio = v.targetValue ? `${v.originVal * 100 / v.targetValue}%`: '-';
+        v.relativeRatio = v.targetValue ? `${v.originVal * 100 / v.targetValue}%` : '-';
         if (!v.targetValue) {
           v.NotSet = v.saleAmount;
           delete v.saleAmount

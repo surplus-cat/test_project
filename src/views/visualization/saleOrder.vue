@@ -8,10 +8,17 @@
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       :column="colConfigs">
     </lb-table>
+
+    <detail-pop
+      :dialog-visible="dialogVisible"
+      :data-obj="dataObj"
+      @close="close">
+    </detail-pop>
   </div>
 </template>
 
 <script>
+import detailPop from './popout/detailPop';
 import LbTable from '@/components/lb-table/lb-table';
 
 export default {
@@ -25,14 +32,14 @@ export default {
           label: 'GMV占比',
           render: (h, scope) => {
             return (
-              scope.row.GMVChain ?
-                <div class="innerBox">
+              scope.row.GMVChain
+                ? <div class="innerBox">
                   <span class="progress">
                     <i class="gmv" style={{ width: scope.row.GMVChain }}></i>
                   </span>
                   <span>{scope.row.GMVChain}</span>
                 </div>
-              : ''
+                : ''
             )
           }
         },
@@ -41,8 +48,8 @@ export default {
           label: '下单量占比',
           render: (h, scope) => {
             return (
-              scope.row.saleAmountChain ?
-                <div class="innerBox">
+              scope.row.saleAmountChain
+                ? <div class="innerBox">
                   <span class="progress">
                     <i class="default" style={{ width: scope.row.saleAmountChain }}></i>
                   </span>
@@ -52,11 +59,27 @@ export default {
             )
           }
         },
-        { prop: 'count', label: '下单笔数' },
+        // { prop: 'count', label: '下单笔数' },
+        {
+          label: '下单笔数',
+          render: (h, scope) => {
+            // 根据二级表格有的属性做筛除
+            return (
+              !scope.row.saleAmountChain
+                ? <span>{scope.row.count}</span>
+                : <span class="count" on-click={() => this.open(scope.row.count) } >{scope.row.count}</span>
+            )
+          }
+        },
         {
           label: '下单趋势',
           render: (h, scope) => {
-            return <i class="dj-bi- dj-bi-histogram" on-click={() => this.open() } />
+            // 根据二级表格有的属性做筛除
+            return (
+              !scope.row.saleAmountChain
+                ? <i class="dj-bi- dj-bi-histogram" on-click={() => this.open() } />
+                : ''
+            )
           }
         },
       ],
@@ -181,80 +204,46 @@ export default {
           ]
         }
       ],
+      dialogVisible: false,
+      dataObj: {}
     };
   },
   components: {
-    LbTable
+    LbTable,
+    detailPop
   },
   computed: {},
   watch: {},
-  methods: {}
+  methods: {
+    close () {
+      this.dialogVisible = false;
+    },
+    open(row) {
+      let index = row.$index;
+      this.dataObj.title = `xxx下单明细表`;
+
+      this.dataObj.tableData = [
+        {
+          orderNumber: '46464464',
+          paytime: '2020-09-19 19:01',
+          size: '1313cm',
+          gmv: '￥13131346',
+          saleAmount: '46464m²'
+        },
+        {
+          orderNumber: '979116464646',
+          paytime: '2020-09-19 19:01',
+          size: '1313cm',
+          gmv: '￥13131346',
+          saleAmount: '46464m²'
+        }
+      ];
+      this.dialogVisible = true;
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
-/deep/.el-table {
-  background-color: rgba(0,13,34, 0.2);
+@import './common.less';
 
-  tr {
-    color: #fff;
-    background-color: rgba(8,21,42, 0.2);
-
-    &:hover > td {
-      background-color: rgba(8,21,42, 0.2);
-    }
-  }
-
-  th {
-    background-color: rgba(255,255,255,0.08);
-  }
-}
-/deep/.innerBox {
-  width: 148px;
-  display: flex;
-  color: #fff;
-  justify-content: space-between;
-
-  .progress {
-    width: 80px;
-    height: 6px;
-    display: block;
-    background-color: rgba(0,0,0,0.15);
-    border-radius:4px;
-    margin-top: 8px;
-  }
-
-  i {
-    height: 6px;
-    display: block;
-    background: linear-gradient(270deg,rgba(12,115,249,1) 0%,rgba(0,185,255,1) 100%);
-    border-radius:3px;
-
-    &.gmv {
-      background: linear-gradient(270deg,rgba(42,132,207,1) 0%,rgba(3,254,205,1) 100%);
-    }
-  }
-
-}
-/deep/.el-table__indent {
-  // padding-left: 3px!important;
-}
-/deep/ .el-icon-arrow-right {
-  font-family: "dj-bi-" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  &:before {
-    content: "\e65b";
-  }
-}
-
-/deep/ .el-table__expand-icon--expanded {
-  transform: rotate(0deg);
-
-  .el-icon-arrow-right:before {
-    content: "\e65a";
-  }
-}
 </style>

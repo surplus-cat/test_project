@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
-    <a class="btn" href="javascript:;" @click="backTop">回顶部</a>
+    <!-- <a class="btn" href="javascript:;" @click="backTop">回顶部</a> -->
   </div>
 </template>
 <script>
@@ -64,12 +64,13 @@ export default {
   // background-color: #f13460;
   display: flex;
   flex-direction: column;
+  background-color: #000;
 }
 
 .btn {
   position: absolute;
   right: 0;
-  bottom: -100vh;
+  bottom: 0vh;
 }
 
 ::-webkit-scrollbar {

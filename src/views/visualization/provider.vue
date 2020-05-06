@@ -4,7 +4,7 @@
       <h3 class="title">总接单趋势</h3>
       <div class="vesselBoxer">
         <div class="vessel">
-          <echart ref="chart" type="trends" v-show="isWhether" />
+          <echart ref="chart" type="trends" :style="{ visibility: isWhether ? 'visible' : 'hidden' }" />
           <div class="nodata" v-show="!isWhether"></div>
         </div>
       </div>

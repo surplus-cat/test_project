@@ -1,0 +1,74 @@
+.btable {
+  margin: 0 24px;
+
+  /deep/.count {
+    color: #498EFF;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+/deep/.el-table {
+  background-color: rgba(0,13,34, 0.2);
+
+  tr {
+    color: #fff;
+    background-color: rgba(8,21,42, 0.2);
+
+    &:hover > td {
+      background-color: rgba(8,21,42, 0.2);
+    }
+  }
+
+  th {
+    background-color: rgba(255,255,255,0.08);
+  }
+}
+/deep/.innerBox {
+  width: 148px;
+  display: flex;
+  color: #fff;
+  justify-content: space-between;
+
+  .progress {
+    width: 80px;
+    height: 6px;
+    display: block;
+    background-color: rgba(0,0,0,0.15);
+    border-radius:4px;
+    margin-top: 8px;
+  }
+
+  i {
+    height: 6px;
+    display: block;
+    background: linear-gradient(270deg,rgba(12,115,249,1) 0%,rgba(0,185,255,1) 100%);
+    border-radius:3px;
+
+    &.gmv {
+      background: linear-gradient(270deg,rgba(42,132,207,1) 0%,rgba(3,254,205,1) 100%);
+    }
+  }
+
+}
+/deep/.el-table__indent {
+  // padding-left: 3px!important;
+}
+/deep/ .el-icon-arrow-right {
+  font-family: "dj-bi-" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:before {
+    content: "\e65b";
+  }
+}
+
+/deep/ .el-table__expand-icon--expanded {
+  transform: rotate(0deg);
+
+  .el-icon-arrow-right:before {
+    content: "\e65a";
+  }
+}

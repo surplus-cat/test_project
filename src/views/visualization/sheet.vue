@@ -199,11 +199,13 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.boxer {
-  width: 1000px;
-  background-color: #000D22;
-  margin: 0 auto;
-}
+@import './common.less';
+
+// .boxer {
+//   width: 1000px;
+//   background-color: #000D22;
+//   margin: 0 auto;
+// }
 .icon {
   cursor: pointer;
 }
