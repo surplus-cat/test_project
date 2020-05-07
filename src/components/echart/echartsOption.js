@@ -2566,7 +2566,7 @@ let option = [
     }],
     dataset: {
       dimensions: [
-        'date', 'saleAmount', 'saleAmountChain', 'GMVChain', 'GMV'
+        'date', 'saleAmount', 'saleAmountChain', 'GMVChain', 'GMV', 'hiddenVal'
       ],
       source: []
     },
@@ -2599,9 +2599,9 @@ let option = [
     },
     {
       x: '1%',
-      y1: '5%',
-      top: '40%',
-      height: '12.5%',
+      y1: '0%',
+      top: '5%',
+      height: '87.5%',
       left: 80,
       right: 28,
       show: false
@@ -2776,7 +2776,7 @@ let option = [
       yAxisIndex: 1,
       encode: {
         x: 'date',
-        y: 'saleAmount'
+        y: 'hiddenVal'
       },
       itemStyle: {
         normal: {

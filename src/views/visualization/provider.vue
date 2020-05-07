@@ -237,6 +237,7 @@ export default {
           saleAmount: 287,
           saleAmountChain: "2.4",
           GMV: 131,
+          hiddenVal: 10,
           GMVChain: '-1.5',
         },
         {
@@ -244,6 +245,7 @@ export default {
           saleAmount: 187,
           saleAmountChain: "2",
           GMV: 136,
+          hiddenVal: 10,
           GMVChain: '-12.8',
         },
         {
@@ -251,6 +253,7 @@ export default {
           saleAmount: 147,
           saleAmountChain: "12",
           GMV: 126,
+          hiddenVal: 10,
           GMVChain: '-11',
         },
         {
@@ -258,6 +261,7 @@ export default {
           saleAmount: 87,
           saleAmountChain: "12",
           GMV: 226,
+          hiddenVal: 10,
           GMVChain: '-10',
         },
         {
@@ -265,6 +269,7 @@ export default {
           saleAmount: 107,
           saleAmountChain: "12",
           GMV: 246,
+          hiddenVal: 10,
           GMVChain: '-18',
         },
         {
@@ -272,6 +277,7 @@ export default {
           saleAmount: 227,
           saleAmountChain: "2.2",
           GMV: 46,
+          hiddenVal: 10,
           GMVChain: '12',
         },
         {
@@ -279,6 +285,7 @@ export default {
           saleAmount: 127,
           saleAmountChain: "3",
           GMV: 16,
+          hiddenVal: 10,
           GMVChain: '-12',
         }
       ];
@@ -290,7 +297,7 @@ export default {
         this.$refs.chart.option.dataset.source = data;
         this.$refs.chart.reDraw();
 
-        this.$refs.chart.myChart.on('mouseover', function () {
+        this.$refs.chart.myChart.on('mouseover', 'series', function () {
           console.log(111);
         })
       });

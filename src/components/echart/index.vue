@@ -33,7 +33,7 @@ export default {
     };
   },
   mounted () {
-    console.log(this.$el.offsetWidth)
+    // console.log(this.$el.offsetWidth)
     // 基于准备好的dom，初始化echarts实例
     this.width = this.$el.offsetWidth + 'px';
     this.height = this.$el.offsetHeight + 'px';
