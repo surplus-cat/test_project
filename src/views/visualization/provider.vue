@@ -289,6 +289,10 @@ export default {
       this.$nextTick(() => {
         this.$refs.chart.option.dataset.source = data;
         this.$refs.chart.reDraw();
+
+        this.$refs.chart.myChart.on('mouseover', function () {
+          console.log(111);
+        })
       });
 
       // this.$refs.chart.option.dataset.source = data;
@@ -298,6 +302,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+@import './common';
+
 .ProviderBox {
   padding: 0 24px;
   display: flex;

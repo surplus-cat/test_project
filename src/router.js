@@ -59,19 +59,9 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/table.vue')
     },
     {
-      path: '/sheet',
-      name: 'sheet',
-      component: () => import(/* webpackChunkName: "about" */ './views/visualization/sheet.vue')
-    },
-    {
       path: '/board',
       name: 'board',
       component: () => import(/* webpackChunkName: "about" */ './views/visualization/board.vue')
-    },
-    {
-      path: '/target',
-      name: 'target',
-      component: () => import(/* webpackChunkName: "about" */ './views/visualization/target.vue')
     },
     {
       path: '/provider',
