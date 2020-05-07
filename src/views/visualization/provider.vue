@@ -36,6 +36,8 @@
 import echart from '@/components/echart';
 import chartPop from './popout/chartPop';
 import LbTable from '@/components/lb-table/lb-table';
+import { func } from '@/util';
+const debounce = func.debounce;
 
 export default {
   data () {
@@ -297,13 +299,17 @@ export default {
         this.$refs.chart.option.dataset.source = data;
         this.$refs.chart.reDraw();
 
-        this.$refs.chart.myChart.on('mouseover', 'series', function () {
-          console.log(111);
+        this.$refs.chart.myChart.on('mouseover', 'series', (event) => {
+          debounce(() => {
+            this.print(event);
+          }, 1000)
         })
       });
-
       // this.$refs.chart.option.dataset.source = data;
       // this.$refs.chart.reDraw();
+    },
+    print(event) {
+      console.log(event, +new Date());
     }
   }
 };

@@ -35,13 +35,13 @@ export function toThousands(s, n) {
 export function diff(obj1, obj2) {
   var o1 = obj1 instanceof Object;
   var o2 = obj2 instanceof Object;
-  if (!o1 || !o2) {/*  判断不是对象  */
+  if (!o1 || !o2) { /*  判断不是对象  */
     return obj1 === obj2;
   }
 
   if (Object.keys(obj1).length !== Object.keys(obj2).length) {
     return false;
-    //Object.keys() 返回一个由对象的自身可枚举属性(key值)组成的数组,例如：数组返回下表：let arr = ["a", "b", "c"];console.log(Object.keys(arr))->0,1,2;
+    // Object.keys() 返回一个由对象的自身可枚举属性(key值)组成的数组,例如：数组返回下表：let arr = ["a", "b", "c"];console.log(Object.keys(arr))->0,1,2;
   }
 
   for (var attr in obj1) {
@@ -119,31 +119,44 @@ export function debounce(fn, wait) {
 }
 
 export function dispose(int) {
-  return int ? int : 0;
+  return int || 0;
 }
+
+export function debounceDup(fn, ms) {
+  let timer;
+  return function(...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn(...args)
+      timer = null;
+    }, ms);
+  }
+};
 
 export function getTime(timestamp) {
   var time = new Date(timestamp);
-  var y = time.getFullYear();//年
-  var m = zeroBu(time.getMonth() + 1);//月
-  var d = zeroBu(time.getDate());//日
-  var h = zeroBu(time.getHours());//时
-  var mm = zeroBu(time.getMinutes());//分
-  var s = zeroBu(time.getSeconds());//秒
+  var y = time.getFullYear(); // 年
+  var m = zeroBu(time.getMonth() + 1); // 月
+  var d = zeroBu(time.getDate()); // 日
+  var h = zeroBu(time.getHours()); // 时
+  var mm = zeroBu(time.getMinutes()); // 分
+  var s = zeroBu(time.getSeconds()); // 秒
   var times = y + "-" + m + "-" + d + " " + h + ":" + mm + ":" + s;
   return times;
 }
 
 export function gainTime(timestamp) {
   var time = new Date(timestamp);
-  var y = time.getFullYear();//年
-  var m = zeroBu(time.getMonth() + 1);//月
-  var d = zeroBu(time.getDate());//日
+  var y = time.getFullYear(); // 年
+  var m = zeroBu(time.getMonth() + 1); // 月
+  var d = zeroBu(time.getDate()); // 日
   var times = y + "." + m + "." + d;
   return times;
 }
 
-//补零函数
+// 补零函数
 function zeroBu(n) {
   if (n < 10) {
     return '0' + n;
@@ -201,32 +214,32 @@ let convertToInt = function (num) {
   num = Number(num);
   var newNum = num;
   var times = countDecimals(num);
-  var temp_num = num.toString().toUpperCase();
-  if (temp_num.split('E').length === 2) {
+  let tempNum = num.toString().toUpperCase();
+  if (tempNum.split('E').length === 2) {
     newNum = Math.round(num * Math.pow(10, times));
   } else {
-    newNum = Number(temp_num.replace(".", ""));
+    newNum = Number(tempNum.replace(".", ""));
   }
   return newNum;
 };
 let getCorrectResult = function (type, num1, num2, result) {
-  var temp_result = 0;
+  let tempResult = 0;
   switch (type) {
     case "add":
-      temp_result = num1 + num2;
+      tempResult = num1 + num2;
       break;
     case "sub":
-      temp_result = num1 - num2;
+      tempResult = num1 - num2;
       break;
     case "div":
-      temp_result = num1 / num2;
+      tempResult = num1 / num2;
       break;
     case "mul":
-      temp_result = num1 * num2;
+      tempResult = num1 * num2;
       break;
   }
-  if (Math.abs(result - temp_result) > 1) {
-    return temp_result;
+  if (Math.abs(result - tempResult) > 1) {
+    return tempResult;
   }
   return result;
 };
