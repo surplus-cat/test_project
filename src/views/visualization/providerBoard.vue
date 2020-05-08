@@ -1,38 +1,42 @@
 <template>
-  <div class="ProviderBox">
-    <div class="ChartBox">
-      <h3 class="title">总接单趋势</h3>
-      <div class="vesselBoxer">
-        <div class="vessel">
-          <echart ref="chart" type="trends" :style="{ visibility: isWhether ? 'visible' : 'hidden' }" />
-          <div class="nodata" v-show="!isWhether"></div>
+  <div>
+    <oneCommon />
+    <div class="ProviderBox">
+      <div class="ChartBox">
+        <h3 class="title">总接单趋势</h3>
+        <div class="vesselBoxer">
+          <div class="vessel">
+            <echart ref="chart" type="trends" :style="{ visibility: isWhether ? 'visible' : 'hidden' }" />
+            <div class="nodata" v-show="!isWhether"></div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="tableBox">
-      <div class="titleBox">
-        <h3 class="title">xxx月xx日供应商接单明细</h3>
-        <el-input class="el_input" v-model="areaName" placeholder="行政区名称" />
+      <div class="tableBox">
+        <div class="titleBox">
+          <h3 class="title">xxx月xx日供应商接单明细</h3>
+          <el-input class="el_input" v-model="productName" placeholder="产品名称" />
+        </div>
+
+        <lb-table
+          class="btable"
+          ref="baseTable"
+          :data="tableData"
+          :column="colConfigs">
+        </lb-table>
       </div>
 
-      <lb-table
-        class="btable"
-        ref="baseTable"
-        :data="tableData"
-        :column="colConfigs">
-      </lb-table>
+      <chart-pop
+        ref="ChartPop"
+        :dialog-visible="dialogVisible"
+        :chart-obj="ChartObj"
+        @close="close">
+      </chart-pop>
     </div>
-
-    <chart-pop
-      ref="ChartPop"
-      :dialog-visible="dialogVisible"
-      :chart-obj="ChartObj"
-      @close="close">
-    </chart-pop>
   </div>
 </template>
 
 <script>
+import oneCommon from './components/oneCommon';
 import echart from '@/components/echart';
 import chartPop from './popout/chartPop';
 import LbTable from '@/components/lb-table/lb-table';
@@ -42,7 +46,7 @@ const debounce = func.debounce;
 export default {
   data () {
     return {
-      areaName: '',
+      productName: '',
       isWhether: true,
       colConfigs: [
         {
@@ -52,13 +56,13 @@ export default {
           render: (h, scope) => {
             return (
               scope.row.productName.length > 8
-                ? <div class="innerBox">
+                ? <div class="innerCase">
                   <span class="rank">{ scope.$index + 1 }</span>
                   <el-tooltip content={scope.row.productName} placement="top-start" effect="light">
                     <p class="productName">{ scope.row.productName }</p>
                   </el-tooltip>
                 </div> : (
-                  <div class="innerBox">
+                  <div class="innerCase">
                     <span class="rank">{ scope.$index + 1 }</span>
                     <p class="productName">{ scope.row.productName }</p>
                   </div>
@@ -145,7 +149,8 @@ export default {
   components: {
     echart,
     chartPop,
-    LbTable
+    LbTable,
+    oneCommon
   },
   computed: {},
   mounted() {
@@ -318,9 +323,7 @@ export default {
 @import './common';
 
 .ProviderBox {
-  padding: 0 24px;
   display: flex;
-  margin-top: 50px;
 
   .ChartBox {
     width: 1024px;
@@ -389,12 +392,7 @@ export default {
       /deep/ .el-input__inner {
         height: 38px;
         line-height: 38px;
-        background-color: rgba(8,21,42,1);
-        border-color: rgba(255,255,255,0.2);
 
-        &:hover {
-          border-color: rgba(255,255,255,0.2);
-        }
       }
     }
 
@@ -423,7 +421,7 @@ export default {
 
     }
 
-    /deep/.innerBox {
+    /deep/.innerCase {
       display: flex;
 
       .rank {

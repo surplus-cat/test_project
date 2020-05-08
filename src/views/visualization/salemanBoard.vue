@@ -1,6 +1,6 @@
 <template>
   <div>
-    <salemanfiltro @handover="handover" />
+    <salemanfiltro ref="filtro" @handover="handover" />
     <div class="concrete_content">
       <div class="echart-content" v-show="type === 'manager'">
         <!-- 销售趋势图 -->
@@ -228,6 +228,11 @@ export default {
       this.query();
     }, 1000)
   },
+  computed: {
+    mold () {
+      return this.$refs.filtro.source;
+    }
+  },
   methods: {
     handover(val) {
       this.type = val;
@@ -270,7 +275,14 @@ export default {
     },
     open(row) {
       let index = row.$index;
-      this.ChartObj.title = "纸板团购接单趋势";
+      if (this.mold === 'groupon') {
+        this.ChartObj.title = "纸板团购接单趋势";
+        this.ChartObj.type = "trends";
+      } else {
+        this.ChartObj.title = "积分商城接单趋势";
+        this.ChartObj.type = "integral";
+      }
+
       let data = JSON.parse(JSON.stringify(this.data2));
       let newObj = JSON.parse(JSON.stringify(this.data2[index]));
 
@@ -279,7 +291,7 @@ export default {
       data.push(newObj);
 
       // this.ChartObj.source = data;
-      this.ChartObj.type = "trends";
+
       this.dialogVisible = true;
 
       // if (this.$refs.ChartPop.$refs.echart) {

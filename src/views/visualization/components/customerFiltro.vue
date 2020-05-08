@@ -10,14 +10,6 @@
     <div class="condition_gather">
       <div class="dimension">
         <ul>
-          <li v-show="tab === 'manager'">
-            <span class="name">目标维度</span>
-            <span class="option"
-              v-for="(item, index) in targets"
-              @click="toggle('target', item.value)"
-              :class="{'active': target === item.value }"
-              :key="index">{{ item.name }}</span>
-          </li>
           <li v-show="tab === 'order'">
             <span class="name">客户来源</span>
             <span class="option"
@@ -26,29 +18,13 @@
               :class="{'active': source === item.value }"
               :key="index">{{ item.name }}</span>
           </li>
-          <li>
+          <li v-show="tab === 'order'">
             <span class="name">时间维度</span>
             <span class="option"
               v-for="(item, index) in times"
               @click="toggle('time', item.value)"
               :class="{'active': time === item.value }"
               :key="index">{{ item.name }}</span>
-          </li>
-          <!-- 业务员管理是时间点，业务员订单是时间段 -->
-          <li v-show="tab === 'manager'">
-            <span class="name">时间段</span>
-            <el-date-picker
-              v-show="time === 'day'"
-              v-model="timeing"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
-            <el-date-picker
-              v-show="time === 'month'"
-              v-model="timeing"
-              type="month"
-              placeholder="选择日期">
-            </el-date-picker>
           </li>
           <li v-show="tab === 'order'">
             <span class="name">时间段</span>
@@ -75,6 +51,29 @@
               placeholder="选择日期">
             </el-date-picker>
           </li>
+          <li v-show="tab === 'manager'">
+            <span class="name">日期</span>
+            <el-date-picker
+              v-model="date"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </li>
+          <li>
+            <span class="name">客户</span>
+            <el-input v-model="customerName" class="input_field" />
+          </li>
+          <li>
+            <span class="name">业务员</span>
+            <el-select v-model="value" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </li>
           <li>
             <p class="reset">重置</p>
           </li>
@@ -95,42 +94,54 @@ import WeekPicker from 'packages/date-picker/index.js';
 export default {
   data () {
     return {
-      nowTime: +new Date(),
-      time: 'day',
-      target: 'gmv',
-      source: 'groupon',
-      timezones: '',
-      timeing: '',
-      tab: 'manager',
+      date: '',
+      customerName: '',
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      value: '',
       tabs: [
         {
-          name: '业务员管理',
-          value: 'manager'
+          name: '客户订单',
+          value: 'order'
         },
         {
-          name: '业务员订单',
-          value: 'order'
+          name: '客户管理',
+          value: 'manager'
         }
       ],
+      nowTime: +new Date(),
+      time: 'day',
+      timezones: '',
+      timeing: '',
+      tab: 'order',
+      source: 'groupon',
       times: [
         {
           name: '日',
           value: 'day'
         },
         {
+          name: '周',
+          value: 'week'
+        },
+        {
           name: '月',
           value: 'month'
         },
-      ],
-      targets: [
-        {
-          name: 'GMV',
-          value: 'gmv'
-        },
-        {
-          name: '接单量',
-          value: 'saleAmount'
-        }
       ],
       sources: [
         {
@@ -154,33 +165,6 @@ export default {
 
       if (property === 'tab') {
         this.$emit('handover', this.tab);
-        if (this.tab === 'manager') {
-          this.times = [
-            {
-              name: '日',
-              value: 'day'
-            },
-            {
-              name: '月',
-              value: 'month'
-            },
-          ]
-        } else {
-          this.times = [
-            {
-              name: '日',
-              value: 'day'
-            },
-            {
-              name: '周',
-              value: 'week'
-            },
-            {
-              name: '月',
-              value: 'month'
-            },
-          ]
-        }
       }
     }
   }

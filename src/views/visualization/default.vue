@@ -2,37 +2,58 @@
   <div>
     <div class="common_nav">
       <ul>
+        <li>首页</li>
         <li v-for="(item, index) in items" :key="item" @click="handleClick(index)" :class="{ active: activeIndex === index }">
           {{ item }}
         </li>
       </ul>
     </div>
-    <h4 class="subtitle">温州分公司客户数据</h4>
+    <h4 class="subtitle">温州{{ titles[activeIndex] }}</h4>
     <div class="content">
-      <salemanManage />
+      <saleBoard v-if="activeIndex === 0" />
+      <providerBoard v-if="activeIndex === 1" />
+      <customerBoard v-if="activeIndex === 2"/>
+      <salemanBoard v-if="activeIndex === 3" />
+      <saleData v-if="activeIndex === 4 || activeIndex === 5" :index="activeIndex" />
     </div>
   </div>
 </template>
 
 <script>
-import salemanManage from './salemanManage.vue';
+import salemanBoard from './salemanBoard.vue';
+import saleBoard from './saleBoard.vue';
+import providerBoard from './providerBoard.vue';
+import saleData from './saleData.vue';
+import customerBoard from './customerBoard.vue';
 
 export default {
   data () {
     return {
       activeIndex: 0,
       items: [
-        '首页',
         '销售看板',
+        '供应商看板',
         '客户看板',
         '业务员看板',
         '待付款看板',
         '购物车看板'
       ],
+      titles: [
+        '分公司接单数据',
+        '分公司供应商接单数据',
+        '分公司客户数据',
+        '分公司业务员数据',
+        '分公司今日待付款',
+        '分公司今日购物车'
+      ]
     };
   },
   components: {
-    salemanManage
+    saleBoard,
+    salemanBoard,
+    providerBoard,
+    saleData,
+    customerBoard
   },
   computed: {},
   watch: {},
@@ -77,19 +98,5 @@ export default {
       }
     }
   }
-}
-
-.subtitle {
-  line-height: 32px;
-  font-size: 20px;
-  margin-top: 24px;
-  margin-bottom: 16px;
-  margin-left: 48px;
-  color: #fff;
-  text-align: left;
-}
-
-.content {
-  margin: 0 24px;
 }
 </style>

@@ -50,6 +50,10 @@
     &.gmv {
       background: linear-gradient(270deg,rgba(42,132,207,1) 0%,rgba(3,254,205,1) 100%);
     }
+
+    &.integral {
+      background:linear-gradient(90deg,rgba(255,211,41,1) 0%,rgba(254,167,18,1) 100%);
+    }
   }
 
 }
@@ -81,99 +85,35 @@ li {
   list-style: none;
 }
 
-
-.filtro_box {
-  padding: 17px 24px 29px;
-  height: 129px;
-  box-sizing: border-box;
-  background-color: rgba(8,21,42,1);
-  border-radius: 4px;
-  text-align: left;
+.subtitle {
+  line-height: 32px;
+  font-size: 20px;
+  margin-top: 24px;
   margin-bottom: 16px;
+  margin-left: 48px;
+  color: #fff;
+  text-align: left;
+}
 
-  .tabsBar {
-    line-height: 32px;
-    font-size: 18px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 24px;
+.content {
+  margin: 0 24px;
+}
 
-    .tabs {
-      cursor: pointer;
-      margin-right: 28px;
+/deep/ .el-input__inner {
+  color: rgba(255,255,255,0.65);
+  background-color: transparent;
+  border-color: rgba(255,255,255,0.2);
 
-      &.active {
-        color: #fff;
-      }
-    }
+  &:hover {
+    border-color: rgba(255,255,255,0.2);
   }
 }
 
+/deep/ .el-range-input {
+  color: rgba(255,255,255,0.65);
+  background-color: transparent;
+}
 
-
-.condition_gather {
-  display: flex;
-  justify-content: space-between;
-
-  .dimension {
-    line-height: 34px;
-
-    ul {
-      display: flex;
-    }
-
-    li {
-      margin-right: 24px;
-    }
-
-    .name {
-      font-size: 14px;
-      color: rgba(255,255,255,0.85);
-      margin-right: 16px;
-    }
-
-    .option {
-      line-height: 24px;
-      padding: 6px 9px;
-      font-size: 14px;
-      margin-right: 16px;
-      border-radius: 2px;
-      border: 1px solid rgba(255,255,255,0.2);
-      cursor: pointer;
-
-      &.active {
-        color: #fff;
-        background-color: rgba(20,128,255,0.3);
-        border-color: rgba(0,100,235,1);
-      }
-    }
-
-    .reset {
-      width:60px;
-      height: 32px;
-      line-height: 33px;
-      text-align: center;
-      font-size: 14px;
-      border-radius:2px;
-      border:1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.65);
-      cursor: pointer;
-    }
-  }
-
-  .clock {
-    color: rgba(255,255,255,0.45);
-    margin-right: 24px;
-  }
-
-  .nowTime {
-    margin-left: 8px;
-  }
-
-  .refreshBtn {
-    color: #fff;
-  }
-
-  .dj-bi-refresh {
-    margin-left: 8px;
-  }
+/deep/ .el-date-editor .el-range-separator {
+  color: rgba(255,255,255,0.65);
 }

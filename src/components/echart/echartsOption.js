@@ -3071,6 +3071,118 @@ let option = [
         }
       }
     }]
-  }
+  },
+  {
+    name: 'integral',
+    axisPointer: {
+      link: {
+        xAxisIndex: 'all'
+      },
+      label: {
+        backgroundColor: '#777'
+      }
+    },
+    title: [{
+      text: '接单量（万平方米）',
+      left: 22,
+      top: 0,
+      textStyle: {
+        color: 'rgba(255,255,255,0.65)',
+        fontSize: 14,
+        fontWeight: 'normal'
+      }
+    }],
+    dataset: {
+      dimensions: [
+        'date', 'saleAmount', 'saleAmountChain', 'GMVChain', 'GMV', 'hiddenVal'
+      ],
+      source: []
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'line',
+        lineStyle: {
+          type: 'dashed'
+        }
+      },
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      padding: 10,
+      formatter: function (params) {
+        let text = `<div class="trendsBoxer">
+                      <div class="line"><p>${params[0].name} 周五</p></div>
+                      <div class="line"><p><span class="mark"></span> 日环比</p>  <p>${params[0]['value']['GMV']} ${params[0]['value']['GMVChain'] > 0 ? '<i class="dj-bi- dj-bi-chart_increase"></i>' : '<i class="dj-bi- dj-bi-chart_decrease"></i>'}<span class="rightText">${Math.abs(params[0]['value']['GMVChain'])}%</span></p></div>
+                    </div>`;
+        return text;
+      }
+    },
+    grid: [{
+      left: 80,
+      right: 28,
+      show: false
+    }],
+    xAxis: [{
+      type: 'category',
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        color: 'rgba(255,255,255,0.85)'
+      },
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12);'
+        }
+      }
+    }],
+    yAxis: [{
+      type: 'value',
+      nameTextStyle: {
+        padding: 40
+      },
+      offset: 24,
+      position: 'left',
+      nameLocation: 'middle',
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: 'rgba(255,255,255,0.12)'
+        }
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        formatter: '{value}',
+        textStyle: {
+          color: 'rgba(255,255,255,0.65)',
+          fontSize: 12
+        }
+      }
+    }],
+    series: [{
+      name: '接单量',
+      type: 'bar',
+      barWidth: 30,
+      encode: {
+        x: 'date',
+        y: 'saleAmount'
+      },
+      itemStyle: {
+        normal: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+            offset: 0,
+            color: '#FFD329'
+          }, {
+            offset: 1,
+            color: '#FEA712'
+          }])
+        }
+      }
+    }]
+  },
 ];
 export default option;

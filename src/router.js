@@ -64,16 +64,6 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/visualization/board.vue')
     },
     {
-      path: '/provider',
-      name: 'provider',
-      component: () => import(/* webpackChunkName: "about" */ './views/visualization/provider.vue')
-    },
-    {
-      path: '/saleBoard',
-      name: 'saleBoard',
-      component: () => import(/* webpackChunkName: "about" */ './views/visualization/saleBoard.vue')
-    },
-    {
       path: '/saleOrder',
       name: 'saleOrder',
       component: () => import(/* webpackChunkName: "about" */ './views/visualization/saleOrder.vue')
