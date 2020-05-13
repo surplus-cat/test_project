@@ -28,6 +28,8 @@
               v-show="time === 'day'"
               v-model="timezones"
               type="daterange"
+              :clearable="false"
+              value-format="yyyy-MM-dd"
               placeholder="选择日期">
             </el-date-picker>
             <week-picker
@@ -37,6 +39,8 @@
               start-placeholder="开始周"
               end-placeholder="结束周"
               type="weekrange"
+              value-format="yyyy-MM-dd"
+              :clearable="false"
               placeholder="选择周"
               :picker-options="{'firstDayOfWeek': 1}">
             </week-picker>
@@ -44,6 +48,8 @@
               v-show="time === 'month'"
               v-model="timezones"
               type="monthrange"
+              :clearable="false"
+              value-format="yyyy-MM"
               placeholder="选择日期">
             </el-date-picker>
           </li>

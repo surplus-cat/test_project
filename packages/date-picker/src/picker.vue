@@ -115,6 +115,7 @@ const DEFAULT_FORMATS = {
   timerange: 'HH:mm:ss',
   daterange: 'yyyy-MM-dd',
   monthrange: 'yyyy-MM',
+  weekrange: 'yyyy-MM-dd',
   datetimerange: 'yyyy-MM-dd HH:mm:ss',
   year: 'yyyy'
 };
@@ -152,8 +153,35 @@ const FORMATTER = function (date) {
   let year = new Date(date).getFullYear();
   let month = new Date(date).getMonth() + 1;
   let week = Math.ceil((now - firstWeek) / 7) + Number(isFirstWeek);
-  return `${year} 年 ${month} 月 第 ${week} 周`
+  return `${year}年${month}月第${week}周`
 };
+
+const WEEKRANGE_FORMATT = function (value, type) {
+  let year = value.match(/\d+/g)[0];
+  let month = value.match(/\d+/g)[1];
+  let week = value.match(/\d+/g)[2];
+  let day = '';
+  let firstDay = new Date(`${year}-${month}-01`).getDay();
+  let firstWeek = firstDay === 0 ? 1 : new Date(`${year}-${month}-${7 - firstDay + 1}`).getDate();
+  if (type === 'first') {
+    day = firstDay === 0 ? new Date(`${year}-${month}-${(week - 1) * 7 + 1}`).getDate() : new Date(`${year}-${month}-${(week - 1) * 7 + 1}`).getDate();
+  } else {
+    day = firstDay === 0 ? new Date(`${year}-${month}-${week * 7}`).getDate() : new Date(`${year}-${month}-${(week - 1) * 7 + 1}`).getDate();
+  }
+
+  console.log(`${year}-${month}-${week}`)
+}
+
+const WEEKRANGE_PARSER = function (value, format) {
+  if (!value) return '';
+  if (value.length === 2) {
+    const range1 = value[0];
+    const range2 = value[1];
+
+    return [WEEKRANGE_FORMATT(range1, 'first'), WEEKRANGE_FORMATT(range2, 'end')];
+  }
+};
+
 const WEEK_PARSER = function (value, format) {
   let week = getWeekNumber(value);
   let month = value.getMonth();
@@ -253,7 +281,7 @@ const TYPE_VALUE_RESOLVER_MAP = {
   },
   weekrange: {
     formatter: WEEKRANGE_FORMATTER,
-    parser: WEEK_PARSER
+    parser: WEEKRANGE_PARSER
   },
   daterange: {
     formatter: RANGE_FORMATTER,
