@@ -14,11 +14,6 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/product.vue')
     },
     {
-      path: '/sale',
-      name: 'sale',
-      component: () => import(/* webpackChunkName: "about" */ './views/sale.vue')
-    },
-    {
       path: '/radio',
       name: 'radio',
       component: () => import(/* webpackChunkName: "about" */ './views/radio.vue')

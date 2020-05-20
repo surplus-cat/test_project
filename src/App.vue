@@ -64,7 +64,6 @@ export default {
   // background-color: #f13460;
   display: flex;
   flex-direction: column;
-  background-color: #000;
 }
 
 .btn {
