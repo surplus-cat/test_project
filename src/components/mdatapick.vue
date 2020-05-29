@@ -546,7 +546,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 5px 0px 11px;
+    padding: 15px 0px 11px;
     .btn {
       display: flex;
       justify-content: center;

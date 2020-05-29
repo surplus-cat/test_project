@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     {{ obj.name }} <el-button @click="add">筛选条件</el-button>
     <div class="filter-group-control">
       <div id="filter-group-relation"
@@ -8,7 +8,7 @@
         <div class="relation-topline"></div>
         <button data-method="relation"
           data-relation="and"
-          class="btn"
+          class="buttons"
           @click="toggle"
           type="button">{{ aliasname[obj.type] }}</button>
         <div class="relation-bottomline"></div>
@@ -46,7 +46,7 @@
             <span data-role="remove" @click="remove(index, idx)"></span>
           </span>
           <div class="tipbox">
-            <input @input="check($event, idx)" :id="forId('input', idx)" @keyup.enter="submit($event, idx)" @keyup.delete="backspace($event, idx)" />
+            <input @input="check($event, idx)" :id="forId('input', idx)" @keyup.enter="submit($event, idx)" @keyup.delete="backspace($event, idx)" @blur="submit($event, idx)" />
 
             <ul v-show="ele.state3 && tips.length > 0">
               <li v-for="(tip, index) in tips_cp"
@@ -302,6 +302,10 @@ export default {
 
 </script>
 <style lang="less" scoped>
+.wrapper {
+  padding-left: 20px;
+  background-color: #ccc;
+}
 .filter-group-control {
   align-items: center;
   width: 100%;
@@ -520,7 +524,7 @@ export default {
   height: calc(50% - 33px);
 }
 
-.btn {
+.buttons {
   background: #f6f8fa;
   border: 1px solid #a8b7c8;
   padding: 6px 10px;

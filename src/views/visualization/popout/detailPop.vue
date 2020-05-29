@@ -185,7 +185,7 @@ export default {
 .filtrateBox {
   display: flex;
   line-height: 40px;
-  margin: 0 24px 28px;
+  margin: 0 31px 28px;
   color: #fff;
 
   .statusBox {
