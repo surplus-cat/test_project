@@ -104,3 +104,46 @@ measures: [
     aggregator: "average"
   }
 ]
+
+
+静态时间 传值
+
+measures: [{,…}, {event_name: "$AppStart", aggregator: "average"}]
+unit: "week"
+filter: {}
+by_fields: ["event.$Anything.$country", "event.$Anything.$screen_height"]
+sampling_factor: 64
+axis_config: {isNormalize: false, left: [], right: []}
+from_date: "2020-04-07"
+to_date: "2020-04-14"
+approx: false
+tType: "n"
+ratio: "n"
+detail_and_rollup: true
+layer_other_rollup: false
+isSaved: false
+sub_task_type: "SEGMENTATION"
+jump_url: "/segmentation/?project=default#measures%5B0%5D%5Bexpression%5D=count(event.%24AppStartPassively)%2Fmax(event.%24AppClick.%24screen_width)%2Bmax(event.%24AppViewScreen.%24screen_height)%7C%252p&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Brelation%5D=and&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Bconditions%5D%5B0%5D%5Bfield%5D=event.%24AppClick.%24distinct_id&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Bconditions%5D%5B0%5D%5Bfunction%5D=equal&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Bconditions%5D%5B0%5D%5Bparams%5D%5B%5D=111122222&measures%5B0%5D%5Bevents%5D%5B%5D=%24AppStartPassively&measures%5B0%5D%5Bevents%5D%5B%5D=%24AppClick&measures%5B0%5D%5Bevents%5D%5B%5D=%24AppViewScreen&measures%5B0%5D%5Bname%5D=emm&measures%5B0%5D%5Bformat%5D=%252p&measures%5B1%5D%5Bevent_name%5D=%24AppStart&measures%5B1%5D%5Baggregator%5D=average&unit=week&by_fields%5B%5D=event.%24Anything.%24country&by_fields%5B%5D=event.%24Anything.%24screen_height&chartsType=line&sampling_factor=64&axis_config%5BisNormalize%5D=false&rangeText=&from_date=2020-04-07&to_date=2020-04-14&approx=false&tType=n&ratio=n&request_id=1591077472999:836642"
+request_id: "1591077472999:836642"
+use_cache: true
+
+动态时间 传值
+
+measures: [{,…}, {event_name: "$AppStart", aggregator: "average"}]
+unit: "week"
+filter: {}
+by_fields: ["event.$Anything.$country", "event.$Anything.$screen_height"]
+sampling_factor: 64
+axis_config: {isNormalize: false, left: [], right: []}
+from_date: "2020-04-07"
+to_date: "2020-04-14"
+approx: false
+tType: "n"
+ratio: "n"
+detail_and_rollup: true
+layer_other_rollup: false
+isSaved: false
+sub_task_type: "SEGMENTATION"
+jump_url: "/segmentation/?project=default#measures%5B0%5D%5Bexpression%5D=count(event.%24AppStartPassively)%2Fmax(event.%24AppClick.%24screen_width)%2Bmax(event.%24AppViewScreen.%24screen_height)%7C%252p&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Brelation%5D=and&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Bconditions%5D%5B0%5D%5Bfield%5D=event.%24AppClick.%24distinct_id&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Bconditions%5D%5B0%5D%5Bfunction%5D=equal&measures%5B0%5D%5Bexpression_filters%5D%5B1%5D%5Bconditions%5D%5B0%5D%5Bparams%5D%5B%5D=111122222&measures%5B0%5D%5Bevents%5D%5B%5D=%24AppStartPassively&measures%5B0%5D%5Bevents%5D%5B%5D=%24AppClick&measures%5B0%5D%5Bevents%5D%5B%5D=%24AppViewScreen&measures%5B0%5D%5Bname%5D=emm&measures%5B0%5D%5Bformat%5D=%252p&measures%5B1%5D%5Bevent_name%5D=%24AppStart&measures%5B1%5D%5Baggregator%5D=average&unit=week&by_fields%5B%5D=event.%24Anything.%24country&by_fields%5B%5D=event.%24Anything.%24screen_height&chartsType=line&sampling_factor=64&axis_config%5BisNormalize%5D=false&rangeText=%E8%BF%87%E5%8E%BB49%E5%A4%A9+-+%E8%BF%87%E5%8E%BB56%E5%A4%A9&from_date=2020-04-07&to_date=2020-04-14&approx=false&tType=n&ratio=n&request_id=1591077424884:563659"
+request_id: "1591077424884:563659"
+use_cache: true
