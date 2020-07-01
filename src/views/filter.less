@@ -21,17 +21,21 @@
   }
   .expression-unit {
     position: relative;
-    width: 50%;
+    // width: 50%;
     height: 100%;
     max-height: 173px;
-    overflow-y: scroll;
-    margin: 0;
-    border: 1px solid #e2e9f1;
+    // overflow-y: scroll;
     border-radius: 3px;
     padding: 0 0 0 3px;
     background: #fff;
     vertical-align: middle;
-    margin-left: 10px;
+    
+
+    &.master {
+      width: 600px;
+      border: 1px solid #e2e9f1;
+      margin-left: 10px;
+    }
 
     &>ul {
       position: relative;

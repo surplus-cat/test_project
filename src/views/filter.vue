@@ -13,8 +13,7 @@
           data-relation="and"
           class="buttons"
           @click="toggle"
-          type="button"
-        >
+          type="button">
           {{ aliasname[obj.type] }}
         </button>
         <div class="relation-bottomline"></div>
@@ -23,8 +22,7 @@
         <div
           class="case"
           @click.stop="open1(idx)"
-          :style="{ 'z-index': 1000 - idx }"
-        >
+          :style="{ 'z-index': 1000 - idx }">
           {{ ele.value1.label }}
           <div class="hideBox" v-show="ele.state1">
             <input type="text" @input="filt" placeholder="搜索" />
@@ -69,15 +67,13 @@
               :id="forId('input', idx)"
               @keyup.enter="submit($event, idx)"
               @keyup.delete="backspace($event, idx)"
-              @blur="submit($event, idx)"
-            />
+              @blur="submit($event, idx)" />
 
             <ul v-show="ele.state3 && tips.length > 0">
               <li
                 v-for="(tip, index) in tips_cp"
                 :key="index"
-                @click.stop="join(tip, idx)"
-              >
+                @click.stop="join(tip, idx)" >
                 {{ tip.name }}
               </li>
             </ul>
@@ -103,23 +99,31 @@
       <div>
         <el-input v-model="name" placeholder="请输入名字" />
       </div>
-      <div class="expression-unit">
+      <div class="expression-unit master">
         <div class="mask"></div>
         <div class="expression-unit">
-          <ul data-method="focus">
-            <li data-input="true" data-type="none"><span class="placeholder"></span><input type="text" value=""></li>
+          <ul data-method="focus" @click="focalize" ref="unit">
+            <li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
+              <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
+              <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
+            </li>
+            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>
+            <li data-input="true" data-type="none">
+              <span class="placeholder"></span>
+              <input type="text" @input="feed($event)" @keyup.delete="rollback($event, idx)">
+            </li>
+            <!--<li data-input="true" data-type="none"><span class="placeholder"></span><input type="text" value=""></li>
             <li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
               <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span><span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
             </li>
             <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>
             <li data-tag="true" data-type="property" data-value="总次数">
               <span class="tag" data-type="property" data-method="select" data-value="总次数" data-parent="&quot;App 被动启动&quot;">总次数</span>
-            </li>
-            <li data-input="true" data-type="none"><span class="placeholder"></span><input type="text" value="" @keyup.delete="rollback($event, idx)"></li>
+            </li>-->
           </ul>
         </div>
         <div class="expression-menu" style="display:none"></div>
-        <div class="expression-menu">
+        <div class="expression-menu" style="display:none">
           <div class="overflow-wrapper" style="width: 160px; height: 928px; max-height: 459px;">
             <ul class="expression-menu-list">
               <li v-for="(item) in names" :key="item.id">{{item.name}}</li>
@@ -325,6 +329,16 @@ export default {
       this.meanObj = this.obj.arr[idx].elems;
       this.dialogVisible = true;
     },
+    feed(event, val) {
+      console.log(event, val);
+    },
+    focalize() {
+      // console.log(this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0]);
+      this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0].focus();
+    },
+    rollback(event, idx) {
+      console.log(event, idx);
+    },
     close() {
       this.dialogVisible = false;
     },
@@ -461,5 +475,5 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@import './analyse';
+@import './filter';
 </style>

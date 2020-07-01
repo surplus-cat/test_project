@@ -14,14 +14,19 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/product.vue')
     },
     {
+      path: '/date',
+      name: 'date',
+      component: () => import(/* webpackChunkName: "about" */ './views/date.vue')
+    },
+    {
       path: '/radio',
       name: 'radio',
       component: () => import(/* webpackChunkName: "about" */ './views/radio.vue')
     },
     {
-      path: '/anlysise',
-      name: 'anlysise',
-      component: () => import(/* webpackChunkName: "about" */ './views/anlysise.vue')
+      path: '/filter',
+      name: 'filter',
+      component: () => import(/* webpackChunkName: "about" */ './views/filter.vue')
     },
     {
       path: '/chart',
