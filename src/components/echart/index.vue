@@ -6,8 +6,6 @@
 
 <script>
 import field from './echartsOption';
-// import Worker from 'worker-loader!./worker';
-// import Worker from 'worker-loader!./webworker.worker';
 import { func } from '@/util';
 
 export default {

@@ -2281,261 +2281,262 @@ let option = [
     }]
   },
 
-  {
-    name: 'salemanTarget',
-    animation: true,
-    title: [{
-      text: '各业务员目标达成情况',
-      left: 36,
-      top: 40,
-      textStyle: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'normal'
-      }
-    }, {
-      subtext: 'GMV（万元）',
-      subtextStyle: {
-        color: 'rgba(255, 255, 255, 0.65)',
-        fontSize: 14,
-        fontWeight: 'normal'
-      },
-      left: 36,
-      top: 82
-    }],
-    legend: {
-      data: ['目标值', '未达成', '已达成', '未设置该维度目标'],
-      left: 300,
-      top: 40,
-      icon: 'rect',
-      itemWidth: 17,
-      itemHeight: 17,
-      textStyle: {
-        color: '#fff'
-      }
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: "shadow",
-        label: {
-          backgroundColor: '#6a7985'
-        }
-      },
-      textStyle: {
-        rich: {
-          a: {
-            color: '#fff',
-            fontSize: 18,
-            padding: 5
-          },
-          b: {
-            color: '#80f5ff',
-            fontSize: 12
-          }
-        }
-      },
-      padding: 15,
-      backgroundColor: 'rgba(0,0,0,0.7)',
-      // 色值 不需要带''
-      formatter: function (params) {
-        let content = `
-                        <div class="salemanTargetBoxer">
-                          <div>￥<span style="font-family: ding">${params[0]['value']['originVal']}</span></div>
-                          <p>达成率 ${params[0]['value']["relativeRatio"]}</p>
-                        </div>`;
-        return content;
-      }
+  // {
+  //   name: 'salemanTarget',
+  //   animation: true,
+  //   title: [{
+  //     text: '各业务员目标达成情况',
+  //     left: 36,
+  //     top: 40,
+  //     textStyle: {
+  //       color: '#fff',
+  //       fontSize: 18,
+  //       fontWeight: 'normal'
+  //     }
+  //   }, {
+  //     subtext: 'GMV（万元）',
+  //     subtextStyle: {
+  //       color: 'rgba(255, 255, 255, 0.65)',
+  //       fontSize: 14,
+  //       fontWeight: 'normal'
+  //     },
+  //     left: 36,
+  //     top: 82
+  //   }],
+  //   legend: {
+  //     data: ['目标值', '未达成', '已达成', '未设置该维度目标'],
+  //     left: 300,
+  //     top: 40,
+  //     icon: 'rect',
+  //     itemWidth: 17,
+  //     itemHeight: 17,
+  //     textStyle: {
+  //       color: '#fff'
+  //     }
+  //   },
+  //   tooltip: {
+  //     trigger: 'axis',
+  //     axisPointer: {
+  //       type: "shadow",
+  //       label: {
+  //         backgroundColor: '#6a7985'
+  //       }
+  //     },
+  //     textStyle: {
+  //       rich: {
+  //         a: {
+  //           color: '#fff',
+  //           fontSize: 18,
+  //           padding: 5
+  //         },
+  //         b: {
+  //           color: '#80f5ff',
+  //           fontSize: 12
+  //         }
+  //       }
+  //     },
+  //     padding: 15,
+  //     backgroundColor: 'rgba(0,0,0,0.7)',
+  //     // 色值 不需要带''
+  //     formatter: function (params) {
+  //       let content = `
+  //                       <div class="salemanTargetBoxer">
+  //                         <div>￥<span style="font-family: ding">${params[0]['value']['originVal']}</span></div>
+  //                         <p>达成率 ${params[0]['value']["relativeRatio"]}</p>
+  //                       </div>`;
+  //       return content;
+  //     }
 
-    },
-    dataset: {
-      dimensions: [
-        'salemanName', 'saleAmount', 'relativeRatio', 'targetValue', 'NotSet', 'LackOf', 'originVal'
-      ],
-      source: []
-    },
-    grid: {
-      left: 50,
-      right: 40,
-      top: 160,
-      bottom: 40,
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      axisTick: {
-        alignWithLabel: true,
-        show: false
-      },
-      axisLabel: {
-        show: true,
-        textStyle: {
-          color: '#fff',
-          fontSize: 12
-        },
-        interval: 0
-      },
-      axisLine: {
-        lineStyle: {
-          // color: '#E1F5FE'
-        }
-      },
-      offset: 16
-    },
-    yAxis: [{
-      type: 'value',
-      nameLocation: 'end',
-      nameGap: 40,
-      offset: 10,
-      nameRotate: 0,
-      axisLine: {
-        show: false
-      },
-      axisTick: {
-        alignWithLabel: true,
-        show: false
-      },
-      axisLabel: {
-        show: true,
-        textStyle: {
-          color: '#909399',
-          fontSize: 14
-        }
-      },
-      nameTextStyle: {
-        color: 'rgba(225, 245, 254, 0.2)',
-        fontSize: 14,
-        padding: [0, 0, 0, 54]
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          width: 1,
-          color: 'rgba(225, 255, 255, 0.12)'
-        }
-      }
-    }],
-    series: [{
-      name: '目标值',
-      type: "bar",
-      barMaxWidth: 30,
-      z: 0,
-      itemStyle: {
-        normal: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0,
-            color: 'rgba(255,255,255,0.12)'
-          }, {
-            offset: 1,
-            color: 'rgba(255,255,255,0.12)'
-          }]),
-          label: {
-            show: false,
-            textStyle: {
-              fontSize: 16
-            },
-            position: "top",
-            distance: 10
-          }
-        }
-      },
-      encode: {
-        x: 'salemanName',
-        y: 'targetValue'
-      }
-    }, {
-      name: "未达成",
-      type: "bar",
-      silent: true,
-      barMaxWidth: 30,
-      barGap: '-100%',
-      z: 1,
-      itemStyle: {
-        normal: {
-          color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
-            offset: 0,
-            color: '#2A84CF'
-          }, {
-            offset: 1,
-            color: '#03FECD'
-          }]),
-          label: {
-            show: false,
-            position: 'top',
-            distance: 0,
-            color: '#000',
-            fontSize: 16,
-            padding: [10, 15, 20, 15],
-            borderRadius: 100
-          }
-        }
-      },
-      encode: {
-        x: 'salemanName',
-        y: 'LackOf'
-      }
-    }, {
-      name: "已达成",
-      type: "bar",
-      barMaxWidth: 30,
-      barGap: '-100%',
-      z: 2,
-      itemStyle: {
-        normal: {
-          color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
-            offset: 0,
-            color: '#3654EA'
-          }, {
-            offset: 1,
-            color: '#00B9FF'
-          }]),
-          label: {
-            show: false,
-            position: 'top',
-            distance: 0,
-            color: '#434e79',
-            fontSize: 16,
-            padding: [10, 15, 20, 15],
-            borderRadius: 100
-          }
-        }
-      },
-      encode: {
-        x: 'salemanName',
-        y: 'saleAmount'
-      }
-    }, {
-      name: "未设置该维度目标",
-      type: "bar",
-      barMaxWidth: 30,
-      barGap: '-100%',
-      z: 3,
-      itemStyle: {
-        normal: {
-          color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
-            offset: 0,
-            color: '#FFD329'
-          }, {
-            offset: 1,
-            color: '#FEA712'
-          }]),
-          label: {
-            show: false,
-            position: 'top',
-            distance: 0,
-            color: '#434e79',
-            fontSize: 16,
-            padding: [10, 15, 20, 15],
-            borderRadius: 100
-          }
-        }
-      },
-      encode: {
-        x: 'salemanName',
-        y: 'NotSet'
-      }
-    }]
-  }, {
+  //   },
+  //   dataset: {
+  //     dimensions: [
+  //       'salemanName', 'saleAmount', 'relativeRatio', 'targetValue', 'NotSet', 'LackOf', 'originVal'
+  //     ],
+  //     source: []
+  //   },
+  //   grid: {
+  //     left: 50,
+  //     right: 40,
+  //     top: 160,
+  //     bottom: 40,
+  //     containLabel: true
+  //   },
+  //   xAxis: {
+  //     type: 'category',
+  //     axisTick: {
+  //       alignWithLabel: true,
+  //       show: false
+  //     },
+  //     axisLabel: {
+  //       show: true,
+  //       textStyle: {
+  //         color: '#fff',
+  //         fontSize: 12
+  //       },
+  //       interval: 0
+  //     },
+  //     axisLine: {
+  //       lineStyle: {
+  //         // color: '#E1F5FE'
+  //       }
+  //     },
+  //     offset: 16
+  //   },
+  //   yAxis: [{
+  //     type: 'value',
+  //     nameLocation: 'end',
+  //     nameGap: 40,
+  //     offset: 10,
+  //     nameRotate: 0,
+  //     axisLine: {
+  //       show: false
+  //     },
+  //     axisTick: {
+  //       alignWithLabel: true,
+  //       show: false
+  //     },
+  //     axisLabel: {
+  //       show: true,
+  //       textStyle: {
+  //         color: '#909399',
+  //         fontSize: 14
+  //       }
+  //     },
+  //     nameTextStyle: {
+  //       color: 'rgba(225, 245, 254, 0.2)',
+  //       fontSize: 14,
+  //       padding: [0, 0, 0, 54]
+  //     },
+  //     splitLine: {
+  //       show: true,
+  //       lineStyle: {
+  //         width: 1,
+  //         color: 'rgba(225, 255, 255, 0.12)'
+  //       }
+  //     }
+  //   }],
+  //   series: [{
+  //     name: '目标值',
+  //     type: "bar",
+  //     barMaxWidth: 30,
+  //     z: 0,
+  //     itemStyle: {
+  //       normal: {
+  //         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+  //           offset: 0,
+  //           color: 'rgba(255,255,255,0.12)'
+  //         }, {
+  //           offset: 1,
+  //           color: 'rgba(255,255,255,0.12)'
+  //         }]),
+  //         label: {
+  //           show: false,
+  //           textStyle: {
+  //             fontSize: 16
+  //           },
+  //           position: "top",
+  //           distance: 10
+  //         }
+  //       }
+  //     },
+  //     encode: {
+  //       x: 'salemanName',
+  //       y: 'targetValue'
+  //     }
+  //   }, {
+  //     name: "未达成",
+  //     type: "bar",
+  //     silent: true,
+  //     barMaxWidth: 30,
+  //     barGap: '-100%',
+  //     z: 1,
+  //     itemStyle: {
+  //       normal: {
+  //         color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+  //           offset: 0,
+  //           color: '#2A84CF'
+  //         }, {
+  //           offset: 1,
+  //           color: '#03FECD'
+  //         }]),
+  //         label: {
+  //           show: false,
+  //           position: 'top',
+  //           distance: 0,
+  //           color: '#000',
+  //           fontSize: 16,
+  //           padding: [10, 15, 20, 15],
+  //           borderRadius: 100
+  //         }
+  //       }
+  //     },
+  //     encode: {
+  //       x: 'salemanName',
+  //       y: 'LackOf'
+  //     }
+  //   }, {
+  //     name: "已达成",
+  //     type: "bar",
+  //     barMaxWidth: 30,
+  //     barGap: '-100%',
+  //     z: 2,
+  //     itemStyle: {
+  //       normal: {
+  //         color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+  //           offset: 0,
+  //           color: '#3654EA'
+  //         }, {
+  //           offset: 1,
+  //           color: '#00B9FF'
+  //         }]),
+  //         label: {
+  //           show: false,
+  //           position: 'top',
+  //           distance: 0,
+  //           color: '#434e79',
+  //           fontSize: 16,
+  //           padding: [10, 15, 20, 15],
+  //           borderRadius: 100
+  //         }
+  //       }
+  //     },
+  //     encode: {
+  //       x: 'salemanName',
+  //       y: 'saleAmount'
+  //     }
+  //   }, {
+  //     name: "未设置该维度目标",
+  //     type: "bar",
+  //     barMaxWidth: 30,
+  //     barGap: '-100%',
+  //     z: 3,
+  //     itemStyle: {
+  //       normal: {
+  //         color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+  //           offset: 0,
+  //           color: '#FFD329'
+  //         }, {
+  //           offset: 1,
+  //           color: '#FEA712'
+  //         }]),
+  //         label: {
+  //           show: false,
+  //           position: 'top',
+  //           distance: 0,
+  //           color: '#434e79',
+  //           fontSize: 16,
+  //           padding: [10, 15, 20, 15],
+  //           borderRadius: 100
+  //         }
+  //       }
+  //     },
+  //     encode: {
+  //       x: 'salemanName',
+  //       y: 'NotSet'
+  //     }
+  //   }]
+  // },
+   {
     name: 'trends',
     axisPointer: {
       link: {
@@ -3181,6 +3182,257 @@ let option = [
             color: '#FEA712'
           }])
         }
+      }
+    }]
+  },
+
+  {
+    name: 'salemanTarget',
+    animation: true,
+    title: [{
+      text: '各业务员目标达成情况',
+      left: 36,
+      top: 40,
+      textStyle: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'normal'
+      }
+    }, {
+      subtext: 'GMV（万元）',
+      subtextStyle: {
+        color: 'rgba(255, 255, 255, 0.65)',
+        fontSize: 14,
+        fontWeight: 'normal'
+      },
+      left: 36,
+      top: 82
+    }],
+    legend: {
+      data: ['目标值', '已达成', '未达成', '未设置该维度目标'],
+      left: 300,
+      top: 40,
+      icon: 'rect',
+      itemWidth: 17,
+      itemHeight: 17,
+      itemGap: 32,
+      padding: 12,
+      textStyle: {
+        color: '#fff'
+      }
+    },
+    color: ['#2db7f5', '#ff6600', '#808bc6', '#ff31ac'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: "shadow",
+        label: {
+          backgroundColor: '#6a7985'
+        }
+      },
+      textStyle: {
+        rich: {
+          a: {
+            color: '#fff',
+            fontSize: 18,
+            padding: 5
+          },
+          b: {
+            color: '#80f5ff',
+            fontSize: 12
+          }
+        }
+      },
+      padding: 15,
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      // 色值 不需要带''
+      formatter: function (params) {
+        let content = `
+                        <div class="salemanTargetBoxer">
+                          <div>${params[0]['value'].targetType === 'gmv' ? '￥' : ''} <span style="font-family: ding">${params[0]['value']['originVal']}</span> ${params[0]['value'].targetType === 'saleAmount' ? 'm²' : ''}</div>
+                          <p>达成率 ${params[0]['value']["percentageComplete"]}</p>
+                        </div>`;
+        return content;
+      }
+
+    },
+    dataset: {
+      dimensions: [
+        'salemanName', 'percentageComplete', 'goalValue', 'NotSet', 'LackOf', 'originVal', 'baseVal', 'targetType'
+      ],
+      source: []
+    },
+    grid: {
+      left: 80,
+      right: 66,
+      top: 160,
+      bottom: 80,
+    },
+    xAxis: {
+      type: 'category',
+      axisTick: {
+        alignWithLabel: true,
+        show: false
+      },
+      axisLabel: {
+        show: true,
+        textStyle: {
+          color: '#fff',
+          fontSize: 12
+        },
+        formatter: function (value) {
+          return `${value.slice(0, -8)}`;
+        },
+        interval: 0,
+      },
+      axisLine: {
+        lineStyle: {
+          // color: '#E1F5FE'
+        }
+      },
+      offset: 16
+    },
+    yAxis: [{
+      type: 'value',
+      nameLocation: 'end',
+      nameGap: 40,
+      offset: 32,
+      nameRotate: 0,
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        alignWithLabel: true,
+        show: false
+      },
+      axisLabel: {
+        show: true,
+        textStyle: {
+          color: '#909399',
+          fontSize: 14,
+          align: 'left',
+          baseline: 'middle'
+        }
+      },
+      nameTextStyle: {
+        color: 'rgba(225, 245, 254, 0.2)',
+        fontSize: 14,
+        padding: [0, 0, 0, 54]
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          width: 1,
+          color: 'rgba(225, 255, 255, 0.12)'
+        }
+      }
+    }],
+    // 自定义属性名 zoom，数据量超过一定值改为dataZoom
+    Zoom: [{
+      type: 'slider',
+      // showDataShadow: false,
+      bottom: 15,
+      height: 6,
+      start: 0,
+      end: 20,
+      borderColor: 'transparent',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      handleStyle: {
+        color: 'rgba(255, 255, 255, 0.12)',
+        borderWidth: 0,
+      },
+      labelFormatter: ''
+    }],
+    series: [{
+      name: '目标值',
+      type: "bar",
+      barMaxWidth: 50,
+      z: 0,
+      itemStyle: {
+        normal: {
+          label: {
+            show: false,
+            textStyle: {
+              fontSize: 16
+            },
+            position: "top",
+            distance: 10
+          }
+        }
+      },
+      encode: {
+        x: 'salemanName',
+        y: 'goalValue'
+      }
+    }, {
+      name: "已达成",
+      type: "bar",
+      barMaxWidth: 50,
+      barGap: '-100%',
+      z: 2,
+      itemStyle: {
+        normal: {
+          label: {
+            show: false,
+            position: 'top',
+            distance: 0,
+            color: '#434e79',
+            fontSize: 16,
+            padding: [10, 15, 20, 15],
+            borderRadius: 100
+          }
+        }
+      },
+      encode: {
+        x: 'salemanName',
+        y: 'baseVal'
+      }
+    }, {
+      name: "未达成",
+      type: "bar",
+      silent: true,
+      barMaxWidth: 50,
+      barGap: '-100%',
+      z: 1,
+      itemStyle: {
+        normal: {
+          label: {
+            show: false,
+            position: 'top',
+            distance: 0,
+            color: '#000',
+            fontSize: 16,
+            padding: [10, 15, 20, 15],
+            borderRadius: 100
+          }
+        }
+      },
+      encode: {
+        x: 'salemanName',
+        y: 'LackOf'
+      }
+    }, {
+      name: "未设置该维度目标",
+      type: "bar",
+      barMaxWidth: 50,
+      barGap: '-100%',
+      z: 3,
+      itemStyle: {
+        normal: {
+          label: {
+            show: false,
+            position: 'top',
+            distance: 0,
+            color: '#434e79',
+            fontSize: 16,
+            padding: [10, 15, 20, 15],
+            borderRadius: 100
+          }
+        }
+      },
+      encode: {
+        x: 'salemanName',
+        y: 'NotSet'
       }
     }]
   },

@@ -31,6 +31,11 @@ export default new Router({
     {
       path: '/chart',
       name: 'chart',
+      component: () => import(/* webpackChunkName: "about" */ './views/chart.vue')
+    },
+    {
+      path: '/view',
+      name: 'view',
       component: () => import(/* webpackChunkName: "about" */ './views/view.vue')
     },
     {
