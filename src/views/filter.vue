@@ -103,11 +103,17 @@
         <div class="mask"></div>
         <div class="expression-unit">
           <ul data-method="focus" @click="focalize" ref="unit">
-            <li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
+            <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
               <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
               <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
             </li>
-            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>
+            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
+
+
+            <li v-for="item in liList">
+              <span :class="{ tag: item.name !== '.', placeholder: item.name === '.' }">{{ item.name }}</span>
+              <input type="text" value="." v-if="item.name === '.'"></li>
+            </li>
             <li data-input="true" data-type="none">
               <span class="placeholder"></span>
               <input type="text" @input="feed($event)" @keyup.delete="rollback($event, idx)">
@@ -311,7 +317,15 @@ export default {
       dialogVisible: false,
       meanObj: [],
       idx: 0,
-      name: ''
+      name: '',
+      liList: [
+        {
+          name: '"App 被动启动"'
+        },
+        {
+          name: '.'
+        }
+      ]
     };
   },
   components: {
