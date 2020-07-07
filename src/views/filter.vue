@@ -102,21 +102,20 @@
       <div class="expression-unit master">
         <div class="mask"></div>
         <div class="expression-unit">
-          <ul data-method="focus" @click="focalize" ref="unit">
+          <ul data-method="focus" @click="focalize($event)" ref="unit">
             <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
               <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
               <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
             </li>
             <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
 
-
-            <li v-for="item in liList">
+            <li v-for="(item, idx) in expressList" :key="idx">
               <span :class="{ tag: item.name !== '.', placeholder: item.name === '.' }">{{ item.name }}</span>
-              <input type="text" value="." v-if="item.name === '.'"></li>
+              <input type="text" value="." v-if="item.name === '.'" />
             </li>
             <li data-input="true" data-type="none">
               <span class="placeholder"></span>
-              <input type="text" @input="feed($event)" @keyup.delete="rollback($event, idx)">
+              <input type="text" @input="feed($event)" @keyup.delete="rollback($event, idx)" v-model="inputValue"/>
             </li>
             <!--<li data-input="true" data-type="none"><span class="placeholder"></span><input type="text" value=""></li>
             <li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
@@ -128,11 +127,17 @@
             </li>-->
           </ul>
         </div>
-        <div class="expression-menu" style="display:none"></div>
-        <div class="expression-menu" style="display:none">
+        <div class="expression-menu" v-show="mainVisible">
           <div class="overflow-wrapper" style="width: 160px; height: 928px; max-height: 459px;">
             <ul class="expression-menu-list">
-              <li v-for="(item) in names" :key="item.id">{{item.name}}</li>
+              <li v-for="(item) in names_" :key="item.id" @click="pickMain(item.name)">{{item.name}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="expression-menu" v-show="minorVisible">
+          <div class="overflow-wrapper" style="width: 160px; height: 928px; max-height: 459px;">
+            <ul class="expression-menu-list">
+              <li v-for="(item) in names" :key="item.id" @click="pick(item.name)">{{item.name}}</li>
             </ul>
           </div>
         </div>
@@ -318,14 +323,19 @@ export default {
       meanObj: [],
       idx: 0,
       name: '',
-      liList: [
-        {
-          name: '"App 被动启动"'
-        },
-        {
-          name: '.'
-        }
-      ]
+      mainVisible: false,
+      minorVisible: false,
+      inputValue: '',
+      // expressList: [
+      //   {
+      //     name: '"App 被动启动"'
+      //   },
+      //   {
+      //     name: '.'
+      //   }
+      // ],
+
+      expressList: []
     };
   },
   components: {
@@ -344,14 +354,45 @@ export default {
       this.dialogVisible = true;
     },
     feed(event, val) {
-      console.log(event, val);
+      if (['+', '-', '*', '/'].includes(this.inputValue) && this.expressList.slice(-1)[0].name !== '.') {
+        this.mainVisible = true;
+      }
     },
-    focalize() {
+    focalize(e) {
+      e.stopPropagation();
       // console.log(this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0]);
       this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0].focus();
+      if (this.expressList.length === 0) {
+        this.mainVisible = true;
+      } else {
+        if (this.expressList.slice(-1)[0].name === '.') {
+          this.minorVisible = true;
+        }
+      }
+    },
+    pickMain(name) {
+      this.expressList.push({ name: `"${name}"` });
+      this.expressList.push({ name: `.` });
+      this.mainVisible = false;
+      this.minorVisible = true;
+    },
+    pick(name) {
+      this.expressList.push({ name: `"${name}"` });
+      this.minorVisible = false;
     },
     rollback(event, idx) {
       console.log(event, idx);
+      if (this.inputValue === '') {
+        this.expressList.pop();
+        if (this.expressList.length === 0) {
+          this.mainVisible = true;
+        }
+
+        if (this.expressList.slice(-1)[0].name === '.') {
+          this.minorVisible = true;
+        }
+      }
+
     },
     close() {
       this.dialogVisible = false;
@@ -484,6 +525,8 @@ export default {
         v.state1 = false;
         v.state3 = false;
       });
+      this.mainVisible = false;
+      this.minorVisible = false;
     }
   }
 };

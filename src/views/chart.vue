@@ -56,7 +56,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="close">取 消</el-button>
         <el-button type="primary" @click="ensure">确 定</el-button>
       </span>
     </el-dialog>
@@ -259,13 +259,16 @@ export default {
           v.type = value;
           v.stack = '';
         }
-
       }
       this.$refs.echarts.drawLine();
     },
     choose(item) {
       this.pickColor = item;
       this.legendList_[this.index].color = item;
+    },
+    close() {
+      this.legendList_ = clone(this.legendList);
+      this.dialogVisible = false;
     },
     ensure() {
       this.legendList = clone(this.legendList_);
