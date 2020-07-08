@@ -99,7 +99,7 @@
       <div>
         <el-input v-model="name" placeholder="请输入名字" />
       </div>
-      <div class="expression-unit master">
+      <div class="expression-input master">
         <div class="mask"></div>
         <div class="expression-unit">
           <ul data-method="focus" @click="focalize($event)" ref="unit">
@@ -109,33 +109,25 @@
             </li>
             <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
 
-            <li v-for="(item, idx) in expressList" :key="idx">
-              <span :class="{ tag: item.name !== '.', placeholder: item.name === '.' }">{{ item.name }}</span>
-              <input type="text" value="." v-if="item.name === '.'" />
+            <li v-for="(item, idx) in expressList" :key="idx" @click="handover(item, idx)">
+              <span :class="{ tag: item.name !== '.' && !operators.includes(item.name), placeholder: item.name === '.' || operators.includes(item.name) }">{{ item.name }}</span>
+              <input type="text" :value="item.name" v-if="item.name === '.' || operators.includes(item.name)" @focus="focus($event)" />
             </li>
             <li data-input="true" data-type="none">
-              <span class="placeholder"></span>
-              <input type="text" @input="feed($event)" @keyup.delete="rollback($event, idx)" v-model="inputValue"/>
+              <span class="placeholder" v-text="inputValue"></span>
+              <input type="text" @input="feed($event)" @keyup.delete="rollback($event)" v-model="inputValue" ref="node"/>
             </li>
-            <!--<li data-input="true" data-type="none"><span class="placeholder"></span><input type="text" value=""></li>
-            <li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
-              <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span><span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
-            </li>
-            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>
-            <li data-tag="true" data-type="property" data-value="总次数">
-              <span class="tag" data-type="property" data-method="select" data-value="总次数" data-parent="&quot;App 被动启动&quot;">总次数</span>
-            </li>-->
           </ul>
         </div>
-        <div class="expression-menu" v-show="mainVisible">
-          <div class="overflow-wrapper" style="width: 160px; height: 928px; max-height: 459px;">
+        <div class="expression-menu" v-show="mainVisible" :style="styles">
+          <div class="overflow-wrapper" >
             <ul class="expression-menu-list">
               <li v-for="(item) in names_" :key="item.id" @click="pickMain(item.name)">{{item.name}}</li>
             </ul>
           </div>
         </div>
-        <div class="expression-menu" v-show="minorVisible">
-          <div class="overflow-wrapper" style="width: 160px; height: 928px; max-height: 459px;">
+        <div class="expression-menu" v-show="minorVisible" :style="styles">
+          <div class="overflow-wrapper" >
             <ul class="expression-menu-list">
               <li v-for="(item) in names" :key="item.id" @click="pick(item.name)">{{item.name}}</li>
             </ul>
@@ -151,11 +143,26 @@
       :meanObj="meanObj"
       :idx="idx"
     ></pop>
+
+    <!--<div class="custom-border border-color">边框宽度1px</div>
+    <div class="scale-border">
+      <div class="content">边框宽度0.5px</div>
+      <div class="border border-color"></div>
+    </div>-->
+
   </div>
 </template>
 
 <script>
 import pop from "../components/pop";
+
+/*
+*
+  待解决问题:
+    1、删除的时候删了符号后也会把属性值给删了
+    2、事件和属性的切换功能未实现，难点在于弹框的定位
+    3、事件还有筛选功能
+*/
 
 export default {
   data() {
@@ -326,16 +333,14 @@ export default {
       mainVisible: false,
       minorVisible: false,
       inputValue: '',
-      // expressList: [
-      //   {
-      //     name: '"App 被动启动"'
-      //   },
-      //   {
-      //     name: '.'
-      //   }
-      // ],
-
-      expressList: []
+      expressList: [],
+      operators: ['+', '-', '*', '/'],
+      styles: {
+        left: '',
+        top: '',
+      },
+      checked: {},
+      index: 0
     };
   },
   components: {
@@ -348,18 +353,45 @@ export default {
     document.removeEventListener("click", this.shutup);
   },
   methods: {
+    focus(event) {
+      console.log(event);
+      event.target.focus();
+    },
     unlock(idx) {
       this.idx = idx;
       this.meanObj = this.obj.arr[idx].elems;
       this.dialogVisible = true;
     },
-    feed(event, val) {
-      if (['+', '-', '*', '/'].includes(this.inputValue) && this.expressList.slice(-1)[0].name !== '.') {
+    feed(event) {
+      // console.log(event);
+      if (this.operators.includes(this.inputValue) && this.expressList.slice(-1)[0].name !== '.') {
         this.mainVisible = true;
       }
+      if (this.inputValue === '.' && this.expressList.slice(-1)[0].name !== '.') {
+        this.minorVisible = true;
+      }
     },
-    focalize(e) {
-      e.stopPropagation();
+    getStyle(element, attr) {
+      if (element.currentStyle) {
+        return element.currentStyle[attr];
+      } else {
+        return getComputedStyle(element, false)[attr];
+      }
+    },
+    // 计算弹框位置
+    calcPos() {
+      let pos1 = this.$refs.unit.getBoundingClientRect();
+      let pos2 = this.$refs.node.getBoundingClientRect();
+      // console.log(this.$refs.unit.getBoundingClientRect())
+      // console.log(this.$refs.node.getBoundingClientRect())
+      // console.log(Number(pos2.x) - Number(pos1.x));
+
+      this.styles.left = (Number(pos2.x) - Number(pos1.x)) + 'px';
+      this.styles.top = (Number(pos2.y) - Number(pos1.y) + 32) + 'px';
+    },
+    focalize(event) {
+      this.calcPos();
+      event.stopPropagation();
       // console.log(this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0]);
       this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0].focus();
       if (this.expressList.length === 0) {
@@ -368,20 +400,60 @@ export default {
         if (this.expressList.slice(-1)[0].name === '.') {
           this.minorVisible = true;
         }
+        if (this.expressList.slice(-1)[0].name !== '.' && this.operators.includes(this.inputValue)) {
+          this.mainVisible = true;
+        }
       }
     },
     pickMain(name) {
-      this.expressList.push({ name: `"${name}"` });
+      if (Object.keys(this.checked).length > 0) {
+        if (this.expressList.some(v => v.name === this.checked.name)) {
+          this.expressList[this.index].name = name;
+          this.checked = {};
+          this.index = 0;
+        }
+        return false;
+      }
+      if (this.expressList.length > 0) {
+        this.expressList.push({ name: `${this.inputValue}` });
+        this.inputValue = '';
+      }
+      this.expressList.push({ name: `"${name}"`, isProperty: false });
       this.expressList.push({ name: `.` });
       this.mainVisible = false;
       this.minorVisible = true;
     },
     pick(name) {
-      this.expressList.push({ name: `"${name}"` });
+      if (Object.keys(this.checked).length > 0) {
+        if (this.expressList.some(v => v.name === this.checked.name)) {
+          this.expressList[this.index].name = name;
+          this.checked = {};
+          this.index = 0;
+        }
+        return false;
+      }
+      if (this.expressList.slice(-1)[0].name !== '.' && this.inputValue === '.') {
+        this.expressList.push({ name: `.` });
+        this.inputValue = '';
+      }
+      this.expressList.push({ name: `"${name}"`, isProperty: true });
       this.minorVisible = false;
     },
-    rollback(event, idx) {
-      console.log(event, idx);
+    handover(item, index) {
+      this.checked = item;
+      this.index = index;
+      if (item.isProperty) {
+        this.minorVisible = true;
+        this.mainVisible = false;
+      } else {
+        this.mainVisible = true;
+        this.minorVisible = false;
+      }
+    },
+    rollback(event) {
+      this.mainVisible = false;
+      this.minorVisible = false;
+      // console.log(this.inputValue);
       if (this.inputValue === '') {
         this.expressList.pop();
         if (this.expressList.length === 0) {
@@ -392,7 +464,7 @@ export default {
           this.minorVisible = true;
         }
       }
-
+      this.calcPos();
     },
     close() {
       this.dialogVisible = false;
@@ -527,6 +599,7 @@ export default {
       });
       this.mainVisible = false;
       this.minorVisible = false;
+      this.checked = {};
     }
   }
 };

@@ -5,14 +5,14 @@
   </div>
 </template>
 <script>
-import TWEEN from 'TWEEN';
+//import TWEEN from 'TWEEN';
 
 export default {
   name: 'app',
 
   mounted: function () {
     // 初始化 TweenJs 监听
-    this.tweenAni();
+    // this.tweenAni();
   },
 
   methods: {
