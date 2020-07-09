@@ -1,6 +1,48 @@
 <template>
   <div class="wrapper">
-    {{ obj.name }} <el-button @click="add">筛选条件</el-button>
+
+    <div class="flexBox">
+      <div>
+        <el-input v-model="name" placeholder="请输入名字" />
+      </div>
+      <div class="expression-input master">
+        <div class="mask"></div>
+        <div class="expression-unit">
+          <ul data-method="focus" @click="focalize($event)" ref="unit">
+            <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
+              <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
+              <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
+            </li>
+            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
+
+            <li v-for="(item, idx) in expressList" :key="idx" @click="handover($event, item, idx)" :ref="count(idx)">
+              <span :class="{ tag: item.name !== '.' && !operators.includes(item.name), placeholder: item.name === '.' || operators.includes(item.name) }">{{ item.name }}</span>
+              <input type="text" :value="item.name" v-if="item.name === '.' || operators.includes(item.name)" @focus="focus($event)" />
+            </li>
+            <li data-input="true" data-type="none">
+              <span class="placeholder" v-text="inputValue"></span>
+              <input type="text" @input="feed($event)" @keyup.delete="rollback($event)" v-model="inputValue" ref="node"/>
+            </li>
+          </ul>
+        </div>
+        <div class="expression-menu" v-show="mainVisible" :style="styles">
+          <div class="overflow-wrapper" >
+            <ul class="expression-menu-list">
+              <li v-for="(item) in names_" :key="item.id" @click="pickMain(item.name)">{{item.name}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="expression-menu" v-show="minorVisible" :style="styles">
+          <div class="overflow-wrapper" >
+            <ul class="expression-menu-list">
+              <li v-for="(item) in names" :key="item.id" @click="pick(item.name)">{{item.name}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="filter-group-control">
       <div
         id="filter-group-relation"
@@ -80,59 +122,20 @@
           </div>
         </div>
         <!-- 第{{ idx + 1 }}排 -->
-        <el-button
+        <!--<el-button
           type="primary"
           icon="el-icon-edit"
           circle
           @click="unlock(idx)"
-        ></el-button>
+        ></el-button>-->
+        <span class="add" @click="add">+添加筛选</span>
         <el-button
           type="danger"
           icon="el-icon-delete"
           circle
           @click="del(idx)"
         ></el-button>
-      </div>
-    </div>
 
-    <div class="flexBox">
-      <div>
-        <el-input v-model="name" placeholder="请输入名字" />
-      </div>
-      <div class="expression-input master">
-        <div class="mask"></div>
-        <div class="expression-unit">
-          <ul data-method="focus" @click="focalize($event)" ref="unit">
-            <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
-              <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
-              <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
-            </li>
-            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
-
-            <li v-for="(item, idx) in expressList" :key="idx" @click="handover(item, idx)">
-              <span :class="{ tag: item.name !== '.' && !operators.includes(item.name), placeholder: item.name === '.' || operators.includes(item.name) }">{{ item.name }}</span>
-              <input type="text" :value="item.name" v-if="item.name === '.' || operators.includes(item.name)" @focus="focus($event)" />
-            </li>
-            <li data-input="true" data-type="none">
-              <span class="placeholder" v-text="inputValue"></span>
-              <input type="text" @input="feed($event)" @keyup.delete="rollback($event)" v-model="inputValue" ref="node"/>
-            </li>
-          </ul>
-        </div>
-        <div class="expression-menu" v-show="mainVisible" :style="styles">
-          <div class="overflow-wrapper" >
-            <ul class="expression-menu-list">
-              <li v-for="(item) in names_" :key="item.id" @click="pickMain(item.name)">{{item.name}}</li>
-            </ul>
-          </div>
-        </div>
-        <div class="expression-menu" v-show="minorVisible" :style="styles">
-          <div class="overflow-wrapper" >
-            <ul class="expression-menu-list">
-              <li v-for="(item) in names" :key="item.id" @click="pick(item.name)">{{item.name}}</li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
     <pop
@@ -163,6 +166,8 @@ import pop from "../components/pop";
     2、事件和属性的切换功能未实现，难点在于弹框的定位
     3、事件还有筛选功能
 */
+
+// 打印表达式  this.expressList.map(v => v.name).join("")
 
 export default {
   data() {
@@ -305,7 +310,6 @@ export default {
       ],
       options3: [],
       obj: {
-        name: "事件满足",
         type: "&",
         arr: [
           {
@@ -353,9 +357,14 @@ export default {
     document.removeEventListener("click", this.shutup);
   },
   methods: {
+    count(index) {
+      return `node_${index}`;
+    },
     focus(event) {
-      console.log(event);
       event.target.focus();
+      event.stopPropagation();
+      this.mainVisible = false;
+      this.minorVisible = false;
     },
     unlock(idx) {
       this.idx = idx;
@@ -363,13 +372,32 @@ export default {
       this.dialogVisible = true;
     },
     feed(event) {
+      // if (this.inputValue === '') {
+      //   this.mainVisible = false;
+      //   this.minorVisible = false;
+      // }
       // console.log(event);
-      if (this.operators.includes(this.inputValue) && this.expressList.slice(-1)[0].name !== '.') {
-        this.mainVisible = true;
-      }
-      if (this.inputValue === '.' && this.expressList.slice(-1)[0].name !== '.') {
+      if (this.inputValue === '.') {
+        this.expressList.push({ name: `${this.inputValue}` });
+        this.inputValue = '';
         this.minorVisible = true;
       }
+      if (this.operators.includes(this.inputValue) && this.expressList.slice(-1)[0].name !== '.') {
+        this.expressList.push({ name: `${this.inputValue}` });
+        this.inputValue = '';
+        this.mainVisible = true;
+      }
+
+      if (this.inputValue === '')  {
+        if (this.expressList.slice(-1)[0].name === '.') {
+          this.minorVisible = true;
+        }
+
+        if (this.operators.includes(this.expressList.slice(-1)[0].name)) {
+          this.mainVisible = true;
+        }
+      }
+
     },
     getStyle(element, attr) {
       if (element.currentStyle) {
@@ -379,18 +407,21 @@ export default {
       }
     },
     // 计算弹框位置
-    calcPos() {
+    calcPos(point) {
       let pos1 = this.$refs.unit.getBoundingClientRect();
       let pos2 = this.$refs.node.getBoundingClientRect();
       // console.log(this.$refs.unit.getBoundingClientRect())
       // console.log(this.$refs.node.getBoundingClientRect())
       // console.log(Number(pos2.x) - Number(pos1.x));
-
+      if (point) {
+        pos2 = point.getBoundingClientRect();
+      }
       this.styles.left = (Number(pos2.x) - Number(pos1.x)) + 'px';
       this.styles.top = (Number(pos2.y) - Number(pos1.y) + 32) + 'px';
     },
     focalize(event) {
       this.calcPos();
+      this.checked = {};
       event.stopPropagation();
       // console.log(this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0]);
       this.$refs.unit.querySelectorAll('li')[this.$refs.unit.querySelectorAll('li').length - 1].querySelectorAll('input')[0].focus();
@@ -401,6 +432,9 @@ export default {
           this.minorVisible = true;
         }
         if (this.expressList.slice(-1)[0].name !== '.' && this.operators.includes(this.inputValue)) {
+          this.mainVisible = true;
+        }
+        if (this.operators.includes(this.expressList.slice(-1)[0].name)) {
           this.mainVisible = true;
         }
       }
@@ -414,10 +448,10 @@ export default {
         }
         return false;
       }
-      if (this.expressList.length > 0) {
-        this.expressList.push({ name: `${this.inputValue}` });
-        this.inputValue = '';
-      }
+      // if (this.expressList.length > 0) {
+      //   this.expressList.push({ name: `${this.inputValue}` });
+      //   this.inputValue = '';
+      // }
       this.expressList.push({ name: `"${name}"`, isProperty: false });
       this.expressList.push({ name: `.` });
       this.mainVisible = false;
@@ -439,16 +473,21 @@ export default {
       this.expressList.push({ name: `"${name}"`, isProperty: true });
       this.minorVisible = false;
     },
-    handover(item, index) {
-      this.checked = item;
-      this.index = index;
-      if (item.isProperty) {
-        this.minorVisible = true;
-        this.mainVisible = false;
-      } else {
-        this.mainVisible = true;
-        this.minorVisible = false;
+    handover(event, item, index) {
+      if (Object.keys(item).includes('isProperty')) {
+        this.calcPos(this.$refs[`node_${index}`][0])
+        this.checked = item;
+        this.index = index;
+        if (item.isProperty) {
+          this.minorVisible = true;
+          this.mainVisible = false;
+        } else {
+          this.mainVisible = true;
+          this.minorVisible = false;
+        }
       }
+
+      event.stopPropagation();
     },
     rollback(event) {
       this.mainVisible = false;
@@ -462,6 +501,14 @@ export default {
 
         if (this.expressList.slice(-1)[0].name === '.') {
           this.minorVisible = true;
+        }
+      }
+      if (this.expressList.length > 0) {
+        if (this.expressList.slice(-1)[0].name === '.') {
+          this.minorVisible = true;
+        }
+        if (this.operators.includes(this.expressList.slice(-1)[0].name)) {
+          this.mainVisible = true;
         }
       }
       this.calcPos();

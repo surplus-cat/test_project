@@ -1,0 +1,135 @@
+<head>
+  <meta charset="UTF-8">
+  <title>echarts学习</title>
+  
+  <script src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+  <div id="chart" style="width: 600px;height:400px;"></div>
+  <script type="text/javascript">// 基于准备好的dom，初始化echarts实例
+    let obj = {};
+    obj.data = [{value: 335, name: '直接访问'},
+                {value: 310, name: '邮件营销'},
+                {value: 234, name: '联盟广告'},
+                {value: 135, name: '视频广告'},
+                {value: 1548, name: '搜索引擎'}]
+
+    const myChartContainer = document.getElementById('chart');
+    const myChart = echarts.init(myChartContainer);
+    let minAngle = 30;// 最小扇形区域为30
+    for (let i = 0; i < obj.data.length; i++) { //某项数据为0时，最小扇形区域为0
+      if (obj.data[i].value === 0) {
+        minAngle = 0;
+        break;
+      }
+    }
+    const pieValue = obj.data.map(v => {
+      return v.value;
+    })
+    const sum = pieValue.reduce((prev, cur) => {//数据值的总和
+      return prev + cur;
+    }, 0);
+
+    const sum2 = pieValue.reduce((prev, cur) => {
+      if (cur < sum / 12 && cur > 0) {//某个值大于0小于总和的1/12即30时，按30计算和
+        return prev + sum / 12;
+      }
+      return prev + cur;
+    }, 0);
+    let initPieValue = pieValue[0];// 初始值
+    if (initPieValue < sum / 12 && initPieValue > 0) {
+      initPieValue = sum / 12;
+    }
+    const option = {
+      tooltip: {
+        show: false,
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      legend: {
+        show: false,
+        orient: 'vertical',
+        x: 'left'
+      },
+      color: ['#44bbf8', '#93e588', '#ffd87b', '#f88071', '#00f'],
+      series: [
+        {
+          name: '',
+          type: 'pie',
+          radius: ['45%', '79%'],
+          clockWise: false,
+          startAngle: 167 - (initPieValue / sum2 * 360 / 2),
+          minAngle: minAngle,
+          avoidLabelOverlap: false,
+          itemStyle: {
+            emphasis: {
+              radius: ['46%', '100%']
+            }
+          },
+          label: {
+            normal: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              show: false,
+              textStyle: {
+                fontSize: '30',
+                fontWeight: 'bold'
+              }
+            }
+          },
+          labelLine: {
+            normal: {
+              show: false
+            }
+          },
+          data: obj.data
+        }
+      ]
+    };
+    myChart.setOption(option);
+    if (minAngle === 30) {  //最小扇形区域30时
+      myChart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: 0 });
+    }
+
+    let preDataIndex = 0;
+    myChart.on('click', (v) => {
+      if (v.dataIndex === preDataIndex) {
+        myChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: v.dataIndex
+        });
+        return;
+      }
+      const sum1 = pieValue.reduce((prev, cur, index) => {
+        if (index < v.dataIndex) {
+          if (cur < sum / 12 && cur > 0) {
+            return prev + sum / 12; // 饼图的扇形最小角度设置为30，占圆的1/12
+          }
+          return prev + cur;
+        }
+        return prev;
+      }, 0);
+      let curPieValue = pieValue[v.dataIndex];
+      if (curPieValue < sum / 12 && curPieValue > 0) {
+        curPieValue = sum / 12;
+      }
+      option.series[0].startAngle = 167 - (sum1 / sum2 * 360 + curPieValue / sum2 * 360 / 2);// 开始渲染图形的角度
+      myChart.setOption(option);
+      preDataIndex = v.dataIndex;
+      window.setTimeout(() => {
+        myChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: v.dataIndex
+        });
+      }, 400);
+
+      this.mrkName = v.data.name;
+      this.mrkValue = v.data.value;
+    });
+  </script>
+</body>

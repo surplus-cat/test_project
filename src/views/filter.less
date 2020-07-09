@@ -30,6 +30,7 @@
     background: #fff;
     vertical-align: middle;
     margin-left: 10px;
+    z-index: 3000;
   }
   .expression-unit {
     position: relative;
@@ -40,6 +41,7 @@
     border-radius: 3px;
     padding: 0 0 0 3px;
     background: #fff;
+    border: 1px solid #ccc;
     vertical-align: middle;
     &.master {
       width: 600px;
@@ -154,30 +156,41 @@
     }
   }
 }
-
 .wrapper {
   padding-left: 20px;
-  background-color: #ccc;
 }
 .filter-group-control {
   align-items: center;
   width: 100%;
+  padding-left: 60px;
   display: flex;
   flex-wrap: wrap;
   position: relative;
+
+  &::before {
+    content: '筛选属性';
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
   .item {
     width: 94%;
     padding-left: 41px;
     margin-bottom: 10px;
     text-align: left;
     display: flex;
+
+    .add {
+      line-height: 2.5;
+      margin: 0 10px;
+      cursor: pointer;
+    }
   }
 
   .icon {
     margin-left: 10px;
   }
 }
-
 .case {
   width: 160px;
   height: 40px;
@@ -187,12 +200,16 @@
   position: relative;
   margin-right: 10px;
   border-radius: 5px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
 
   .hideBox {
-    width: 160px;
+    width: 162px;
     position: absolute;
     left: 0;
     top: 41px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
   }
 
   input {
@@ -234,7 +251,7 @@
     }
 
     &.active {
-      background-color: greenyellow;
+      background-color: pink;
     }
   }
 }
@@ -246,6 +263,7 @@
   border-radius: 5px;
   margin-right: 5px;
   display: flex;
+  border: 1px solid #ccc;
 
   .tipbox {
     position: relative;
@@ -275,6 +293,7 @@
     left: 0;
     top: 42px;
     background-color: #fff;
+    border: 1px solid #ccc;
   }
 
   li {
