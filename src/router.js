@@ -26,7 +26,7 @@ export default new Router({
     {
       path: '/filter',
       name: 'filter',
-      component: () => import(/* webpackChunkName: "about" */ './views/filter.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/analyse/filter.vue')
     },
     {
       path: '/chart',
