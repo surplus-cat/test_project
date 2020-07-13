@@ -1,10 +1,59 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+  v2.0 | 20110126
+  License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
 .flexBox {
   position: relative;
   display: flex;
   padding-left: 40px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
+  // padding-bottom: 10px;
+  // margin-bottom: 10px;
+  border-bottom: 1px solid #F0F2F5;
 
   &::before {
     content: '事件';
@@ -169,12 +218,26 @@
   }
 }
 .fullContent {
-  background-color: #ccc;
+  background-color: #F0F2F5;
 }
 .wrapper {
-  padding-left: 20px;
+  padding: 0 24px;
   background-color: #fff;
-  margin: 10px 0;
+  margin-top: 10px;
+  .eventPost {
+    display: flex;
+    justify-content: space-between;
+    line-height: 40px;
+    border-bottom: 1px solid #F0F2F5;
+    .sign {
+      width: 13px;
+      height: 13px;
+      display: inline-block;
+      background-color: #ccc;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+  }
 }
 .flexContent {
   align-items: center;
@@ -182,14 +245,14 @@
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 20px;
+  border-bottom: 1px solid #F0F2F5;
+  //margin-bottom: 20px;
 
   &::before {
     content: '属性';
     position: absolute;
     left: 0;
-    top: 10px;
+    top: 8px;
   }
   .add {
     line-height: 40px;
@@ -197,12 +260,12 @@
   .item {
     width: 94%;
     line-height: 40px;
-    margin-bottom: 10px;
+    //margin-bottom: 10px;
     text-align: left;
     display: flex;
 
     .add {
-      line-height: 2.5;
+      line-height: 40px;
       margin: 0 10px;
       cursor: pointer;
     }
@@ -238,7 +301,7 @@
   .item {
     width: 94%;
     padding-left: 41px;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     text-align: left;
     display: flex;
 
@@ -274,6 +337,7 @@
     left: 0;
     top: 41px;
     box-sizing: border-box;
+    background-color: #fff;
     border: 1px solid #ccc;
   }
 
@@ -474,131 +538,6 @@
 }
 
 
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-ol,
-ul {
-  list-style: none;
-}
-blockquote,
-q {
-  quotes: none;
-}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: "";
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
 .custom-border{
   width:200px;
   margin:10px auto;
@@ -629,4 +568,128 @@ table {
 .content{
   position:relative;
   z-index:2;
+}
+
+
+
+
+
+
+.chartConfiguation {
+  display: flex;
+  background-color: #F0F2F5;
+  .chartBox {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    margin-bottom: 41px;
+    padding-left: 24px;
+    background-color: #fff;
+    text-align: left;
+    .subtitle {
+      font-size:14px;
+      font-weight: 600;
+      color:rgba(48,49,51,1);
+      line-height: 14px;
+      margin-top: 20px;
+    }
+    .timeZone {
+      font-size:14px;
+      font-family:PingFangSC-Regular,PingFang SC;
+      font-weight:400;
+      color:rgba(144,147,153,1);
+      line-height: 24px;
+      margin-top: 6px;
+      margin-bottom: 20px;
+    }
+    .chartArea {
+      flex: 1;
+      background-color: #ccc;
+      margin-right: 36px;
+      margin-bottom: 48px;
+    }
+  }
+  .deploy {
+    position: relative;
+    // width: 302px;
+    height: 878px;
+    background-color: #fff;
+    margin-left: 21px;
+    text-align: left;
+    box-sizing: border-box;
+    transition: width 1s;
+    border-top: 1px solid #F0F2F5;
+    .deployContent {
+      padding-left: 20px;
+      padding-right: 24px;
+    }
+    .subtitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(48,49,51,1);
+      margin-top: 20px;
+    }
+    .rightMark {
+      position: absolute;
+      left: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 59px;
+      background:rgba(255,255,255,1);
+      cursor: pointer;
+    }
+    .axisBox {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .displaySetup {
+      line-height: 32px;
+
+      dd {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+    }
+
+    .subhead {
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .count {
+      font-size:12px;
+      color: #C0C4CC;
+      text-align: right;
+    }
+
+    .remarkBox {
+
+      /deep/.el-textarea__inner {
+        height: 86px;
+        resize: none !important;
+      }
+    }
+  }
+}
+
+.chartTypes {
+  display: flex;
+  flex-wrap: wrap;
+
+  dd {
+    width: 36px;
+    height: 36px;
+    margin-right: 14px;
+    margin-bottom: 12px;
+    background-color: #ccc;
+  }
+}
+
+/deep/ .el-radio-button--mini .el-radio-button__inner {
+  padding: 7px 12px;
 }

@@ -1,252 +1,266 @@
 <template>
   <div class="fullContent">
     <div class="wrapper">
-      <div class="flexBox">
+      <div class="eventPost">
         <div>
-          <el-input v-model="name" placeholder="请输入名字" />
+          <span class="sign" @click="cut"></span>
+          <span class="name">事件配置</span>
         </div>
-        <div class="expression-input master">
-          <div class="mask"></div>
-          <div class="expression-unit">
-            <ul data-method="focus" @click="focalize($event)" ref="unit">
-              <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
-              <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
-              <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
-            </li>
-            <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
+        <div>
+          <el-button size="mini">刷新</el-button>
+          <el-button size="mini">保存</el-button>
+        </div>
 
-              <li
-                v-for="(item, idx) in expressList"
-                :key="idx"
-                @click="handover($event, item, idx)"
-                :ref="count(idx)"
-              >
-                <span
-                  :class="{
-                    tag: item.name !== '.' && !operators.includes(item.name),
-                    placeholder:
-                      item.name === '.' || operators.includes(item.name)
-                  }"
-                  >{{ item.name }}</span
-                >
-                <input
-                  type="text"
-                  :value="item.name"
-                  v-if="item.name === '.' || operators.includes(item.name)"
-                  @focus="focus($event)"
-                />
-              </li>
-              <li data-input="true" data-type="none">
-                <span class="placeholder" v-text="inputValue"></span>
-                <input
-                  type="text"
-                  @input="feed($event)"
-                  @keyup.delete="rollback($event)"
-                  v-model="inputValue"
-                  ref="node"
-                />
-              </li>
-            </ul>
-          </div>
-          <div class="expression-menu" v-show="mainVisible" :style="styles">
-            <div class="overflow-wrapper">
-              <ul class="expression-menu-list">
-                <li
-                  v-for="item in names_"
-                  :key="item.id"
-                  @click="pickMain(item.name)"
-                >
-                  {{ item.name }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="expression-menu" v-show="minorVisible" :style="styles">
-            <div class="overflow-wrapper">
-              <ul class="expression-menu-list">
-                <li
-                  v-for="item in names"
-                  :key="item.id"
-                  @click="pick(item.name)"
-                >
-                  {{ item.name }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
+      <div v-show="showState">
+        <div class="flexBox">
+          <div>
+            <el-input v-model="name" placeholder="请输入名字" />
+          </div>
+          <div class="expression-input master">
+            <div class="mask"></div>
+            <div class="expression-unit">
+              <ul data-method="focus" @click="focalize($event)" ref="unit">
+                <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
+                <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
+                <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
+              </li>
+              <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
 
-      <div class="flexContent">
-        <div
-          v-for="(ele, idx) in obk.arr"
-          class="item"
-          :key="idx"
-          @mouseover="ele.isShowDel = true"
-          @mouseout="ele.isShowDel = false"
-        >
-          按
-          <div
-            class="case"
-            @click.stop="open1(idx)"
-            :style="{ 'z-index': 1000 - idx }"
-          >
-            {{ ele.value1.label }}
-            <div class="hideBox" v-show="ele.state1">
-              <input type="text" @input="filt" placeholder="搜索" />
-              <ul>
                 <li
-                  v-for="elem in options1_cp"
-                  :key="elem.value"
-                  :class="{ active: ele.value1.label === elem.label }"
-                  @click.stop="select(elem, idx)"
+                  v-for="(item, idx) in expressList"
+                  :key="idx"
+                  @click="handover($event, item, idx)"
+                  :ref="count(idx)"
                 >
-                  {{ elem.label }}
+                  <span
+                    :class="{
+                      tag: item.name !== '.' && !operators.includes(item.name),
+                      placeholder:
+                        item.name === '.' || operators.includes(item.name)
+                    }"
+                    >{{ item.name }}</span
+                  >
+                  <input
+                    type="text"
+                    :value="item.name"
+                    v-if="item.name === '.' || operators.includes(item.name)"
+                    @focus="focus($event)"
+                  />
+                </li>
+                <li data-input="true" data-type="none">
+                  <span class="placeholder" v-text="inputValue"></span>
+                  <input
+                    type="text"
+                    @input="feed($event)"
+                    @keyup.delete="rollback($event)"
+                    v-model="inputValue"
+                    ref="node"
+                  />
                 </li>
               </ul>
             </div>
+            <div class="expression-menu" v-show="mainVisible" :style="styles">
+              <div class="overflow-wrapper">
+                <ul class="expression-menu-list">
+                  <li
+                    v-for="item in names_"
+                    :key="item.id"
+                    @click="pickMain(item.name)"
+                  >
+                    {{ item.name }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="expression-menu" v-show="minorVisible" :style="styles">
+              <div class="overflow-wrapper">
+                <ul class="expression-menu-list">
+                  <li
+                    v-for="item in names"
+                    :key="item.id"
+                    @click="pick(item.name)"
+                  >
+                    {{ item.name }}
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-          查看
-
-          <span class="add" @click="append" v-if="idx === obk.arr.length - 1"
-            >+添加属性</span
-          >
-          <i
-            class="el-icon-delete icon"
-            @click="omit(idx)"
-            v-show="ele.isShowDel"
-          ></i>
         </div>
-      </div>
 
-      <div class="filter-group-control">
-        <span class="add" @click="add" v-if="obj.arr.length === 0"
-          >+添加筛选</span
-        >
-        <div
-          id="filter-group-relation"
-          v-show="obj.arr.length > 1"
-          class="filter-group-relation"
-        >
-          <div class="relation-topline"></div>
-          <button
-            data-method="relation"
-            data-relation="and"
-            class="buttons"
-            @click="toggle"
-            type="button"
+        <div class="flexContent">
+          <div
+            v-for="(ele, idx) in obk.arr"
+            class="item"
+            :key="idx"
+            @mouseover="ele.isShowDel = true"
+            @mouseout="ele.isShowDel = false"
           >
-            {{ aliasname[obj.type] }}
-          </button>
-          <div class="relation-bottomline"></div>
+            按
+            <div
+              class="case"
+              @click.stop="open2(idx)"
+              :style="{ 'z-index': 2000 - idx }"
+            >
+              {{ ele.value1.label }}
+              <div class="hideBox" v-show="ele.state1">
+                <input type="text" @input="filt" placeholder="搜索" />
+                <ul>
+                  <li
+                    v-for="elem in options1_cp"
+                    :key="elem.value"
+                    :class="{ active: ele.value1.label === elem.label }"
+                    @click.stop="select2(elem, idx)"
+                  >
+                    {{ elem.label }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            查看
+
+            <span class="add" @click="append" v-if="idx === obk.arr.length - 1"
+              >+添加属性</span
+            >
+            <i
+              class="el-icon-delete icon"
+              @click="omit(idx)"
+              v-show="ele.isShowDel"
+            ></i>
+          </div>
         </div>
-        <div
-          v-for="(ele, idx) in obj.arr"
-          class="item"
-          :key="idx"
-          @mouseover="ele.isShowDel = true"
-          @mouseout="ele.isShowDel = false"
-        >
-          <div
-            class="case"
-            @click.stop="open1(idx)"
-            :style="{ 'z-index': 1000 - idx }"
-          >
-            {{ ele.value1.label }}
-            <div class="hideBox" v-show="ele.state1">
-              <input type="text" @input="filt" placeholder="搜索" />
-              <ul>
-                <li
-                  v-for="elem in options1_cp"
-                  :key="elem.value"
-                  :class="{ active: ele.value1.label === elem.label }"
-                  @click.stop="select(elem, idx)"
-                >
-                  {{ elem.label }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <el-select v-model="ele.value2">
-            <el-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
-          <!-- 有三种情况，中间条件为 包含和不包含时 第三个为下拉单选，还有一种是输入框  -->
-          <div
-            class="boxer"
-            @click.stop="open(idx)"
-            :style="{ 'z-index': 1000 - idx }"
-          >
-            <span
-              v-for="(elem, index) in ele.elems"
-              class="label-info"
-              :key="index"
-            >
-              {{ elem.name }}
-              <span data-role="remove" @click="remove(index, idx)"></span>
-            </span>
-            <div class="tipbox">
-              <input
-                @input="check($event, idx)"
-                :id="forId('input', idx)"
-                @keyup.enter="submit($event, idx)"
-                @keyup.delete="backspace($event, idx)"
-                @blur="submit($event, idx)"
-              />
 
-              <ul v-show="ele.state3 && tips.length > 0">
-                <li
-                  v-for="(tip, index) in tips_cp"
-                  :key="index"
-                  @click.stop="join(tip, idx)"
-                >
-                  {{ tip.name }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <!-- 第{{ idx + 1 }}排 -->
-          <!--<el-button
-          type="primary"
-          icon="el-icon-edit"
-          circle
-          @click="unlock(idx)"
-        ></el-button>-->
-          <span class="add" @click="add" v-if="idx === obj.arr.length - 1"
+        <div class="filter-group-control">
+          <span class="add" @click="add" v-if="obj.arr.length === 0"
             >+添加筛选</span
           >
-          <i
-            class="el-icon-delete icon"
-            @click="del(idx)"
-            v-show="ele.isShowDel"
-          ></i>
+          <div
+            id="filter-group-relation"
+            v-show="obj.arr.length > 1"
+            class="filter-group-relation"
+          >
+            <div class="relation-topline"></div>
+            <button
+              data-method="relation"
+              data-relation="and"
+              class="buttons"
+              @click="toggle"
+              type="button"
+            >
+              {{ aliasname[obj.type] }}
+            </button>
+            <div class="relation-bottomline"></div>
+          </div>
+          <div
+            v-for="(ele, idx) in obj.arr"
+            class="item"
+            :key="idx"
+            @mouseover="ele.isShowDel = true"
+            @mouseout="ele.isShowDel = false"
+          >
+            <div
+              class="case"
+              @click.stop="open1(idx)"
+              :style="{ 'z-index': 1000 - idx }"
+            >
+              {{ ele.value1.label }}
+              <div class="hideBox" v-show="ele.state1">
+                <input type="text" @input="filt" placeholder="搜索" />
+                <ul>
+                  <li
+                    v-for="elem in options1_cp"
+                    :key="elem.value"
+                    :class="{ active: ele.value1.label === elem.label }"
+                    @click.stop="select(elem, idx)"
+                  >
+                    {{ elem.label }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <el-select v-model="ele.value2">
+              <el-option
+                v-for="item in options2"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <!-- 有三种情况，中间条件为 包含和不包含时 第三个为下拉单选，还有一种是输入框  -->
+            <div
+              class="boxer"
+              @click.stop="open(idx)"
+              :style="{ 'z-index': 1000 - idx }"
+            >
+              <span
+                v-for="(elem, index) in ele.elems"
+                class="label-info"
+                :key="index"
+              >
+                {{ elem.name }}
+                <span data-role="remove" @click="remove(index, idx)"></span>
+              </span>
+              <div class="tipbox">
+                <input
+                  @input="check($event, idx)"
+                  :id="forId('input', idx)"
+                  @keyup.enter="submit($event, idx)"
+                  @keyup.delete="backspace($event, idx)"
+                  @blur="submit($event, idx)"
+                />
+
+                <ul v-show="ele.state3 && tips.length > 0">
+                  <li
+                    v-for="(tip, index) in tips_cp"
+                    :key="index"
+                    @click.stop="join(tip, idx)"
+                  >
+                    {{ tip.name }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- 第{{ idx + 1 }}排 -->
+            <!--<el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            @click="unlock(idx)"
+          ></el-button>-->
+            <span class="add" @click="add" v-if="idx === obj.arr.length - 1"
+              >+添加筛选</span
+            >
+            <i
+              class="el-icon-delete icon"
+              @click="del(idx)"
+              v-show="ele.isShowDel"
+            ></i>
+          </div>
         </div>
       </div>
-
-      <pop
-        v-if="dialogVisible"
-        @close="close"
-        @save="save"
-        :dialogVisible="dialogVisible"
-        :meanObj="meanObj"
-        :idx="idx"
-      ></pop>
-
       <!--<div class="custom-border border-color">边框宽度1px</div>
     <div class="scale-border">
       <div class="content">边框宽度0.5px</div>
       <div class="border border-color"></div>
     </div>-->
     </div>
+    <chart />
+
+    <pop
+      v-if="dialogVisible"
+      @close="close"
+      @save="save"
+      :dialogVisible="dialogVisible"
+      :meanObj="meanObj"
+      :idx="idx"
+    ></pop>
   </div>
 </template>
 
 <script>
+import chart from "./chart";
 import pop from "../../components/pop";
 
 /*
@@ -255,6 +269,7 @@ import pop from "../../components/pop";
     1、删除的时候删了符号后也会把属性值给删了  已完成
     2、事件和属性的切换功能未实现，难点在于弹框的定位 定位已完成
     3、事件还有筛选功能  目前需求砍掉
+    4、() 和常数 目前不支持
 */
 
 // 打印表达式  this.expressList.map(v => v.name).join("")
@@ -417,20 +432,7 @@ export default {
       },
       obj: {
         type: "&",
-        arr: [
-          // {
-          //   name: 1,
-          //   value1: {
-          //     value: "content",
-          //     label: "元素内容"
-          //   },
-          //   state1: false,
-          //   value2: "equal",
-          //   state3: false,
-          //   elems: [],
-          //   backState: false
-          // }
-        ]
+        arr: []
       },
       aliasname: {
         "&": "且",
@@ -450,10 +452,12 @@ export default {
         top: ""
       },
       checked: {},
-      index: 0
+      index: 0,
+      showState: true,
     };
   },
   components: {
+    chart,
     pop
   },
   mounted() {
@@ -463,6 +467,9 @@ export default {
     document.removeEventListener("click", this.shutup);
   },
   methods: {
+    cut() {
+      this.showState = !this.showState;
+    },
     count(index) {
       return `node_${index}`;
     },
@@ -709,6 +716,11 @@ export default {
       this.obj.arr[idx].value1.value = item.value;
       this.obj.arr[idx].state1 = false;
     },
+    select2(item, idx) {
+      this.obk.arr[idx].value1.label = item.label;
+      this.obk.arr[idx].value1.value = item.value;
+      this.obk.arr[idx].state1 = false;
+    },
     // 键盘回退事件
     backspace(e, idx) {
       if (!e.target.value && this.obj.arr[idx].backState) {
@@ -795,8 +807,19 @@ export default {
       this.obj.arr[idx].state1 = true;
       this.options1_cp = this.options1.slice(0);
     },
+    open2(idx) {
+      this.obk.arr.forEach(v => {
+        v.state1 = false;
+      });
+      this.obk.arr[idx].state1 = true;
+      this.options1_cp = this.options1.slice(0);
+    },
     shutup() {
       this.obj.arr.forEach(v => {
+        v.state1 = false;
+        v.state3 = false;
+      });
+      this.obk.arr.forEach(v => {
         v.state1 = false;
         v.state3 = false;
       });
