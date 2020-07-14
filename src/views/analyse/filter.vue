@@ -13,80 +13,93 @@
 
       </div>
       <div v-show="showState">
-        <div class="flexBox">
-          <div>
-            <el-input v-model="name" placeholder="请输入名字" />
+        <div class="flexBox"
+          @mouseover="showToggleIcon = true"
+          @mouseout="showToggleIcon = false">
+          <div class="commonLine" v-show="showType">
+            <el-select v-model="affair" size="small">
+              <el-option
+                v-for="item in affairs"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <span>的</span>
+            <putDown />
           </div>
-          <div class="expression-input master">
-            <div class="mask"></div>
-            <div class="expression-unit">
-              <ul data-method="focus" @click="focalize($event)" ref="unit">
-                <!--<li data-tag="true" data-type="event" data-value="&quot;App 被动启动&quot;">
-                <span class="tag" data-type="event" data-method="select" data-value="&quot;App 被动启动&quot;">"App 被动启动"</span>
-                <span class="action-filter-set" data-method="set-filter" data-event="&quot;App 被动启动&quot;"><span class="icon-filter-set"></span></span>
-              </li>
-              <li data-input="true" data-type="connector"><span class="placeholder">.</span><input type="text" value="."></li>-->
+          <div class="customLine" v-show="!showType">
+            <div>
+              <el-input v-model="name" placeholder="请输入名字" />
+            </div>
+            <div class="expression-input master">
+              <div class="mask"></div>
+              <div class="expression-unit">
+                <ul data-method="focus" @click="focalize($event)" ref="unit">
+                  <li
+                    v-for="(item, idx) in expressList"
+                    :key="idx"
+                    @click="handover($event, item, idx)"
+                    :ref="count(idx)"
+                  >
+                    <span
+                      :class="{
+                        tag: item.name !== '.' && !operators.includes(item.name),
+                        placeholder:
+                          item.name === '.' || operators.includes(item.name)
+                      }"
+                      >{{ item.name }}</span
+                    >
+                    <input
+                      type="text"
+                      :value="item.name"
+                      v-if="item.name === '.' || operators.includes(item.name)"
+                      @focus="focus($event)"
+                    />
+                  </li>
+                  <li data-input="true" data-type="none">
+                    <span class="placeholder" v-text="inputValue"></span>
+                    <input
+                      type="text"
+                      @input="feed($event)"
+                      @keyup.delete="rollback($event)"
+                      v-model="inputValue"
+                      ref="node"
+                    />
+                  </li>
+                </ul>
+              </div>
+              <div class="expression-menu" v-show="mainVisible" :style="styles">
+                <div class="overflow-wrapper">
+                  <ul class="expression-menu-list">
+                    <li
+                      v-for="item in attrs"
+                      :key="item.id"
+                      @click="pickMain(item.name)"
+                    >
+                      {{ item.name }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="expression-menu" v-show="minorVisible" :style="styles">
+                <div class="overflow-wrapper">
+                  <ul class="expression-menu-list">
+                    <li
+                      v-for="item in affairs"
+                      :key="item.id"
+                      @click="pick(item.name)"
+                    >
+                      {{ item.name }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                <li
-                  v-for="(item, idx) in expressList"
-                  :key="idx"
-                  @click="handover($event, item, idx)"
-                  :ref="count(idx)"
-                >
-                  <span
-                    :class="{
-                      tag: item.name !== '.' && !operators.includes(item.name),
-                      placeholder:
-                        item.name === '.' || operators.includes(item.name)
-                    }"
-                    >{{ item.name }}</span
-                  >
-                  <input
-                    type="text"
-                    :value="item.name"
-                    v-if="item.name === '.' || operators.includes(item.name)"
-                    @focus="focus($event)"
-                  />
-                </li>
-                <li data-input="true" data-type="none">
-                  <span class="placeholder" v-text="inputValue"></span>
-                  <input
-                    type="text"
-                    @input="feed($event)"
-                    @keyup.delete="rollback($event)"
-                    v-model="inputValue"
-                    ref="node"
-                  />
-                </li>
-              </ul>
-            </div>
-            <div class="expression-menu" v-show="mainVisible" :style="styles">
-              <div class="overflow-wrapper">
-                <ul class="expression-menu-list">
-                  <li
-                    v-for="item in names_"
-                    :key="item.id"
-                    @click="pickMain(item.name)"
-                  >
-                    {{ item.name }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="expression-menu" v-show="minorVisible" :style="styles">
-              <div class="overflow-wrapper">
-                <ul class="expression-menu-list">
-                  <li
-                    v-for="item in names"
-                    :key="item.id"
-                    @click="pick(item.name)"
-                  >
-                    {{ item.name }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          <span class="toggleIcon" v-show="showToggleIcon" @click="showType = !showType"></span>
         </div>
 
         <div class="flexContent">
@@ -98,26 +111,7 @@
             @mouseout="ele.isShowDel = false"
           >
             按
-            <div
-              class="case"
-              @click.stop="open2(idx)"
-              :style="{ 'z-index': 2000 - idx }"
-            >
-              {{ ele.value1.label }}
-              <div class="hideBox" v-show="ele.state1">
-                <input type="text" @input="filt" placeholder="搜索" />
-                <ul>
-                  <li
-                    v-for="elem in options1_cp"
-                    :key="elem.value"
-                    :class="{ active: ele.value1.label === elem.label }"
-                    @click.stop="select2(elem, idx)"
-                  >
-                    {{ elem.label }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <dropCombo :ele="ele" :idx="idx" :source="obk.arr" @unfold="unfold" @elect="elect" :options1="options1" />
             查看
 
             <span class="add" @click="append" v-if="idx === obk.arr.length - 1"
@@ -159,26 +153,7 @@
             @mouseover="ele.isShowDel = true"
             @mouseout="ele.isShowDel = false"
           >
-            <div
-              class="case"
-              @click.stop="open1(idx)"
-              :style="{ 'z-index': 1000 - idx }"
-            >
-              {{ ele.value1.label }}
-              <div class="hideBox" v-show="ele.state1">
-                <input type="text" @input="filt" placeholder="搜索" />
-                <ul>
-                  <li
-                    v-for="elem in options1_cp"
-                    :key="elem.value"
-                    :class="{ active: ele.value1.label === elem.label }"
-                    @click.stop="select(elem, idx)"
-                  >
-                    {{ elem.label }}
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <dropCombo :ele="ele" :idx="idx" :source="obj.arr" @unfold="unfold" @elect="elect" :options1="options1" />
             <el-select v-model="ele.value2">
               <el-option
                 v-for="item in options2"
@@ -262,7 +237,9 @@
 <script>
 import chart from "./chart";
 import pop from "../../components/pop";
-
+import dropCombo from "./dropCombo";
+import dropDown from "./dropDown";
+import putDown from "./putDown";
 /*
 *
   待解决问题:
@@ -277,7 +254,8 @@ import pop from "../../components/pop";
 export default {
   data() {
     return {
-      names: [
+      affair: '',
+      affairs: [
         { name: "总次数", value: 0 },
         { name: "用户数", value: 1 },
         { name: "人均次数", value: 2 },
@@ -308,7 +286,7 @@ export default {
         { name: "appName", value: 27 },
         { name: "平台类型", value: 28 }
       ],
-      names_: [
+      attrs: [
         { name: "任意事件", value: 0 },
         { name: "App 元素点击", value: 1 },
         { name: "App 启动", value: 2 },
@@ -349,6 +327,8 @@ export default {
       ],
       tips_cp: [],
       options1_cp: [],
+      showType: true,
+      showToggleIcon: false,
       options1: [
         {
           label: "元素内容",
@@ -458,7 +438,10 @@ export default {
   },
   components: {
     chart,
-    pop
+    pop,
+    dropCombo,
+    dropDown,
+    putDown
   },
   mounted() {
     document.addEventListener("click", this.shutup);
@@ -711,16 +694,6 @@ export default {
         this.options1_cp = arr.filter(v => v.label.includes(e.data));
       }
     },
-    select(item, idx) {
-      this.obj.arr[idx].value1.label = item.label;
-      this.obj.arr[idx].value1.value = item.value;
-      this.obj.arr[idx].state1 = false;
-    },
-    select2(item, idx) {
-      this.obk.arr[idx].value1.label = item.label;
-      this.obk.arr[idx].value1.value = item.value;
-      this.obk.arr[idx].state1 = false;
-    },
     // 键盘回退事件
     backspace(e, idx) {
       if (!e.target.value && this.obj.arr[idx].backState) {
@@ -800,19 +773,16 @@ export default {
       });
       this.obj.arr[idx].state3 = true;
     },
-    open1(idx) {
-      this.obj.arr.forEach(v => {
+    unfold(source, idx) {
+      source.forEach(v => {
         v.state1 = false;
       });
-      this.obj.arr[idx].state1 = true;
-      this.options1_cp = this.options1.slice(0);
+      source[idx].state1 = true;
     },
-    open2(idx) {
-      this.obk.arr.forEach(v => {
-        v.state1 = false;
-      });
-      this.obk.arr[idx].state1 = true;
-      this.options1_cp = this.options1.slice(0);
+    elect(source, item, idx) {
+      source[idx].value1.label = item.label;
+      source[idx].value1.value = item.value;
+      source[idx].state1 = false;
     },
     shutup() {
       this.obj.arr.forEach(v => {

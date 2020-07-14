@@ -48,6 +48,7 @@ table {
 }
 
 .flexBox {
+  min-height: 48px;
   position: relative;
   display: flex;
   padding-left: 40px;
@@ -60,6 +61,24 @@ table {
     position: absolute;
     left: 0;
     top: 10px;
+  }
+
+  .toggleIcon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    background-color: #ccc;
+    position: absolute;
+    right: 0;
+    top: 10px;
+  }
+
+  .commonLine {
+    display: flex;
+  }
+
+  .customLine {
+    display: flex;
   }
 
   .express-input {
@@ -240,6 +259,7 @@ table {
   }
 }
 .flexContent {
+  min-height: 48px;
   align-items: center;
   padding-left: 40px;
   display: flex;
@@ -283,6 +303,7 @@ table {
 
 }
 .filter-group-control {
+  min-height: 48px;
   align-items: center;
   padding-left: 40px;
   display: flex;
@@ -319,71 +340,7 @@ table {
   }
 
 }
-.case {
-  width: 160px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  background-color: #fff;
-  position: relative;
-  margin-right: 10px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
 
-  .hideBox {
-    width: 162px;
-    position: absolute;
-    left: 0;
-    top: 41px;
-    box-sizing: border-box;
-    background-color: #fff;
-    border: 1px solid #ccc;
-  }
-
-  input {
-    width: 160px;
-    padding-left: 8px;
-    height: 40px;
-    outline: none;
-    border: none;
-    line-height: 20px;
-    min-width: 60px;
-    font-size: 14px;
-    transition: background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    color: #212121;
-    border-radius: 3px;
-    box-shadow: none;
-    background-color: #fff;
-    vertical-align: middle;
-    box-sizing: border-box;
-  }
-
-  ul {
-    width: 160px;
-    background-color: #fff;
-    margin-top: 2px;
-  }
-
-  li {
-    width: 160px;
-    height: 30px;
-    padding-left: 20px;
-    line-height: 30px;
-    text-align: left;
-    box-sizing: border-box;
-    color: #000;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #ccc;
-    }
-
-    &.active {
-      background-color: pink;
-    }
-  }
-}
 .boxer {
   min-width: 100px;
   height: 40px;
@@ -568,128 +525,4 @@ table {
 .content{
   position:relative;
   z-index:2;
-}
-
-
-
-
-
-
-.chartConfiguation {
-  display: flex;
-  background-color: #F0F2F5;
-  .chartBox {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-top: 12px;
-    margin-bottom: 41px;
-    padding-left: 24px;
-    background-color: #fff;
-    text-align: left;
-    .subtitle {
-      font-size:14px;
-      font-weight: 600;
-      color:rgba(48,49,51,1);
-      line-height: 14px;
-      margin-top: 20px;
-    }
-    .timeZone {
-      font-size:14px;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(144,147,153,1);
-      line-height: 24px;
-      margin-top: 6px;
-      margin-bottom: 20px;
-    }
-    .chartArea {
-      flex: 1;
-      background-color: #ccc;
-      margin-right: 36px;
-      margin-bottom: 48px;
-    }
-  }
-  .deploy {
-    position: relative;
-    // width: 302px;
-    height: 878px;
-    background-color: #fff;
-    margin-left: 21px;
-    text-align: left;
-    box-sizing: border-box;
-    transition: width 1s;
-    border-top: 1px solid #F0F2F5;
-    .deployContent {
-      padding-left: 20px;
-      padding-right: 24px;
-    }
-    .subtitle {
-      font-size: 14px;
-      font-weight: 600;
-      color: rgba(48,49,51,1);
-      margin-top: 20px;
-    }
-    .rightMark {
-      position: absolute;
-      left: -16px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 59px;
-      background:rgba(255,255,255,1);
-      cursor: pointer;
-    }
-    .axisBox {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-    .displaySetup {
-      line-height: 32px;
-
-      dd {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-      }
-    }
-
-    .subhead {
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .count {
-      font-size:12px;
-      color: #C0C4CC;
-      text-align: right;
-    }
-
-    .remarkBox {
-
-      /deep/.el-textarea__inner {
-        height: 86px;
-        resize: none !important;
-      }
-    }
-  }
-}
-
-.chartTypes {
-  display: flex;
-  flex-wrap: wrap;
-
-  dd {
-    width: 36px;
-    height: 36px;
-    margin-right: 14px;
-    margin-bottom: 12px;
-    background-color: #ccc;
-  }
-}
-
-/deep/ .el-radio-button--mini .el-radio-button__inner {
-  padding: 7px 12px;
 }
