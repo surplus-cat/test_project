@@ -111,7 +111,7 @@
             @mouseout="ele.isShowDel = false"
           >
             按
-            <dropCombo :ele="ele" :idx="idx" :source="obk.arr" @unfold="unfold" @elect="elect" :options1="options1" />
+            <dropCombo :zIndex="3000" :ele="ele" :idx="idx" :source="obk.arr" @unfold="unfold" @elect="elect" :options1="options1" />
             查看
 
             <span class="add" @click="append" v-if="idx === obk.arr.length - 1"

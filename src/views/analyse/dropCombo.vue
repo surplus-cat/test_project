@@ -3,7 +3,7 @@
     <div
       class="case"
       @click.stop="open(idx)"
-      :style="{ 'z-index': 2000 - idx }">
+      :style="{ 'z-index': zIndex - idx }">
       {{ ele.value1.label }}
       <div class="hideBox" v-show="ele.state1">
         <input type="text" @input="filt" placeholder="搜索" />
@@ -24,6 +24,10 @@
 <script>
 export default {
   props: {
+    zIndex: {
+      type: Number,
+      default: 2000
+    },
     source: {
       type: Array,
       default: function() {
