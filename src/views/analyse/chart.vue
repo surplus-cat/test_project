@@ -14,7 +14,7 @@
         <ul>
           <li v-for="(item, idx) in chartOption" :key="idx">
             <div class="subhead">
-              <span class="trigon" @click="toggle(item)"></span>
+              <span class="trigon" @click="handover(item)"></span>
               <span class="name">{{item.name}}</span>
             </div>
             <div v-show="!item.isShow">
@@ -62,18 +62,11 @@
                 <dl class="displaySetup">
                   <dd>
                     <span>属性</span>
-                    <el-select v-model="timeDuration" placeholder="请选择" size="small">
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
+                    <dropDown :source="source1" :Zindex="1000" />
                   </dd>
                   <dd>
                     <span>数据</span>
-                    <dropDown />
+                    <dropDown :source="source2" />
                   </dd>
                   <dd>
                     <span>图表颜色</span>
@@ -133,6 +126,8 @@ export default {
         x: false,
         y: false
       },
+      source1: ['jack', 'john', 'Mike', 'lucy', 'king', 'queen', 'double', 'three', 'auto'],
+      source2: ['dog', 'cat', 'bee', 'fish', 'bird', 'flower', 'lion', 'tiger'],
       chartTypes: ['line', 'bar', 'heap_bar', 'h_bar', 'heap_h_bar', 'pie', 'table', 'card'],
       options: [{
         value: 'payType',
@@ -212,6 +207,9 @@ export default {
         this.width = 302;
       }
       this.isShow = !this.isShow;
+    },
+    handover(item) {
+      item.isShow = !item.isShow;
     },
     toggle(event) {
       if (Array.isArray(event)) {

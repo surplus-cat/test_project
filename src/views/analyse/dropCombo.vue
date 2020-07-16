@@ -26,7 +26,7 @@ export default {
   props: {
     zIndex: {
       type: Number,
-      default: 2000
+      default: 1000
     },
     source: {
       type: Array,

@@ -5,10 +5,10 @@
     </button>
     <ul class="popBox" v-show="showPop">
       <li v-for="(item, idx) in list" @mouseover="enter(item)" @mouseout="leave(item)" @click.stop="choose(item, idx)" :key="idx">
-        <a href="#" :class="{ extend: item.children && item.children.length > 0, active: idx === arr[0] }">{{ item.name }}</a>
+        <a href="javascript:void(0)" :class="{ extend: item.children && item.children.length > 0, active: idx === arr[0] }">{{ item.name }}</a>
         <ul class="dropdown-menu" v-if="item.children && item.children.length > 0" v-show="item.isShow">
           <li v-for="(subItem, index) in item.children" @click.stop="choose(subItem, idx, index)" :key="index">
-            <a href="#" :class="{ active: idx === arr[0] && index === arr[1] }">{{ subItem.name }}</a>
+            <a href="javascript:void(0)" :class="{ active: idx === arr[0] && index === arr[1] }">{{ subItem.name }}</a>
           </li>
         </ul>
       </li>
@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      showText: '总次数',
+      showText: '',
       showPop: false,
       list: [
         {
@@ -85,7 +85,7 @@ export default {
           ]
         }
       ],
-      arr: [0],
+      arr: [],
     };
   },
   computed: {

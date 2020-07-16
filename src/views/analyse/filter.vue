@@ -8,7 +8,7 @@
         </div>
         <div>
           <el-button size="mini">刷新</el-button>
-          <el-button size="mini">保存</el-button>
+          <el-button size="mini" :disabled="!isClick" type="primary">保存</el-button>
         </div>
 
       </div>
@@ -31,8 +31,9 @@
           </div>
           <div class="customLine" v-show="!showType">
             <div>
-              <el-input v-model="name" placeholder="请输入名字" />
+              <el-input v-model="name" placeholder="请输入自定义事件名称" size="mini" />
             </div>
+            <span>显示</span>
             <div class="expression-input master">
               <div class="mask"></div>
               <div class="expression-unit">
@@ -111,7 +112,7 @@
             @mouseout="ele.isShowDel = false"
           >
             按
-            <dropCombo :zIndex="3000" :ele="ele" :idx="idx" :source="obk.arr" @unfold="unfold" @elect="elect" :options1="options1" />
+            <dropCombo :zIndex="1500" :ele="ele" :idx="idx" :source="obk.arr" @unfold="unfold" @elect="elect" :options1="options1" />
             查看
 
             <span class="add" @click="append" v-if="idx === obk.arr.length - 1"
@@ -151,10 +152,9 @@
             class="item"
             :key="idx"
             @mouseover="ele.isShowDel = true"
-            @mouseout="ele.isShowDel = false"
-          >
+            @mouseout="ele.isShowDel = false">
             <dropCombo :ele="ele" :idx="idx" :source="obj.arr" @unfold="unfold" @elect="elect" :options1="options1" />
-            <el-select v-model="ele.value2">
+            <el-select  v-model="ele.value2" class="alSelect">
               <el-option
                 v-for="item in options2"
                 :key="item.value"
@@ -186,12 +186,11 @@
                   @blur="submit($event, idx)"
                 />
 
-                <ul v-show="ele.state3 && tips.length > 0">
+                <ul v-show="ele.state3 && tips.length > 0 && tips_cp.length > 0">
                   <li
                     v-for="(tip, index) in tips_cp"
                     :key="index"
-                    @click.stop="join(tip, idx)"
-                  >
+                    @click.stop="join(tip, idx)">
                     {{ tip.name }}
                   </li>
                 </ul>
@@ -435,6 +434,11 @@ export default {
       index: 0,
       showState: true,
     };
+  },
+  computed: {
+    isClick() {
+      return false;
+    }
   },
   components: {
     chart,
