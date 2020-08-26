@@ -14,7 +14,7 @@ Vue.use(ElementUI);
 // 全局注册
 
 Vue.prototype.bus = new Vue();
-Vue.prototype.$echarts = echarts;
+// Vue.prototype.$echarts = echarts;
 
 Vue.directive('loadmore', {
   bind(el, binding) {

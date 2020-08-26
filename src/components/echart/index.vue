@@ -1,12 +1,14 @@
 <template>
-  <div class="echart-container">
-    <div ref="chart" class="chart" :style="{ width, height }"></div>
-  </div>
+<div class="echart-container">
+  <div ref="chart" class="chart" :style="{ width, height }"></div>
+</div>
 </template>
 
 <script>
-import field from './echartsOption';
-import { func } from '@/util';
+import field from './echartsOption.js';
+import {
+  func
+} from '@/util';
 
 export default {
   props: {
@@ -16,12 +18,12 @@ export default {
     },
     source: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       }
     }
   },
-  data () {
+  data() {
     return {
       option: {},
       width: null,
@@ -30,7 +32,7 @@ export default {
       myChart: ''
     };
   },
-  mounted () {
+  mounted() {
     // console.log(this.$el.offsetWidth)
     // 基于准备好的dom，初始化echarts实例
     this.width = this.$el.offsetWidth + 'px';
@@ -44,12 +46,12 @@ export default {
     clear() {
       this.myChart.clear();
     },
-    draw () {
+    draw() {
       let data = field.filter(v => v.name === this.type);
       this.option = Object.assign({}, this.option, data[0]);
       this.drawLine();
     },
-    drawLine () {
+    drawLine() {
       // 数据赋值
       if (this.source.length > 0) {
         this.option.dataset.source = this.source;
@@ -58,7 +60,7 @@ export default {
       this.myChart.setOption(this.option, true);
       this.myChart.resize();
     },
-    async reDraw (calcHeight) {
+    async reDraw(calcHeight) {
       this.width = this.width ? this.width : this.$el.offsetWidth + 'px';
       // 卡片有数据模块是根据接口来判断是否展示，因此高度需要重新计算
       this.height = calcHeight ? calcHeight + 'px' : (this.height && parseInt(this.height, 10) === this.$el.offsetHeight) ? this.height : this.$el.offsetHeight + 'px';
@@ -119,6 +121,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less" scoped>
 .echart-container {
   display: flex;

@@ -87,6 +87,11 @@ export default new Router({
       path: '/menology',
       name: 'menology',
       component: () => import(/* webpackChunkName: "about" */ './components/index.vue')
+    },
+    {
+      path: '/excel',
+      name: 'excel',
+      component: () => import(/* webpackChunkName: "about" */ './views/excel.vue')
     }
   ]
 })
