@@ -12,6 +12,22 @@
       </el-table>
     </div>
   </el-card>
+
+  <el-dialog
+    title="提示"
+    :visible.sync="dialogVisible"
+    width="30%"
+    :before-close="handleClose">
+    <div>
+      <el-radio-group v-model="radio">
+        <el-radio :label="idx" v-for="(item, idx) in arr" :key="idx">{{ item }}</el-radio>
+      </el-radio-group>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="ensure">确 定</el-button>
+    </span>
+  </el-dialog>
 </div>
 </template>
 
@@ -24,7 +40,10 @@ export default {
       tableData: [],
       tableHeader: '',
       tableTitle: '',
-      workbook: ''
+      workbook: '',
+      dialogVisible: false,
+      radio: '',
+      arr: []
     }
   },
   mounted() {
@@ -38,6 +57,9 @@ export default {
     //console.log(XLSX.utils)
   },
   methods: {
+    handleClose() {
+      this.dialogVisible = false;
+    },
     generateDate({
       tableTitle,
       header,
@@ -84,77 +106,89 @@ export default {
           let workbook = XLSX.read(data, {
             type: 'array'
           });
-          //console.log(workbook);
+          console.log(workbook.SheetNames);
+
+          this.arr = workbook.SheetNames;
           this.workbook = workbook;
-
-          const firstSheetName = workbook.SheetNames[0] // 第一张表 sheet1
-          const worksheet = workbook.Sheets[firstSheetName] // 读取sheet1表中的数据
-          //console.log(worksheet);
-
-          delete worksheet['!merges'];
-          let A_l = worksheet['!ref'].split(':')[1] //当excel存在标题行时
-          worksheet['!ref'] = `A2:${A_l}`
-          const tableTitle = firstSheetName
-          // const header = workbook.Strings.map((v, idx) => {
-          //   return {
-          //     idx: (idx + 1).toString(),
-          //     value: v.r
-          //   };
-          // });
-          const header = [];
-          const range = XLSX.utils.decode_range(worksheet['!ref'])
-
-          for (let c = range.s.c; c <= range.e.c; c++) {
-            const theader = XLSX.utils.encode_col(c) + '1'
-            // console.log(theader); A B C D
-            // console.log(worksheet[theader]);
-            header.push({
-              serial: (c).toString(),
-              value: worksheet[theader] ? worksheet[theader]['v'] : worksheet[theader],
-              type: 'text'
-            })
+          if (this.arr.length > 1) {
+            this.dialogVisible = true;
+          } else {
+            this.dealData(0)
           }
-
-          //const results = XLSX.utils.sheet_to_json(worksheet);
-
-          var sheet2arr = function (sheet) {
-            var result = [];
-            var row;
-            var rowNum;
-            var colNum;
-            var range = XLSX.utils.decode_range(sheet['!ref']);
-            for (rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
-              row = [];
-              for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
-                var nextCell = sheet[
-                  XLSX.utils.encode_cell({
-                    r: rowNum,
-                    c: colNum
-                  })
-                ];
-                if (typeof nextCell === 'undefined') {
-                  row.push(void 0);
-                } else row.push(nextCell.w);
-              }
-              result.push(row);
-            }
-            return result;
-          };
-
-          console.log(sheet2arr(worksheet));
-
-          const results = sheet2arr(worksheet);
-
-          // console.log(results);
-          this.generateDate({
-            tableTitle,
-            header,
-            results
-          });
 
         }
         reader.readAsArrayBuffer(itemFile)
       }
+    },
+    ensure() {
+      this.dialogVisible = false;
+      this.dealData(this.radio);
+    },
+    dealData(idx) {
+      const firstSheetName = this.workbook.SheetNames[idx] // 第N张表 sheet1
+      const worksheet = this.workbook.Sheets[firstSheetName] // 读取sheet1表中的数据
+      //console.log(worksheet);
+
+      delete worksheet['!merges'];
+      let A_l = worksheet['!ref'].split(':')[1] //当excel存在标题行时
+      worksheet['!ref'] = `A2:${A_l}`
+      const tableTitle = firstSheetName
+      // const header = workbook.Strings.map((v, idx) => {
+      //   return {
+      //     idx: (idx + 1).toString(),
+      //     value: v.r
+      //   };
+      // });
+      const header = [];
+      const range = XLSX.utils.decode_range(worksheet['!ref'])
+
+      for (let c = range.s.c; c <= range.e.c; c++) {
+        const theader = XLSX.utils.encode_col(c) + '1'
+        // console.log(theader); A B C D
+        // console.log(worksheet[theader]);
+        header.push({
+          serial: (c).toString(),
+          value: worksheet[theader] ? worksheet[theader]['v'] : worksheet[theader],
+          type: 'text'
+        })
+      }
+
+      //const results = XLSX.utils.sheet_to_json(worksheet);
+
+      var sheet2arr = function (sheet) {
+        var result = [];
+        var row;
+        var rowNum;
+        var colNum;
+        var range = XLSX.utils.decode_range(sheet['!ref']);
+        for (rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
+          row = [];
+          for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
+            var nextCell = sheet[
+              XLSX.utils.encode_cell({
+                r: rowNum,
+                c: colNum
+              })
+            ];
+            if (typeof nextCell === 'undefined') {
+              row.push(void 0);
+            } else row.push(nextCell.w);
+          }
+          result.push(row);
+        }
+        return result;
+      };
+
+      console.log(sheet2arr(worksheet));
+
+      const results = sheet2arr(worksheet);
+
+      // console.log(results);
+      this.generateDate({
+        tableTitle,
+        header,
+        results
+      });
     },
     fixdata(data) {
       let o = ''
