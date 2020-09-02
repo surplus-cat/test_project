@@ -6,10 +6,35 @@
       <span>数据预览</span>
     </div>
     <div class="text item">
-      <el-table :data="tableData" border highlight-current-row style="width: 100%;">
-        <el-table-column min-width="150" v-for="item in tableHeader" :prop="item.serial" :label="item.value" :key="item.serial">
+      <!--<el-table :data="tableData" border highlight-current-row style="width: 100%;">
+        <el-table-column
+          type="index"
+          width="50"
+          v-if="tableData.length > 0">
+          <template
+            slot="header"
+            slot-scope="{ column, $index }">
+            序号
+          </template>
         </el-table-column>
-      </el-table>
+        <el-table-column
+          min-width="150"
+          v-for="item in tableHeader"
+          :prop="item.serial"
+          :label="item.value"
+          :key="item.serial"
+          :render-header="renderHeader">
+        </el-table-column>
+      </el-table>-->
+
+      <lb-table
+        class="btable"
+        ref="baseTable"
+        :data="tableData"
+        :column="tableColumns"
+        border
+        :key="updateKey">
+      </lb-table>
     </div>
   </el-card>
 
@@ -33,18 +58,47 @@
 
 <script>
 import XLSX from 'xlsx';
+import LbTable from "@/components/lb-table/lb-table";
 
 export default {
   data() {
     return {
       tableData: [],
-      tableHeader: '',
+      tableHeader: [],
+      tableColumns: [],
       tableTitle: '',
       workbook: '',
       dialogVisible: false,
       radio: '',
-      sheetList: []
+      sheetList: [],
+      customObj: {},
+      updateKey: 1,
+      valueTypeList: [
+        {
+          name: '文本',
+          type: 'text',
+          icon: 'el-icon-remove'
+        },
+        {
+          name: '数值',
+          type: 'int',
+          icon: 'el-icon-check'
+        },
+        {
+          name: '日期',
+          type: 'date',
+          icon: 'el-icon-search'
+        },
+      ],
+      transform: {
+        'text': 'el-icon-remove',
+        'int': 'el-icon-check',
+        'date': 'el-icon-search'
+      }
     }
+  },
+  components: {
+    LbTable
   },
   mounted() {
     document.getElementsByClassName('upload')[0].setAttribute('accept', '.xlsx, .xls')
@@ -68,6 +122,66 @@ export default {
       this.tableTitle = tableTitle;
       this.tableHeader = header;
       this.tableData = results;
+
+      this.tableHeader.map((v, idx) => {
+        this.customObj[`show${idx + 1}`] = false;
+      });
+
+      console.log(this.tableHeader)
+
+      let arr = this.tableHeader.map((v, idx) => {
+        return {
+          prop: v.serial,
+          width: 'auto',
+          renderHeader: (h, scope) => {
+            return  (
+              <div class="customerHeader">
+                {
+                  this.customObj[`show${idx + 1}`]
+                  ? <div class="hideBoxer" onClick={(e) => { e.stopPropagation(); }}>
+                      <div class="innerContent">
+                        <ul>
+                          {
+                            this.valueTypeList.map((k) => (
+                              <li onClick={(e) => { this.toggle(k, idx) }}>
+                                <i class={k.icon}></i>
+                                <span class="name">{ k.name }</span>
+                              </li>
+                            ))
+                          }
+                        </ul>
+                      </div>
+                    </div>
+                  : ''
+                }
+                {
+                  v.value ?
+                  <div class="typeBox">
+                    <i class={ `${this.transform[v.type]} icon` } onClick={ (e) => this.showAndHide(e, idx) }></i>
+                    <i class="el-icon-arrow-down"></i>
+                  </div>
+                  : ''
+                }
+                <span class="customName">{ v.value } </span>
+              </div>
+            )
+          }
+        }
+      });
+      this.tableColumns = arr;
+      console.log(arr);
+    },
+    toggle(k, idx) {
+      let item = this.tableHeader[idx];
+      item.type = k.type;
+      console.log(item);
+      this.tableHeader.splice(idx, 1, item);
+      this.$set(this.customObj, `show${idx + 1}`, false);
+      this.updateKey += 1;
+    },
+    showAndHide(e, idx) {
+      this.$set(this.customObj, `show${idx + 1}`, !this.customObj[`show${idx + 1}`]);
+      this.updateKey += 1;
     },
     handleDrop(e) {
       e.stopPropagation()
@@ -116,6 +230,7 @@ export default {
           this.workbook = workbook;
           if (this.sheetList.length > 1) {
             this.dialogVisible = true;
+            this.radio = 0;
           } else {
             this.dealData(0)
           }
@@ -127,6 +242,26 @@ export default {
     ensure() {
       this.dialogVisible = false;
       this.dealData(this.radio);
+    },
+    renderHeader(h, {column}) {
+      return (
+        <div>
+          <div class="showArea">
+            <i class="el-icon-remove"></i>
+            <ul class="hideArea">
+              {
+                this.valueTypeList.map((v, idx) => {
+                  <li onClick={e => this.toggle(e, idx)}>
+                    <i class="v.icon"></i>
+                    v.name
+                  </li>
+                })
+              }
+            </ul>
+          </div>
+          column
+        </div>
+      );
     },
     dealData(idx) {
       const firstSheetName = this.workbook.SheetNames[idx] // 第N张表 sheet1
@@ -183,7 +318,7 @@ export default {
         return result;
       };
 
-      console.log(sheet2arr(worksheet));
+      //console.log(sheet2arr(worksheet));
 
       const results = sheet2arr(worksheet);
 
@@ -231,4 +366,84 @@ export default {
   width: 100%;
   height: 100px;
 }
+
+/deep/.el-table {
+  .el-table__header-wrapper {
+    overflow: visible;
+  }
+  th {
+    overflow: visible;
+  }
+
+  .cell {
+    overflow: visible;
+  }
+
+  .customerHeader {
+    position: relative;
+    overflow: visible;
+    padding: 0;
+    display: flex;
+
+    div {
+      margin: 0;
+      padding: 0;
+    }
+
+    .hideBoxer {
+      width: 104px;
+      background-color: #FFFFFF;
+      box-shadow: 0px 2px 12px 0px rgba(48, 49, 51, 0.06);
+      border: 1px solid #EBEEF5;
+      position: absolute;
+      top: 31px;
+      left: 0;
+      z-index: 10;
+
+      &:after {
+        display: block;
+        content: " ";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 5px 0 5px 5px;
+        border-left-color: #ccc;
+        right: 7px;
+        top: 11px;
+      }
+    }
+
+    .icon {
+
+      cursor: pointer;
+    }
+
+    .typeBox {
+      display: flex;
+      width: 35px;
+      justify-content: space-between;
+      margin-right: 10px;
+      border-bottom: 1px solid #3654EA;
+    }
+
+    .innerContent {
+      width: 100%;
+
+      li {
+        padding-left: 15px;
+        line-height: 40px;
+        cursor: pointer;
+      }
+
+      .name {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+
+
 </style>
