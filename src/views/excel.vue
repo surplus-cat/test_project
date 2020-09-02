@@ -20,7 +20,7 @@
     :before-close="handleClose">
     <div>
       <el-radio-group v-model="radio">
-        <el-radio :label="idx" v-for="(item, idx) in arr" :key="idx">{{ item }}</el-radio>
+        <el-radio :label="idx" v-for="(item, idx) in sheetList" :key="idx" :disabled="item.disabled">{{ item.name }}</el-radio>
       </el-radio-group>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -43,7 +43,7 @@ export default {
       workbook: '',
       dialogVisible: false,
       radio: '',
-      arr: []
+      sheetList: []
     }
   },
   mounted() {
@@ -106,11 +106,15 @@ export default {
           let workbook = XLSX.read(data, {
             type: 'array'
           });
-          console.log(workbook.SheetNames);
 
-          this.arr = workbook.SheetNames;
+          this.sheetList = workbook.SheetNames.map(v => {
+            return {
+              name: v,
+              disabled: Object.getOwnPropertyNames(workbook.Sheets[v]).length === 1
+            }
+          });
           this.workbook = workbook;
-          if (this.arr.length > 1) {
+          if (this.sheetList.length > 1) {
             this.dialogVisible = true;
           } else {
             this.dealData(0)
