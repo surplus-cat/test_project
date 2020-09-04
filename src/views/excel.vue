@@ -103,8 +103,10 @@ export default {
   mounted() {
     document.getElementsByClassName('upload')[0].setAttribute('accept', '.xlsx, .xls')
     document.getElementsByClassName('upload')[0].onchange = (e) => {
+      console.log(e);
       const files = e.target.files;
       const itemFile = files[0] // only use files[0]if (!itemFile)
+      event.target.value= '';  // 上传后清除文件内容
       return this.readerData(itemFile)
     };
     //console.log(XLSX.utils)
@@ -125,8 +127,6 @@ export default {
       this.tableHeader.map((v, idx) => {
         this.customObj[`show${idx + 1}`] = false;
       });
-
-      console.log(this.tableHeader)
 
       let arr = this.tableHeader.map((v, idx) => {
         return {
