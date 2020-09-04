@@ -107,7 +107,6 @@ export default {
       const itemFile = files[0] // only use files[0]if (!itemFile)
       return this.readerData(itemFile)
     };
-
     //console.log(XLSX.utils)
   },
   methods: {
@@ -207,37 +206,38 @@ export default {
           message: '上传文件格式错误，请上传xls、xlsx文件！',
           type: 'warning'
         });
-      } else {
-        const reader = new FileReader()
-        reader.onload = e => {
-          // const data = e.target.result
-          // const fixedData = this.fixdata(data)
-          // const workbook = XLSX.read(btoa(fixedData), {
-          //   type: 'base64'
-          // });
-
-          var data = new Uint8Array(e.target.result);
-          let workbook = XLSX.read(data, {
-            type: 'array'
-          });
-
-          this.sheetList = workbook.SheetNames.map(v => {
-            return {
-              name: v,
-              disabled: Object.getOwnPropertyNames(workbook.Sheets[v]).length === 1
-            }
-          });
-          this.workbook = workbook;
-          if (this.sheetList.length > 1) {
-            this.dialogVisible = true;
-            this.radio = 0;
-          } else {
-            this.dealData(0)
-          }
-
-        }
-        reader.readAsArrayBuffer(itemFile)
+        return false;
       }
+
+      const reader = new FileReader()
+      reader.onload = e => {
+        // const data = e.target.result
+        // const fixedData = this.fixdata(data)
+        // const workbook = XLSX.read(btoa(fixedData), {
+        //   type: 'base64'
+        // });
+
+        var data = new Uint8Array(e.target.result);
+        let workbook = XLSX.read(data, {
+          type: 'array'
+        });
+
+        this.sheetList = workbook.SheetNames.map(v => {
+          return {
+            name: v,
+            disabled: Object.getOwnPropertyNames(workbook.Sheets[v]).length === 1
+          }
+        });
+        this.workbook = workbook;
+        if (this.sheetList.length > 1) {
+          this.dialogVisible = true;
+          this.radio = 0;
+        } else {
+          this.dealData(0)
+        }
+
+      }
+      reader.readAsArrayBuffer(itemFile)
     },
     ensure() {
       this.dialogVisible = false;
@@ -264,8 +264,8 @@ export default {
       );
     },
     dealData(idx) {
-      const firstSheetName = this.workbook.SheetNames[idx] // 第N张表 sheet1
-      const worksheet = this.workbook.Sheets[firstSheetName] // 读取sheet1表中的数据
+      const firstSheetName = this.workbook.SheetNames[idx] // 第N张表
+      const worksheet = this.workbook.Sheets[firstSheetName] // 读取sheetN表中的数据
       //console.log(worksheet);
 
       delete worksheet['!merges'];
@@ -290,6 +290,20 @@ export default {
           value: worksheet[theader] ? worksheet[theader]['v'] : worksheet[theader],
           type: 'text'
         })
+      };
+
+      let dealHeader = header.map(v => v.value).filter(k => k !== undefined);
+
+      console.log(dealHeader);
+
+
+      if (dealHeader.length !== [...new Set(dealHeader)].length) {
+        this.$message({
+          message: 'sheet表 列名不可重复!',
+          type: 'warning'
+        });
+        this.sheetList = [];
+        return;
       }
 
       //const results = XLSX.utils.sheet_to_json(worksheet);
@@ -392,6 +406,7 @@ export default {
 
     .hideBoxer {
       width: 104px;
+      line-height: 1;
       background-color: #FFFFFF;
       box-shadow: 0px 2px 12px 0px rgba(48, 49, 51, 0.06);
       border: 1px solid #EBEEF5;
@@ -399,20 +414,22 @@ export default {
       top: 31px;
       left: 0;
       z-index: 10;
+      overflow: visible;
 
-      &:after {
-        display: block;
-        content: " ";
+      &:before {
+        content: "";
         position: absolute;
+        display: inline-block;
+        left: 8px;
+        top: -4px;
         width: 0;
         height: 0;
-        border-color: transparent;
-        border-style: solid;
-        border-width: 5px 0 5px 5px;
-        border-left-color: #ccc;
-        right: 7px;
-        top: 11px;
+        vertical-align: middle;
+        border-bottom: 4px dashed #fff;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
       }
+
     }
 
     .icon {
@@ -424,6 +441,7 @@ export default {
       display: flex;
       width: 35px;
       justify-content: space-between;
+      align-items: center;
       margin-right: 10px;
       border-bottom: 1px solid #3654EA;
     }
