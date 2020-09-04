@@ -103,9 +103,12 @@ export default {
   mounted() {
     document.getElementsByClassName('upload')[0].setAttribute('accept', '.xlsx, .xls')
     document.getElementsByClassName('upload')[0].onchange = (e) => {
-      console.log(e);
+      //console.log(e);
       const files = e.target.files;
       const itemFile = files[0] // only use files[0]if (!itemFile)
+      this.tableData = [];
+      this.tableColumns = [];
+      this.tableHeader = [];
       event.target.value= '';  // 上传后清除文件内容
       return this.readerData(itemFile)
     };
@@ -122,7 +125,10 @@ export default {
     }) {
       this.tableTitle = tableTitle;
       this.tableHeader = header;
-      this.tableData = results;
+      // this.tableData = results;
+
+      // 过滤空的行和空的列数据
+      this.tableData = results.filter(v => v.filter(k => k).length > 0).map(v => v.slice(0, header.length));
 
       this.tableHeader.map((v, idx) => {
         this.customObj[`show${idx + 1}`] = false;
@@ -168,7 +174,6 @@ export default {
         }
       });
       this.tableColumns = arr;
-      console.log(arr);
     },
     toggle(k, idx) {
       let item = this.tableHeader[idx];
@@ -278,8 +283,10 @@ export default {
       //     value: v.r
       //   };
       // });
-      const header = [];
-      const range = XLSX.utils.decode_range(worksheet['!ref'])
+      let header = [];
+      const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+      //console.log(range);
 
       for (let c = range.s.c; c <= range.e.c; c++) {
         const theader = XLSX.utils.encode_col(c) + '1'
@@ -292,9 +299,19 @@ export default {
         })
       };
 
-      let dealHeader = header.map(v => v.value).filter(k => k !== undefined);
+      let originHeader = header.map(v => v.value);
 
-      console.log(dealHeader);
+      let dealHeader = header.map(v => v.value).filter(k => k !== undefined);
+      //let dealHeader = header.map(v => v.value);
+      //console.log(dealHeader, header.map(v => v.value));
+
+      let validEndElem = originHeader.filter(v => v).slice(-1)[0];
+      let validEndIdx = originHeader.findIndex(v => v === validEndElem);
+
+      let validHeader = header.map(v => v.value).slice(0, validEndIdx + 1);
+
+      console.log(validHeader);
+
 
 
       if (dealHeader.length !== [...new Set(dealHeader)].length) {
@@ -305,6 +322,19 @@ export default {
         this.sheetList = [];
         return;
       }
+
+      if (validHeader.length !== validHeader.filter(v => v !== undefined).length) {
+        this.$message({
+          message: 'sheet表 列名不可为空!',
+          type: 'warning'
+        });
+        this.tableData = [];
+        this.sheetList = [];
+        return;
+      }
+
+      header = header.filter(v => validHeader.includes(v.value));
+
 
       //const results = XLSX.utils.sheet_to_json(worksheet);
 
