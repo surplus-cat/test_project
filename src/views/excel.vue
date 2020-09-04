@@ -441,7 +441,7 @@ export default {
       box-shadow: 0px 2px 12px 0px rgba(48, 49, 51, 0.06);
       border: 1px solid #EBEEF5;
       position: absolute;
-      top: 31px;
+      top: 45px;
       left: 0;
       z-index: 10;
       overflow: visible;
