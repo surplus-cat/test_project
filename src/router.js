@@ -24,6 +24,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/radio.vue')
     },
     {
+      path: '/Virtual',
+      name: 'Virtual',
+      component: () => import(/* webpackChunkName: "about" */ './views/Virtual.vue')
+    },
+    {
       path: '/filter',
       name: 'filter',
       component: () => import(/* webpackChunkName: "about" */ './views/analyse/filter.vue')

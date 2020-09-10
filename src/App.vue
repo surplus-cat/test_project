@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
     <!-- <a class="btn" href="javascript:;" @click="backTop">回顶部</a> -->
   </div>
 </template>
