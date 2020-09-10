@@ -1,39 +1,29 @@
 <template>
-  <div>
-    <el-input style="width: 100px;" v-model="filterName" @input="filt($event)" size="mini" />
-    <div ref="list"
-      class="infinite-list-container"
-      @scroll="scrollEvent($event)">
-      <div
-        class="positionDiv">
-        <label class="el-checkbox" :class="{ 'is-checked': checkedNames.length === listData_.length }">
-          <span class="el-checkbox__input" :class="{ isDetermine: checkedNames.length > 0 && checkedNames.length < listData_.length, 'is-checked': checkedNames.length === listData_.length}">
+<div>
+  <el-input style="width: 100px;" v-model="filterName" @input="filt($event)" size="mini" />
+  <div ref="list" class="infinite-list-container" @scroll="scrollEvent($event)">
+    <div class="positionDiv">
+      <label class="el-checkbox" :class="{ 'is-checked': checkedNames.length === listData_.length }">
+        <span class="el-checkbox__input" :class="{ isDetermine: checkedNames.length > 0 && checkedNames.length < listData_.length, 'is-checked': checkedNames.length === listData_.length}">
+          <span class="el-checkbox__inner"></span>
+          <input type="checkbox" id="全选" class="el-checkbox__original" value="全选" v-model="isChecked" @change="allCheck"></span>
+        <span class="el-checkbox__label">全选</span>
+      </label>
+    </div>
+    <!-- <span>test {{screenHeight}}px</span> -->
+    <div class="infinite-list-phantom" :style="{ height: listHeight + 'px' }"></div>
+    <div class="infinite-list" :style="{ transform: getTransform }">
+      <div ref="items" class="infinite-list-item" v-for="item in visibleData" :key="item.id">
+        <label class="el-checkbox" :for="item.value" :class="{ 'is-checked': checkedNames.includes(item.value) }">
+          <span class="el-checkbox__input" :class="{ 'is-checked': checkedNames.includes(item.value) }">
             <span class="el-checkbox__inner"></span>
-            <input type="checkbox" id="全选" class="el-checkbox__original" value="全选" v-model="isChecked" @change="allCheck"></span>
-          <span class="el-checkbox__label">全选</span>
+            <input type="checkbox" :id="item.value" class="el-checkbox__original" :value="item.value" v-model="checkedNames" @change="check(item)"></span>
+          <span class="el-checkbox__label">{{item.value}}</span>
         </label>
-      </div>
-      <!-- <span>test {{screenHeight}}px</span> -->
-      <div class="infinite-list-phantom"
-        :style="{ height: listHeight + 'px' }"></div>
-      <div class="infinite-list"
-        :style="{ transform: getTransform }">
-        <div ref="items"
-          class="infinite-list-item"
-          v-for="item in visibleData"
-          :key="item.id"
-          :style="{ height: itemSize + 'px',lineHeight: itemSize + 'px' }">
-          <label class="el-checkbox" :for="item.value" :class="{ 'is-checked': checkedNames.includes(item.value) }">
-            <span class="el-checkbox__input" :class="{ 'is-checked': checkedNames.includes(item.value) }">
-              <span class="el-checkbox__inner"></span>
-              <input type="checkbox" :id="item.value" class="el-checkbox__original" :value="item.value" v-model="checkedNames" @change="check(item)"></span>
-            <span class="el-checkbox__label">{{item.value}}</span>
-          </label>
-        </div>
       </div>
     </div>
   </div>
-
+</div>
 </template>
 
 <script>
@@ -111,7 +101,7 @@ export default {
       //此时的偏移量
       this.startOffset = scrollTop - (scrollTop % this.itemSize);
     },
-    check () {
+    check() {
       if (this.checkedNames.length === this.listData_.length) {
         this.isChecked = true;
       } else {
@@ -140,7 +130,6 @@ export default {
 };
 </script>
 
-
 <style lang="less" scoped>
 .infinite-list-container {
   width: 189px;
@@ -167,13 +156,14 @@ export default {
 .infinite-list {
   left: 0;
   right: 0;
-  top: 0;
+  top: 18px;
+  line-height: 28px;
   position: absolute;
   text-align: left;
 }
 
 .infinite-list-item {
-  padding: 10px;
+  // padding: 10px;
   color: #555;
   box-sizing: border-box;
   border-bottom: 1px solid #999;
