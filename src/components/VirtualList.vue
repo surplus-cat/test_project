@@ -112,9 +112,11 @@ export default {
       // e.data 表示当前输入的内容
       if (e === undefined) {
         this.listData_ = this.listData.filter(v => v);
+        this.checkedNames = this.checkedNames.filter(v => v);
       } else {
         let arr = this.listData.filter(v => v);
         this.listData_ = arr.filter(v => v.value.includes(e));
+        this.checkedNames = this.checkedNames.filter(v => v.includes(e));
       }
     },
     allCheck() {

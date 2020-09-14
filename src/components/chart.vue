@@ -54,20 +54,20 @@ export default {
       this.chart.data(this.data);
 
       this.chart.scale({
-        temperature: {
+        value: {
           nice: true
         }
       });
 
       this.chart
         .line()
-        .position('month*temperature')
-        .color('city')
+        .position('feature*value')
+        .color('phone')
 
       this.chart
         .point()
-        .position('month*temperature')
-        .color('city')
+        .position('feature*value')
+        .color('phone')
         .shape('circle');
       this.chart.render();
     },
@@ -77,14 +77,14 @@ export default {
       this.chart.data(this.data);
 
       this.chart.scale({
-        temperature: {
+        value: {
           nice: true
         }
       });
       this.chart
         .interval()
-        .position('month*temperature')
-        .color('city')
+        .position('feature*value')
+        .color('phone')
         .adjust([  // 分组
           {
             type: 'dodge',
@@ -122,6 +122,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .boxer {
+  width: 400px;
+  height: 400px;
   text-align: left;
   margin-top: 20px;
   margin-left: 20px;

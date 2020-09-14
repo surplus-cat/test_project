@@ -49,11 +49,6 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/view.vue')
     },
     {
-      path: '/timer',
-      name: 'timer',
-      component: () => import(/* webpackChunkName: "about" */ './views/timer.vue')
-    },
-    {
       path: '/calendar',
       name: 'calendar',
       component: () => import(/* webpackChunkName: "about" */ './views/calendar.vue')
